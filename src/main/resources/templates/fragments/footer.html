@@ -1,0 +1,21 @@
+<footer class="footer" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" th:fragment="footer">
+				<div class="footer-inner">
+					<div class="footer-content">
+						<span class="bigger-120">
+							<span class="blue bolder">
+							<i class="fa fa-calendar"></i>
+							FunOlympic2024</span>
+							&copy;						
+						2024 All rights reserved							
+						</span>
+<!-- 						
+				<span sec:authorize="isAuthenticated()" style="display: inline-block;">
+                    | Logged user: <span sec:authentication="name"></span> |
+                    Roles: <span sec:authentication="principal.authorities"></span> |
+                    <span sec:authorize="hasAuthority('ADMIN')"></span>
+                </span>  -->
+                <span> | Developed by: <span class="bigger-120"> <a th:href="@{/}">Ishan Shakya, ISMT </a></span></span>
+                
+					</div>
+				</div>
+			</footer>

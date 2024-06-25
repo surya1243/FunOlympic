@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/default}">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>New Locker & Custodian</title>
+	</head>
+	<body>
+	<div layout:fragment="content">
+		<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+			<ul class="breadcrumb">
+				<li>
+					<i class="ace-icon fa fa-home home-icon"></i>
+					<a href="#">Home</a>
+				</li>
+				<li>
+					<a href="#">Locker &amp; and Custodian</a>
+				</li>
+				<li class="active">Create New Locker</li>
+			</ul><!-- /.breadcrumb -->						
+		</div>	
+		<div class="page-content">	
+			<div class="row">
+				<div class="col-xs-12">
+					<!-- PAGE CONTENT BEGINS -->
+					<div th:if="${message}">
+						<h2 class="alert alert-danger" th:text="${message}" />
+					</div>
+					<div th:if="${successMessage}">
+						<div class="alert alert-success">
+							<button type="button" class="close" data-dismiss="alert">
+								<i class="ace-icon fa fa-times"></i>
+							</button>
+							<strong th:text="${successMessage}">Success!</strong> <br />
+						</div>
+					</div>
+				</div>
+			</div>							
+			<div class="page-header">
+				<h1>
+					Add New Locker and Custodian Details				
+				</h1>
+			</div><!-- /.page-header -->
+			<div class="row">
+				<div class="col-xs-12">
+					<!-- PAGE CONTENT BEGINS -->
+					<div class="row">
+						<div class="col-sm-4">
+							<div class="tabbable">
+								<ul class="nav nav-tabs" id="myTab">
+									<li class="active">
+										<a data-toggle="tab" href="#home">
+											<i class="green ace-icon fa fa-key bigger-120"></i>
+											Add New Locker
+										</a>
+									</li>
+									<li>
+										<a data-toggle="tab" href="#messages">
+										<i class="green ace-icon fa fa-user-plus bigger-120"></i>
+											Add New Custodian									
+										</a>
+									</li>
+								</ul>
+							<div class="tab-content">
+								<div id="home" class="tab-pane fade in active">
+									<form th:action="@{/addLocker}"  method="POST" data-toggle="validator" role="form" autocomplete="off">
+									<fieldset>
+									<div class="form-group">
+					                      <label class="block clearfix" for="idLocker"> Locker ID <small class="text-danger">*</small> <span class="bolder">000-000</span> </label>
+					                      <span class="block input-icon input-icon-right">
+					                      <input class="form-control" name ="lockerId" data-error="Please enter Locker ID field." id="idLocker" placeholder="Locker ID"  type="text" 
+					                      pattern="^[a-zA-Z0-9-]{2,7}$" style="text-transform: uppercase;" 
+                                                 onkeyup="this.value = this.value.toUpperCase();" required />
+											</span>
+											<small class="text-danger" id="textExample">Follow the pattern, e.g. <span class="bolder" >(001-001)</span>
+												  Here, 001=BranchCode where Locker exists and 001=LockerID with Three Digits</small>
+					                      <div class="help-block with-errors"></div>
+				                  	</div>
+								<div class="form-group">
+								  <label class="block clearfix" for="idLockerSize"> Locker Size <small class="text-danger">*</small></label>
+	                                <select class="select2 col-xs-10 col-sm-6" data-placeholder="Choose locker size..." id="idLockerSize" name="lockerSize" required>
+	                                    <option value=""></option>
+	                                    <option value="A"> A (6"H X 8"W) </option>
+	                                   	<option value="B"> B (6"H X 16"W) </option>
+	                                    <option value="C"> C (12"H X 16"W) </option>
+	                                </select>                               
+	                                </div>	
+	                                <div class="form-group">
+					                      <label class="block clearfix" for="idKeyNo"> Key Number <small class="text-danger">*</small></label>
+					                      <span class="block input-icon input-icon-right">
+					                      <input class="form-control" name ="keyNo" data-error="Please enter Key Number field." id="idKeyNo" placeholder="Enter Key Number"  type="text" 
+					                      pattern="^[a-zA-Z0-9-]{2,6}$" required />
+											</span>
+					                      <div class="help-block with-errors"></div>
+				                  	</div>
+									<div class="form-group">
+											<label class="block clearfix" for="branchName-dropdown">Branch (Locker Exist) <small class="red">*</small></label>
+											<select class="branchName-dropdown form-control" id="branchName-dropdown"
+												name="branchName" data-placeholder="Choose Branch..."
+												data-error="Please select Branch field." required>
+											</select>
+											<div class="help-block with-errors"></div>
+	                                </div>				                
+					                <div class="form-group">
+									    <label for="inputRemark" class="block clearfix">Remark <small class="text-danger">*</small></label>
+									      <span class="block input-icon input-icon-right">
+				                      <textarea class="form-control" placeholder="Describe here..." name ="remarks" data-error="Please enter remark field." id="remark" required></textarea>
+					                  </span>      
+									         <div class="help-block with-errors"></div>
+									 </div>
+											<div class="space-10"></div>
+
+											<div class="clearfix">
+												<button type="reset" class="width-30 pull-left btn btn-sm">
+													<i class="ace-icon fa fa-refresh"></i> <span
+														class="bigger-110">Reset</span>
+												</button>
+
+												<button type="submit"
+													class="width-65 pull-right btn btn-sm btn-success">
+													<span class="bigger-110">Register</span> <i
+														class="ace-icon fa fa-arrow-right icon-on-right"></i>
+												</button>
+											</div>
+										</fieldset>
+									</form>
+									</div>
+
+								<div id="messages" class="tab-pane fade">
+									<form th:action="@{/addCustodianDetail}" th:object="${custodianDetail}" method="POST" data-toggle="validator" role="form" autocomplete="off">
+									<fieldset>
+									<div class="form-group">
+					                      <label class="block clearfix" for="idCustodianType"> Custodian Type <small class="text-danger">*</small></label>
+	                                <select class="select2 form-control" id="idCustodianType" name="custodianType" required>
+	                                    <option value="" disabled selected>Choose Custodian panel...</option>
+	                                    <option value="A-Panel"> A-Panel </option>
+	                                   	<option value="B-Panel"> B-Panel </option>
+	                                </select> 
+					                      <div class="help-block with-errors"></div>
+				                  	</div>
+									<div class="form-group">
+					                      <label class="block clearfix" for="idCustodianName"> Custodian Name <small class="text-danger">*</small></label>
+					                      <span class="block input-icon input-icon-right">
+					                      <input class="form-control" 
+					                       style="text-transform: uppercase;" 
+                                                 onkeyup="this.value = this.value.toUpperCase();"
+                                                 name ="custodianName" data-error="Please enter Custodian Name." id="idCustodianName" placeholder="Enter Full Name"  type="text" required />
+						                    </span>
+					                      <div class="help-block with-errors"></div>
+				                  	</div>
+				                  	<div class="form-group">
+											<label class="block clearfix" for="branchName-dropdown1">Branch <small class="red">*</small></label>
+											<select class="select2 form-control" id="branchName-dropdown1" name="branchName" 
+												data-placeholder="Choose Branch..." data-error="Select Bank branch" required>
+												 <option value=""></option>
+												<option th:each="branchList : ${branchLists}"
+			                           										 th:value="${branchList.branchName}"
+			                          										 th:text="${branchList.branchName}">Branch</option>
+											</select>
+											<div class="help-block with-errors"></div>
+	                                </div>				                  	
+									<div class="form-group">
+				                      <label class="block clearfix" for="idRemark">Remarks<small class="text-danger"> *</small></label>
+				                      <span class="block input-icon input-icon-right">
+				                      <textarea class="form-control" placeholder="Describe here..." name ="remarks" data-error="Please enter remark field." id="idRemark" required></textarea>
+					                  </span>
+				                      <div class="help-block with-errors"></div>
+				                   </div>							
+									<div class="space-10"></div>
+
+									<div class="clearfix">
+										<button type="reset" class="width-30 pull-left btn btn-sm">
+											<i class="ace-icon fa fa-refresh"></i> <span
+												class="bigger-110">Reset</span>
+										</button>
+
+										<button type="submit"
+											class="width-65 pull-right btn btn-sm btn-success">
+											<span class="bigger-110">Submit</span> <i
+												class="ace-icon fa fa-arrow-right icon-on-right"></i>
+										</button>
+									</div>
+										</fieldset>
+									</form>
+									</div>
+								</div>
+							</div>
+						</div>	
+							<div class="vspace-6-sm"></div>
+						<div class="col-sm-8">
+						<div class="tabbable">
+							<ul
+								class="nav nav-tabs padding-12 tab-color-blue background-blue"
+								id="myTab4">
+								<li class="active"><a data-toggle="tab" href="#home4"
+									aria-expanded="true">Locker List</a></li>
+
+								<li class=""><a data-toggle="tab" href="#profile4"
+									aria-expanded="false">Custodian List</a></li>
+							</ul>
+							<div class="tab-content">
+								<div id="home4" class="tab-pane active">
+									<div th:if="${not #lists.isEmpty(lockerList)}">
+										<div class="clearfix">
+											<div class="pull-right tableTools-container"></div>
+										</div>
+										<table
+											class="dynamic-table table table-striped table-bordered table-hover">
+											<thead>
+												<tr>
+													<th width="6%" class="center">S.N.</th>
+													<th>Branch (Locker Exist)</th>
+													<th>Locker Id</th>
+													<th class="center">Locker Size</th>
+													<th class="center">Locker Status</th>
+													<th class="center hidden-xs">Key No</th>
+													<th class="hidden-xs">Remark</th>
+													<th class="center"  sec:authorize="hasAnyAuthority('ADMIN','HIGHSUPERVISOR', 'SUPERVISOR')">Action</th>
+												</tr>
+											</thead>
+
+											<tbody>
+												<tr th:each="lockerList, iterate :${lockerList}">
+													<td class="center" th:text="${iterate.index+1}"></td>
+													<td th:text="${lockerList?.branchName}">test</td>
+													<td th:text="${lockerList?.lockerId}">test</td>
+						                            <td class="center" th:switch="${lockerList?.lockerSize}">
+														<span class="label label-success arrowed-in arrowed-in-right" th:case="'A'"> A (6"H X 8"W) </span>
+													    <span class="label arrowed-in arrowed-in-right label-info" th:case="'B'"> B (6"H X 16"W) </span>
+													    <span class="label arrowed-in arrowed-in-right label-danger" th:case="'C'"> C (12"H X 16"W) </span>
+												    </td>														
+													<td class="center" th:text="${lockerList?.lockerStatus}">test</td>
+													<td class="center hidden-xs" th:text="${lockerList?.keyNo}">test</td>
+													<td class="hidden-xs" th:text="${lockerList?.remarks}">test</td>
+													
+													<td class="center" sec:authorize="hasAnyAuthority('ADMIN','HIGHSUPERVISOR', 'SUPERVISOR')">
+														<div class="hidden-sm hidden-xs action-buttons">
+															<a class="green" title="Edit" sec:authorize="hasAnyAuthority('ADMIN','HIGHSUPERVISOR', 'SUPERVISOR')"
+																th:href="@{'/updateLocker/'+${lockerList.id}}"> <i
+																class="ace-icon fa fa-pencil bigger-130"></i>
+															</a> <a class="red" title="Delete" sec:authorize="hasAnyAuthority('ADMIN','HIGHSUPERVISOR')"
+																th:data-thing="${lockerList?.id}"
+																th:onclick="deleteBranch(this.getAttribute('data-thing'));">
+																<i class="ace-icon fa fa-trash-o bigger-130"></i>
+															</a>
+														</div>
+														<div class="hidden-md hidden-lg action-buttons">
+															<div class="inline pos-rel">
+																<button
+																	class="btn btn-minier btn-yellow dropdown-toggle"
+																	data-position="auto" data-toggle="dropdown">
+																	<i
+																		class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
+																</button>
+																<div
+																	class="dropdown-menu dropdown-only-icon center dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+																	<a class="green" title="Edit" sec:authorize="hasAnyAuthority('ADMIN','HIGHSUPERVISOR', 'SUPERVISOR')"
+																		th:href="@{'/updateLocker/'+${lockerList.id}}"> <i
+																		class="ace-icon fa fa-pencil bigger-130"></i>
+																	</a> <a class="red" title="Delete" sec:authorize="hasAnyAuthority('ADMIN','HIGHSUPERVISOR')"
+																		th:data-thing="${lockerList?.id}"
+																		th:onclick="deleteBranch(this.getAttribute('data-thing'));">
+																		<i class="ace-icon fa fa-trash-o bigger-130"></i>
+																	</a>
+																</div>
+															</div>
+														</div>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+
+								<div id="profile4" class="tab-pane">
+									<div th:if="${not #lists.isEmpty(custodianList)}">
+										<table
+											class="dynamic-table table table-striped table-bordered table-hover">
+											<thead>
+												<tr>
+													<th width="6%" class="center">S.N.</th>
+													<th width="15%">Custodian Name</th>
+													<th width="15%">Custodian Type</th>
+													<th width="15%">Branch</th>
+													<th width="25%">Remarks</th>
+													<th class="hidden"></th>
+													<th class="hidden"></th>
+													<th width="10%" class="center">Action</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="custodianList, iterate :${custodianList}">
+													<td class="center" th:text="${iterate.index+1}"></td>
+													<td th:text="${custodianList?.custodianName}">test</td>
+													<td th:text="${custodianList?.custodianType}">test</td>
+													<td th:text="${custodianList?.branchName}">test</td>
+													<td th:text="${custodianList?.remarks}">test</td>
+													<td class="hidden"></td>
+													<td class="hidden"></td>
+													<td class="center" sec:authorize="hasAnyAuthority('ADMIN','HIGHSUPERVISOR', 'SUPERVISOR')">
+														<div class="hidden-sm hidden-xs action-buttons">
+															<a class="green" title="Edit" sec:authorize="hasAnyAuthority('ADMIN','HIGHSUPERVISOR', 'SUPERVISOR')"
+																th:href="@{'/updateCustodian/'+${custodianList.id}}">
+																<i class="ace-icon fa fa-pencil bigger-130"></i>
+															</a> <a class="red" title="Delete" sec:authorize="hasAnyAuthority('ADMIN','HIGHSUPERVISOR')"
+																th:data-thing="${custodianList?.id}"
+																th:onclick="deleteFiscalYear(this.getAttribute('data-thing'));">
+																<i class="ace-icon fa fa-trash-o bigger-130"></i>
+															</a>
+														</div>
+														<div class="hidden-md hidden-lg action-buttons">
+															<div class="inline pos-rel">
+																<button
+																	class="btn btn-minier btn-yellow dropdown-toggle"
+																	data-position="auto" data-toggle="dropdown">
+																	<i
+																		class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
+																</button>
+																<div
+																	class="dropdown-menu dropdown-only center-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+																	<a class="green" title="Edit" sec:authorize="hasAnyAuthority('ADMIN','HIGHSUPERVISOR', 'SUPERVISOR')"
+																		th:href="@{'/updateCustodian/'+${custodianList.id}}">
+																		<i class="ace-icon fa fa-pencil bigger-130"></i>
+																	</a> <a class="red" title="Delete" sec:authorize="hasAnyAuthority('ADMIN','HIGHSUPERVISOR')"
+																		th:data-thing="${custodianList?.id}"
+																		th:onclick="deleteFiscalYear(this.getAttribute('data-thing'));">
+																		<i class="ace-icon fa fa-trash-o bigger-130"></i>
+																	</a>
+																</div>
+															</div>
+														</div>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>						
+						</div>
+					</div>
+				</div><!-- /.col -->
+			</div><!-- /.row -->
+		</div><!-- /.page-content -->
+	</div>
+	
+	<th:block layout:fragment="scripts">
+		    <script>
+        autosize(document.querySelectorAll('textarea'));
+	</script>
+	
+	<script>
+		$(document).ready(function() {
+			$('#textExample').hide();
+				$("#idLocker")
+				.mouseover(function() {
+					$('#textExample').show();
+				})
+				.mouseleave(function() {
+					$('#textExample').hide();
+				});
+		});
+		$('.input-mask-date').mask('9999/99');
+		$('.input-mask-mobile').mask('9999999999',{autoclear: false});
+		$('#idLocker').mask('999-999',{autoclear: false});	
+		
+		
+	</script>
+    		<script>
+			$(document).ready(function() {
+				$('.select2').css('width', '100%').select2({});
+			});
+		</script>
+    <script type="text/javascript">
+	   $('.chosen-select').chosen();    
+	   $(window)
+		.off('resize.chosen')
+		.on('resize.chosen', function() {
+			$('.chosen-select').each(function() {
+				 var $this = $(this);
+				 $this.next().css({minWidth: '380px'});
+			})
+		}).trigger('resize.chosen');  
+    </script>
+    
+    		<script type="text/javascript">
+			jQuery(function($) {
+				//initiate dataTables plugin
+				var myTable = $('.dynamic-table')
+
+				.DataTable({
+					bAutoWidth : false,
+					"aoColumns" : [ null, null, null, null, null,null,null,
+
+					{
+						"bSortable" : false
+					} ],
+					"aaSorting" : [],
+				});
+				$.fn.dataTable.Buttons.defaults.dom.container.className = 'dt-buttons btn-overlap btn-group btn-overlap';
+				new $.fn.dataTable.Buttons(
+						myTable,
+						{
+							buttons : [
+									{
+										"extend" : "copy",
+										"text" : "<i class='fa fa-copy bigger-110 pink'></i> <span class='hidden'>Copy to clipboard</span>",
+										"className" : "btn btn-white btn-primary btn-bold"
+									},
+									{
+										"extend" : "csv",
+										"text" : "<i class='fa fa-database bigger-110 orange'></i> <span class='hidden'>Export to CSV</span>",
+										"className" : "btn btn-white btn-primary btn-bold"
+									},
+									{
+										"extend" : "excel",
+										"text" : "<i class='fa fa-file-excel-o bigger-110 green'></i> <span class='hidden'>Export to Excel</span>",
+										"className" : "btn btn-white btn-primary btn-bold",
+										"exportOptions" : {
+											modifier : {
+												page : 'all'
+											}
+										}
+									},
+									{
+										"extend" : "pdf",
+										"text" : "<i class='fa fa-file-pdf-o bigger-110 red'></i> <span class='hidden'>Export to PDF</span>",
+										"className" : "btn btn-white btn-primary btn-bold",
+										"exportOptions" : {
+											modifier : {
+												page : 'all'
+											}
+										}
+									},
+									{
+										"extend" : "print",
+										"text" : "<i class='fa fa-print bigger-110 grey'></i> <span class='hidden'>Print</span>",
+										"className" : "btn btn-white btn-primary btn-bold",
+										autoPrint : true,
+										message : 'This print was produced using the Print button for DataTables'
+									} ]
+						});
+				myTable.buttons().container().appendTo(
+						$('.tableTools-container'));
+				setTimeout(function() {
+					$($('.tableTools-container')).find('a.dt-button').each(
+							function() {
+								var div = $(this).find(' > div').first();
+								if (div.length == 1)
+									div.tooltip({
+										container : 'body',
+										title : div.parent().text()
+									});
+								else
+									$(this).tooltip({
+										container : 'body',
+										title : $(this).text()
+									});
+							});
+				}, 500);
+			})
+		</script>
+		<script>
+			function deleteBranch(control) {
+				var dialog = bootbox
+						.dialog({
+							title : 'Delete Locker!!!',
+							message : '<p>Are you sure you want to delete recorded Locker data?</p>',
+							size : 'md',
+							onEscape : true,
+							backdrop : true,
+							buttons : {
+								cancel : {
+									label : '<i class="fa fa-times"></i> Cancel',
+									className : 'btn-danger pull-right margin-left-10px',
+								},
+								ok : {
+									label : '<i class="fa fa-check"></i> Confirm',
+									className : 'btn-info',
+									callback : function(result) {
+										if (result) {
+											$
+													.ajax({
+														type : 'DELETE',
+														url : '/updateLocker/delete/'
+																+ control,
+														success : function(
+																result) {
+															$('#showMessage')
+																	.append(
+																			"<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'><i class='ace-icon fa fa-times'></i></button><br>"
+																					+ result.message
+																					+ ': '
+																					+ result.data
+																					+ "</div>");
+															alert(result.message
+																	+ ': '
+																	+ result.data);
+															window.location.href = "/lockerform";
+														},
+														error : function(jqXHR,
+																textStatus,
+																errorThrown) {
+															alert(jqXHR.status
+																	+ ' '
+																	+ jqXHR.responseText);
+														}
+													});
+										}
+									}
+								}
+							},
+						});
+			}
+		</script>
+		<script>
+			function deleteFiscalYear(control) {
+				var dialog = bootbox
+						.dialog({
+							title : 'Delete Fiscal Year!!!',
+							message : '<p>Are you sure you want to delete recorded fiscal year data?</p>',
+							size : 'md',
+							onEscape : true,
+							backdrop : true,
+							buttons : {
+								cancel : {
+									label : '<i class="fa fa-times"></i> Cancel',
+									className : 'btn-danger pull-right margin-left-10px',
+								},
+								ok : {
+									label : '<i class="fa fa-check"></i> Confirm',
+									className : 'btn-info',
+									callback : function(result) {
+										if (result) {
+											$
+													.ajax({
+														type : 'DELETE',
+														url : '/updateCustodain/delete/'
+																+ control,
+														success : function(
+																result) {
+															$('#showMessage')
+																	.append(
+																			"<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'><i class='ace-icon fa fa-times'></i></button><br>"
+																					+ result.message
+																					+ "</br>"
+																					+ ': '
+																					+ result.data
+																					+ "</div>");
+															alert(result.message
+																	+ ': '
+																	+ result.data);
+															window.location.href = "/lockerform";
+														},
+														error : function(jqXHR,
+																textStatus,
+																errorThrown) {
+															alert(jqXHR.status
+																	+ ' '
+																	+ jqXHR.responseText);
+														}
+													});
+										}
+									}
+								}
+							},
+						});
+			}
+		</script>
+
+
+		<!-- basic scripts -->
+
+		<!--[if IE]>
+<script src="assets/js/jquery-1.11.3.min.js"></script>
+<![endif]-->
+		<script type="text/javascript">
+			if('ontouchstart' in document.documentElement) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+		</script>
+
+		<!-- inline scripts related to this page -->
+	</th:block>
+	</body>
+</html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{branchmanager/bm_layout/bm_default}">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta charset="utf-8" />
+    <title> Edit Account Opening Log</title>
+    <th:block layout:fragment="styles">
+        <style>
+        .table > tbody > tr > td{
+		    padding: 4px;
+		    line-height: 1.42857143;
+		    vertical-align: top;
+		    border-top: 2px solid #ddd;
+		    border-collapse: collapse;
+		}
+        </style>
+    </th:block>
+</head>
+<body>
+    <div layout:fragment="content">
+		<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+			<ul class="breadcrumb">
+				<li>
+					<i class="ace-icon fa fa-home home-icon"></i>
+					<a href="#">Home</a>
+				</li>
+				<li>
+					<a href="/bm/addaccountinfo">Daily Report</a>
+				</li>
+				<li class="active">Edit Daily Report Form</li>
+			</ul><!-- /.breadcrumb -->						
+		</div> 
+		
+		<div class="page-content">
+			<div class="row">
+				<div class="col-xs-12">
+					<!-- PAGE CONTENT BEGINS -->
+					<div th:if="${message}">
+						<h2 class="alert alert-danger" th:text="${message}" />
+					</div>
+					<div th:if="${successMessage}">
+						<div class="alert alert-success">
+							<button type="button" class="close" data-dismiss="alert">
+								<i class="ace-icon fa fa-times"></i>
+							</button>
+							<strong th:text="${successMessage}">Success!</strong> <br />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="page-header">
+				<h1>
+					<i class="ace-icon fa fa-calendar"></i> Update Daily Report Form
+				</h1>
+			</div>
+			<!-- /.page-header -->
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="col-sm-12 table-responsive">
+					<form th:object="${accountInfo}" method="POST"
+						th:action="@{/bm/accountinfo/update}" id="myform"
+						data-toggle="validator" role="form">
+						<input type="text" name="id" th:value="${accountInfoValById?.id}" readonly class="hide"/>
+						<input type="text" name="lodgedModifiedBy" th:value="${currentUser.email}" readonly class="hide"/>
+						<input id="idLodgedBy" type="text" name="lodgedBy" th:value="${accountInfoValById?.lodgedBy}" readonly class="hide" />
+						<div class="col-xs-12 col-sm-3">
+							<div class="col">
+								<div class="row well">
+									<div class="col">
+										<label for="idBranchName">Branch<small
+											class="red"> *</small></label> <br /> <input
+											class="form-control" id="idBranchName" th:value="${{accountInfoValById?.branchName}}"
+											name="branchName" required readonly/>
+										<div class="space-6"></div>
+										<label for="idRegisteredDate">Registered Date<small
+											class="red"> *</small></label> <br />
+										<div class="input-group">
+											<input id="idRegisteredDate" 
+												name="registeredDate" th:value="${{accountInfoValById?.registeredDate}}" 
+												class="form-control"
+												required readonly/><span
+												class="input-group-addon"> <i
+												class="fa fa-calendar bigger-110"></i>
+											</span>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col">
+										<div class="widget-box">
+											<div class="widget-header"
+												style="background-color: #0D4FA7;">
+												<h5 class="widget-title">Call / Visit Summary</h5>
+											</div>
+
+											<div class="widget-body"
+												style="background-color: #F5F5F5;">
+												<div class="widget-main ">
+													<div class="input-group">
+														<label class="col-sm-9" for="idNoOfCust">Number of Customer:<small
+																		class="red"> *</small>
+															&nbsp;</label> <input type="number" placeholder="0" name="visitCustNo"
+															onblur="this.parentNode.parentNode.style.backgroundColor=/^[0-9]+$/.test(this.value)?'inherit':'red'" 
+															min="0" step="any" id="idNoOfCust" th:value="${#numbers.formatDecimal(accountInfoValById?.visitCustNo, 1, 0)}"
+															class="col-sm-3 pull-right" pattern="^[0-9]+$" required>
+													</div>
+													<div class="space-6"></div>
+													<label class="control-label block" for="idvisitDetails">Details<small
+																		class="red"> *</small>
+													</label>
+													<textarea rows="12" name="visitDetails" id="idvisitDetails" required
+														placeholder="Mention Call/Visit summary details here!"
+														th:value="${accountInfoValById?.visitDetails}" th:text="${accountInfoValById?.visitDetails}"
+														class="form-control"></textarea>
+												</div>
+											</div>
+										</div>
+										
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-12 col-sm-9">
+							<table
+								class="table table-striped table-bordered table-hover"
+								aria-hidden="true">
+								<thead>
+									<tr>
+										<th width="25%" class="text-center">Account Category</th>
+										<th class="text-center" width="10%" >Total Count<small
+																		class="red"> *</small></th>
+										<th class="text-center" width="15%" >Total Amount (Rs.)<small
+																		class="red"> *</small></th>
+										<th class="text-center" width="35%">Remarks</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr >
+										<td class="bolder">
+											Current Account (Natural)<small class="red"> *</small>
+											</td>
+										<td class="form-group"><input type="number" class="form-control"
+											name="currentAccNatural" th:value="${#numbers.formatDecimal(accountInfoValById?.currentAccNatural, 1, 0)}" required/>
+											</td>
+										<td class="form-group"><input
+											type="number" placeholder="0.00" th:value ="${#numbers.formatDecimal(accountInfoValById?.currentAccNaturalAmount, 1,  2)}"
+											min="0" step="any" pattern="^\d+(?:\.\d{1,2})?$" 
+											onblur="this.parentNode.parentNode.style.backgroundColor=/^\d+(?:\.\d{1,2})?$/.test(this.value)?'inherit':'#f28c0e14'"
+											name='currentAccNaturalAmount' class="form-control" required />
+											</td>
+										<td ><textarea  rows="1" th:value="${accountInfoValById?.currentAccNaturalRemakrs}" th:text="${accountInfoValById?.currentAccNaturalRemakrs}"
+												name="currentAccNaturalRemakrs" placeholder="Description"
+												class="form-control"></textarea></td>
+									</tr>
+									<tr>
+										<td class="bolder">
+											Current/Call Account (Institutional)<small class="red"> *</small>
+											</td>
+										<td class="form-group"><input type="number" class="form-control"
+											name="currentCallAccInstitutional" th:value="${#numbers.formatDecimal(accountInfoValById?.currentCallAccInstitutional, 1, 0)}" required/>
+											</td>
+										<td class="form-group"><input
+											type="number" placeholder="0.00"
+											min="0" step="any" pattern="^\d+(?:\.\d{1,2})?$" th:value="${accountInfoValById?.currentCallAccInstitutionalAmount}"
+											onblur="this.parentNode.parentNode.style.backgroundColor=/^\d+(?:\.\d{1,2})?$/.test(this.value)?'inherit':'red'"
+											name='currentCallAccInstitutionalAmount' class="form-control" required />
+											</td>
+										<td><textarea rows="1" th:value="${accountInfoValById?.currentCallAccInstitutionalRemarks}" th:text="${accountInfoValById?.currentCallAccInstitutionalRemarks}"
+												name="currentCallAccInstitutionalRemarks" placeholder="Description"
+												class="form-control"></textarea></td>
+									</tr>
+									<tr >
+										<td class="bolder"> 
+											Savings Account <small class="red">
+												*</small></td>
+										<td class="form-group"><input type="number" class="form-control"
+											name="savingAcc" th:value="${#numbers.formatDecimal(accountInfoValById?.savingAcc, 1, 0)}" required/> 
+											</td>
+										<td class="form-group"><input
+											type="number" placeholder="0.00" min="0" step="any"
+											pattern="^\d+(?:\.\d{1,2})?$" th:value="${#numbers.formatDecimal(accountInfoValById?.savingAccAmount, 1, 2)}"
+											onblur="this.parentNode.parentNode.style.backgroundColor=/^\d+(?:\.\d{1,2})?$/.test(this.value)?'inherit':'#f28c0e14'"
+											name='savingAccAmount' class="form-control" required />
+											</td>
+										<td><textarea rows="1" th:value="${accountInfoValById?.savingAccRemarks}" th:text="${accountInfoValById?.savingAccRemarks}"
+												name="savingAccRemarks" placeholder="Description"
+												class="form-control"></textarea></td>
+									</tr>
+									<tr>
+										<td class="bolder">
+											FD Account<small class="red"> *</small></td>
+										<td class="form-group"><input type="number" th:value="${#numbers.formatDecimal(accountInfoValById?.fdAcc, 1, 0)}" required class="form-control"
+											name="fdAcc"/>
+											</td>
+										<td class="form-group"><input
+											type="number" placeholder="0.00" min="0" step="any"
+											pattern="^\d+(?:\.\d{1,2})?$" th:value="${#numbers.formatDecimal(accountInfoValById?.fdAccAmount, 1, 2)}" 
+											onblur="this.parentNode.parentNode.style.backgroundColor=/^\d+(?:\.\d{1,2})?$/.test(this.value)?'inherit':'#f28c0e14'"
+											name='fdAccAmount' class="form-control" required />
+											</td>
+										<td ><textarea rows="1" th:value="${accountInfoValById?.fdAccRemarks}" th:text="${accountInfoValById?.fdAccRemarks}"
+												name="fdAccRemarks" placeholder="Description"
+												class="form-control"></textarea></td>
+									</tr>
+									<tr>
+										<td class="bolder">
+											Term Loan Account<small class="red"> *</small></td>
+										<td class="form-group"><input type="number" th:value="${#numbers.formatDecimal(accountInfoValById?.termLoanAcc, 1, 0)}" required class="form-control"
+											name="termLoanAcc"/>
+											</td>
+										<td class="form-group"><input
+											type="number" placeholder="0.00" min="0" step="any"
+											pattern="^\d+(?:\.\d{1,2})?$" th:value="${#numbers.formatDecimal(accountInfoValById?.termLoanAccAmount, 1, 2)}"
+											onblur="this.parentNode.parentNode.style.backgroundColor=/^\d+(?:\.\d{1,2})?$/.test(this.value)?'inherit':'#f28c0e14'"
+											name='termLoanAccAmount' class="form-control" required />
+											</td>
+										<td ><textarea rows="1" th:value="${accountInfoValById?.termLoanAccRemarks}" th:text="${accountInfoValById?.termLoanAccRemarks}"
+												name="termLoanAccRemarks" placeholder="Description"
+												class="form-control"></textarea></td>
+									</tr>
+									<tr>
+										<td class="bolder">
+											WC Loan Account<small class="red"> *</small></td>
+										<td class="form-group"><input type="number"  th:value="${#numbers.formatDecimal(accountInfoValById?.wcLoanAcc, 1, 0)}" required class="form-control"
+											name="wcLoanAcc"/>
+											</td>
+										<td class="form-group"><input
+											type="number" placeholder="0.00" min="0" step="any"
+											pattern="^\d+(?:\.\d{1,2})?$" th:value="${#numbers.formatDecimal(accountInfoValById?.wcLoanAccAmount, 1, 2)}" 
+											onblur="this.parentNode.parentNode.style.backgroundColor=/^\d+(?:\.\d{1,2})?$/.test(this.value)?'inherit':'#f28c0e14'"
+											name='wcLoanAccAmount' class="form-control" required />
+											</td>
+										<td><textarea rows="1" th:value="${accountInfoValById?.wcLoanAccRemarks}" th:text="${accountInfoValById?.wcLoanAccRemarks}"
+												name="wcLoanAccRemarks" placeholder="Description"
+												class="form-control"></textarea></td>
+									</tr>
+									<tr>
+										<td class="bolder">
+											OD Loan Account<small class="red"> *</small></td>
+										<td class="form-group"><input type="number" th:value="${#numbers.formatDecimal(accountInfoValById?.odLoanAcc, 1, 0)}" required class="form-control"
+											name="odLoanAcc"/>
+											</td>
+										<td class="form-group"><input
+											type="number" placeholder="0.00" min="0" step="any" th:value="${#numbers.formatDecimal(accountInfoValById?.odLoanAccAmount, 1, 2)}" 
+											pattern="^\d+(?:\.\d{1,2})?$"
+											onblur="this.parentNode.parentNode.style.backgroundColor=/^\d+(?:\.\d{1,2})?$/.test(this.value)?'inherit':'#f28c0e14'"
+											name='odLoanAccAmount' class="form-control" required />
+											</td>
+										<td><textarea rows="1" th:value="${accountInfoValById?.odLoanAccRemarks}" th:text="${accountInfoValById?.odLoanAccRemarks}"
+												name="odLoanAccRemarks" placeholder="Description"
+												class="form-control"></textarea></td>
+									</tr>
+									<tr>
+										<td class="bolder">
+											Mobile Banking<small class="red"> *</small></td>
+										<td class="form-group"><input type="number" th:value="${#numbers.formatDecimal(accountInfoValById?.mobileBanking, 1, 0)}" required class="form-control"
+											name="mobileBanking"/>
+											</td>
+										<td colspan="2"><textarea rows="1" th:value="${accountInfoValById?.mobileBankingRemarks}" th:text="${accountInfoValById?.mobileBankingRemarks}"
+												name="mobileBankingRemarks" placeholder="Description"
+												class="form-control"></textarea></td>
+									</tr>
+									<tr>
+										<td class="bolder">
+											ATM <small class="red"> *</small></td>
+										<td class="form-group"><input type="number" th:value="${#numbers.formatDecimal(accountInfoValById?.atm, 1, 0)}" required class="form-control"
+											name="atm" />
+											</td>
+										<td colspan="2"><textarea rows="1" th:value="${accountInfoValById?.atmRemarks}" th:text="${accountInfoValById?.atmRemarks}"
+												name="atmRemarks" placeholder="Description"
+												class="form-control"></textarea></td>
+									</tr>
+									<tr>
+										<td class="bolder">
+											Internet Banking<small class="red"> *</small></td>
+										<td class="form-group"><input type="number" th:value="${#numbers.formatDecimal(accountInfoValById?.iBanking, 1, 0)}"  required class="form-control"
+											name="iBanking"/>
+											</td>
+										<td colspan="2"><textarea rows="1" th:value="${accountInfoValById?.iBankingRemarks}" th:text="${accountInfoValById?.iBankingRemarks}"
+												name="iBankingRemarks" placeholder="Description"
+												class="form-control"></textarea></td>
+									</tr>
+									<tr>
+										<td class="bolder">
+											QR Code<small class="red"> *</small></td>
+										<td class="form-group"><input type="number" th:value="${#numbers.formatDecimal(accountInfoValById?.qrCode, 1, 0)}"  required class="form-control"
+											name="qrCode"/>
+											</td>
+										<td colspan="2"><textarea rows="1" th:value="${accountInfoValById?.qrCodeRemarks}" th:text="${accountInfoValById?.qrCodeRemarks}"
+												name="qrCodeRemarks" placeholder="Description"
+												class="form-control"></textarea></td>
+									</tr>
+									<tr class="hr hr-dotted hr-8"></tr>
+									<tr>
+										<td class="bolder">Loan Repayments<small
+											class="red"> *</small></td>
+										<td class="form-group"><input type="number" th:value="${#numbers.formatDecimal(accountInfoValById?.loanRepayments, 1, 0)}"
+											name="loanRepayments" required/>
+										</td>
+											<td class="form-group"><input type="number"
+											placeholder="0.00" min="0" step="any"
+											pattern="^\d+(?:\.\d{1,2})?$" th:value="${#numbers.formatDecimal(accountInfoValById?.loanRepaymentsAmount, 1, 0)}"
+											onblur="this.parentNode.parentNode.style.backgroundColor=/^\d+(?:\.\d{1,2})?$/.test(this.value)?'inherit':'#f28c0e14'"
+											name='loanRepaymentsAmount' class="form-control" required />
+										</td>
+										<td ><textarea rows="1" name="loanRepaymentsRemarks" th:value="${accountInfoValById?.loanRepaymentsRemarks}" th:text="${accountInfoValById?.loanRepaymentsRemarks}" 
+												placeholder="Description" class="form-control"></textarea></td>
+									</tr>
+								</tbody>
+							</table>
+							<div class="clearfix form-actions">
+								<div class="col-md-offset-4 col-md-8">
+									<button class="btn btn-success" type="submit"
+										id="submit" value="Upload">
+										<i class="ace-icon fa fa-check bigger-110"></i>
+										Submit
+									</button>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+				</div>
+			</div>
+		</div>
+	</div>                     
+<!-- basic scripts -->
+	<th:block layout:fragment="scripts">
+
+	<script>
+			autosize(document.querySelectorAll('textarea'));
+	</script>
+
+
+	</th:block>
+</body>
+</html>

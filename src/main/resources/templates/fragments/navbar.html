@@ -1,0 +1,42 @@
+<div id="sidebar" class="sidebar responsive ace-save-state" th:fragment="navbar">
+	<script type="text/javascript">
+		try {ace.settings.loadState('sidebar')} catch (e) { }
+	</script>
+	<ul sec:authorize="isAuthenticated()" class="nav nav-list">
+
+		<li class="active">
+			<a th:href="@{/dashboard}">
+				<i class="menu-icon fa fa-desktop"></i>
+				<span class="menu-text"> Dashboard </span>
+			</a>
+			<b class="arrow"></b>
+		</li>
+
+		<li class="" sec:authorize="hasAuthority('ADMIN')">
+			<a th:href="@{/addsports}">
+				<i class="menu-icon fa fa-object-group"></i>
+				<span class="menu-text"> Add Sports Name </span>
+			</a>
+			<b class="arrow"></b>
+		</li>
+
+		<li class="" sec:authorize="hasAuthority('ADMIN')">
+			<a th:href="@{/admin/register}">
+				<i class="menu-icon fa fa-user-plus"></i>
+				<span class="menu-text"> Add User </span>
+			</a>
+			<b class="arrow"></b>
+		</li>
+		<li class="" sec:authorize="hasAnyAuthority('ADMIN')">
+			<a th:href="@{/admin/userlist}">
+				<i class="menu-icon fa fa-th-list"></i>
+				<span class="menu-text"> Users List </span>
+			</a>
+			<b class="arrow"></b>
+		</li>
+	</ul><!-- /.nav-list -->
+	<div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
+		<i id="sidebar-toggle-icon" class="ace-icon fa fa-angle-double-left ace-save-state"
+			data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
+	</div>
+</div>

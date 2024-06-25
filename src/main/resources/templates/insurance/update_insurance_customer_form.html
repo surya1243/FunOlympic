@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layouts/default}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
+    <title>Update Insurance Customer</title>
+</head>
+<body>
+<div>
+    <div class="main-container">
+        <div class="main-content">
+            <div class="page-content" layout:fragment="content">
+                <div class="page-header">
+                    <h1>
+                        <i class="ace-icon fa fa-users blue"></i>
+                        Update Insurance Customer
+                    </h1>
+                </div><!-- /.page-header -->
+                <div class="row">
+                    <div th:if="${message}">
+                        <h2 class="alert alert-danger" th:text="${message}"/>
+                    </div>
+                    <div class="position-relative">
+                        <div class="signup-box visible widget-box no-border">
+                            <div class="widget-body">
+                                <div class="widget-main">
+                                    <form data-toggle="validator" method="POST" role="form"
+                                          th:action="@{/updateinsCust}" th:object="${insuranceCustomer}">
+                                          <input type="hidden" name="id" th:value="${insCustomerValue.id}"/>
+                                          
+                                        <div class="col-sm-4 col-sm-offset-1">
+														<div class="form-group">
+															<label class="block clearfix" for="idClientCode">Client
+																Code</label> <input type="number" class="form-control"
+																name="clientCode" id="idClientCode" data-minlength="8"
+																pattern="/^[0-9]{8}$/" th:value="${insCustomerValue.clientCode}"
+																onblur="this.parentNode.style.backgroundColor=/^[0-9]{8}$/.test(this.value)?'inherit':'orange'"
+																data-error="Please fill 8 digit Client Code."
+																placeholder="Enter Client Code (8 digits)" required/>
+															<div class="help-block with-errors"></div>
+														</div>
+                                                <div class="form-group">
+                                                    <label class="block clearfix" for="nameAcc">Bank Acoount
+                                                        Number</label>
+                                                    <span class="block input-icon input-icon-right">
+				                      <input class="form-control" th:value="${insCustomerValue.bankAccNo}"
+                                             id="nameAcc" name="bankAccNo" type="number"
+                                             data-minlength="20" pattern="/^[0-9]{20}$/"
+											onblur="this.parentNode.parentNode.style.backgroundColor=/^[0-9]{20}$/.test(this.value)?'inherit':'orange'"
+											placeholder="Enter Account Number (20 digits)"
+											data-error="Please fill 20 digit Account No. field." required/>
+						               </span>
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="block clearfix" for="inputCName">Client Name</label>
+                                                    <span class="block input-icon input-icon-right">
+					                      <input class="form-control" data-error="Please enter name field."
+                                                 id="inputCName" name="clientName" th:value="${insCustomerValue.clientName}"
+                                                 placeholder="Client Name" required type="text"/>
+						                    </span>
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="block clearfix" for="inputEmail">Email</label>
+                                                    <span class="block input-icon input-icon-right">
+					                    <input class="form-control" id="inputEmail" name="clientEmail" placeholder="Email"
+                                              th:value="${insCustomerValue.clientEmail}" required type="email"/>
+					                    </span>
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="block clearfix" for="inputFatherName">Father's
+                                                        Name</label>
+                                                    <span class="block input-icon input-icon-right">
+					                      <input class="form-control" data-error="Please enter father name field."
+                                                 id="inputFatherName" name="fatherName" th:value="${insCustomerValue.fatherName}"
+                                                 placeholder="Father's Name" required type="text"/>
+						                    </span>
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="block clearfix" for="grandFName">Grand Father's
+                                                        Name</label>
+                                                    <span class="block input-icon input-icon-right">
+					                      <input class="form-control" data-error="Please enter name field."
+                                                 id="grandFName" name="grandFatherName" th:value="${insCustomerValue.grandFatherName}"
+                                                 placeholder="Grand Father's Name" required type="text"/>
+						                    </span>
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+
+
+
+                                        </div>
+
+                                        <div class="col-sm-4 col-sm-offset-1">
+                                            <fieldset>
+                                                <div class="form-group">
+                                                    <label class="block clearfix" for="inputMobile">Mobile
+                                                        Number</label>
+                                                    <span class="block input-icon input-icon-right">
+					                      <input class="form-control" data-error="Please enter valid mobile number field."
+                                                 id="inputMobile" name="clientMobile" pattern="/^[0-9]{10}$/"
+                                                 title="Mobile number" onblur="this.parentNode.parentNode.style.backgroundColor=/^[0-9]{10}$/.test(this.value)?'inherit':'orange'"
+                                                 th:value="${insCustomerValue.clientMobile}" placeholder="Mobile Number" required type="number"/>
+						                    </span>
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="block clearfix" for="tel">Telephone Number <small class="text-danger">999-999999</small></label>
+                                                    <span class="block input-icon input-icon-right">
+				                      <input class="form-control input-mask-phone" th:value="${insCustomerValue.clientTel}"
+                                             id="tel" name="clientTel" pattern="^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$" 
+                                              onblur="this.parentNode.parentNode.style.backgroundColor=/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/.test(this.value)?'inherit':'orange'"
+                                              data-error="Please enter valid telephone number field." placeholder="Telephone Number" type="text"/>
+						               </span>
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="block clearfix" for="cAddress">Current Address</label>
+                                                    <span class="block input-icon input-icon-right">
+					                    <input class="form-control" data-error="Please enter current address field." id="cAddress" name="cCurrentAddress"
+                                               placeholder="Current Address" th:value="${insCustomerValue.cCurrentAddress}"
+                                               type="text" required/>
+					                    </span>
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="block clearfix" for="pAddress">Permanent
+                                                        Address</label>
+                                                    <span class="block input-icon input-icon-right">
+									         <input class="form-control" data-minlength="5" data-error="must enter minimum of 5 characters" id="pAddress"
+                                                    name="cPermanentAddress" placeholder="Permanent Address" th:value="${insCustomerValue.cPermanentAddress}"
+                                                    required type="text">
+					                   			 </span>
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="block clearfix" for="inputCitz">Citizenship/ID
+                                                        Number</label>
+                                                    <span class="block input-icon input-icon-right">
+									        <input class="form-control" id="inputCitz" name="citizenIdNo" placeholder="Citizenship or ID Number"
+                                                   th:value="${insCustomerValue.citizenIdNo}" required type="text">
+					                    </span>
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="block clearfix" for="idRemark">ID-Remarks</label>
+                                                    <span class="block input-icon input-icon-right">
+					                      <input class="form-control" data-error="Please enter remarks field."
+                                                 id="idRemark" name="cIdRemarks" th:value="${insCustomerValue.cIdRemarks}"
+                                                 placeholder="ID-Remarks" type="text"/>
+					                    </span>
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+
+                                                <div class="space-10"></div>
+
+                                                <div class="clearfix">
+                                                    <button class="width-30 pull-left btn btn-sm" type="reset">
+                                                        <i class="ace-icon fa fa-refresh"></i> <span
+                                                            class="bigger-110">Reset</span>
+                                                    </button>
+
+                                                    <button class="width-65 pull-right btn btn-sm btn-success"
+                                                            type="submit">
+                                                        <span class="bigger-110">Register</span> <i
+                                                            class="ace-icon fa fa-arrow-right icon-on-right"></i>
+                                                    </button>
+                                                </div>
+                                            </fieldset>
+                                            </div>
+                                    </form>
+                                </div>
+                            </div><!-- /.widget-body -->
+                        </div><!-- /.signup-box -->
+                    </div><!-- /.position-relative -->
+                </div><!-- /.widget-body -->
+            </div><!-- /.signup-box -->
+        </div><!-- /.position-relative -->
+
+    </div>
+</div><!-- /.col -->
+</div><!-- /.col -->
+
+<th:block layout:fragment="scripts">
+	<script src="../static/js/jquery.maskedinput.min.js" th:src="@{/js/jquery.maskedinput.min.js/}"></script>
+	<script>
+		$.mask.definitions['~']='[+-]';
+		$('.input-mask-phone').mask('999-999999');	
+	</script>
+</th:block>
+
+</body>
+</html>

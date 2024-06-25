@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{branchmanager/bm_layout/bm_default}">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta charset="utf-8" />
+<title>GFP Detail Page</title>
+
+<th:block layout:fragment="styles">
+	<link rel="stylesheet" href="../static/css/summernote.css"
+		th:href="@{/css/summernote.css}" />
+</th:block>
+</head>
+<body>
+	<div layout:fragment="content">
+		<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+			<ul class="breadcrumb">
+				<li><i class="ace-icon fa fa-home home-icon"></i> <a href="#">Home</a>
+				</li>
+				<li><a th:href="@{/bm/gfplist}">GFP's Record List</a></li>
+				<li class="active">GFP's Record Reports</li>
+			</ul>
+			<!-- /.breadcrumb -->
+		</div>
+		<div class="page-header">
+			<h1>
+				<i class="ace-icon fa fa-bullhorn"></i> Good For Payment details
+			</h1>
+		</div>
+		<!-- /.page-header -->
+		<div th:if="${message}">
+			<h2 class="alert alert-danger" th:text="${message}" />
+		</div>
+		<div class="page-content">
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="col-xs-6 col-sm-2">
+						<button class="btn btn-app btn-pink btn-xs" id="btnPrint"
+							title="Print Customer's Feedback!!!">
+							<i class="ace-icon fa fa-print bigger-160"></i> Print
+						</button>
+					</div>
+
+					<div class="col-xs-12 col-sm-6 user-profile">
+						<div class="profile-user-info profile-user-info-striped">
+							<div class="profile-info-row">
+								<div class="profile-info-name">Issue Date</div>
+								<div class="profile-info-value form-group">
+									<span th:text="${{gfpDetailValue?.issueDate}}"></span>
+								</div>
+							</div>
+							<div class="profile-info-row">
+								<div class="profile-info-name">Issued Branch</div>
+								<div class="profile-info-value form-group">
+									<span th:text="${gfpDetailValue?.branchName}"></span>
+								</div>
+							</div>
+							<div class="profile-info-row">
+								<div class="profile-info-name">Cheque Date</div>
+								<div class="profile-info-value form-group">
+									<span th:text="${{gfpDetailValue?.chequeDate}}"></span>
+								</div>
+							</div>
+							<div class="profile-info-row">
+								<div class="profile-info-name">Party's Name</div>
+								<div class="profile-info-value form-group">
+									<span th:text="${gfpDetailValue?.partiesName}"></span>
+								</div>
+							</div>
+							<div class="profile-info-row">
+								<div class="profile-info-name">Account Number</div>
+								<div class="profile-info-value form-group">
+									<span th:text="${gfpDetailValue?.accountNumber}"></span>
+								</div>
+							</div>
+							<div class="profile-info-row">
+								<div class="profile-info-name">Account Holder's Name</div>
+								<div class="profile-info-value form-group">
+									<span th:text="${gfpDetailValue?.accountHolderName}"></span>
+								</div>
+							</div>
+							<div class="profile-info-row">
+								<div class="profile-info-name">Amount (Rs.)</div>
+								<div class="profile-info-value form-group">
+									<span th:text="${#numbers.formatDecimal(gfpDetailValue?.amount, 1, 'COMMA', 2, 'POINT')}"
+									></span>
+								</div>
+							</div>
+							<div class="profile-info-row">
+								<div class="profile-info-name">Purpose of Payment</div>
+								<div class="profile-info-value form-group">
+									<span th:text="${gfpDetailValue?.purposeOfPayment}"></span>
+								</div>
+							</div>
+							<div class="profile-info-row">
+								<div class="profile-info-name">System Input By</div>
+								<div class="profile-info-value form-group">
+									<span th:text="${gfpDetailValue?.systemInputBy}"></span>
+								</div>
+							</div>
+							<div class="profile-info-row">
+								<div class="profile-info-name">System Approved By</div>
+								<div class="profile-info-value form-group">
+									<span th:text="${gfpDetailValue?.systemApprovedBy}"></span>
+								</div>
+							</div>
+							<div class="profile-info-row">
+								<div class="profile-info-name">GFP Status</div>
+								<div class="profile-info-value form-group">
+									<span class="center" th:switch="${gfpDetailValue?.gfpStatus}">
+										<span class="label label-success arrowed-in arrowed-in-right"
+										th:case="'Active'"> Active </span> <span
+										class="label label-sm label-info" th:case="'Paid'">
+											Paid </span> <span class="label label-sm label-danger"
+										th:case="'Cancel'"> Cancelled </span>
+									</span>
+								</div>
+							</div>
+							<div class="profile-info-row"
+								th:if="${gfpDetailValue?.paidCancelDate}">
+								<div class="profile-info-name">Paid/Cancel Date</div>
+								<div class="profile-info-value form-group">
+									<span th:text="${{gfpDetailValue?.paidCancelDate}}"></span>
+								</div>
+							</div>
+							<div class="profile-info-row"
+								th:if="${gfpDetailValue?.gfpLodgedBy}">
+								<div class="profile-info-name">GFP Record Lodged By</div>
+								<div class="profile-info-value form-group">
+									<span th:text="${{gfpDetailValue?.gfpLodgedBy}}"></span>
+								</div>
+							</div>
+							<div class="profile-info-row"
+								th:if="${gfpDetailValue?.gfpLodgedModifiedBy}">
+								<div class="profile-info-name">GFP Record Modified By</div>
+								<div class="profile-info-value form-group">
+									<span th:text="${{gfpDetailValue?.gfpLodgedModifiedBy}}"></span>
+								</div>
+							</div>							
+						</div>
+					</div>
+					<div class="col-sm-3" sec:authorize="hasAnyAuthority('BM')">
+						<a th:href="@{/bm/updategfpdata/{id}(id=${gfpDetailValue?.id})}"
+							class="btn btn-md btn-success no-border btn-round">Update
+							GFP's Record Details </a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block layout:fragment="scripts">
+		<script>
+			$('#btnPrint').on("click", function() {
+				$('.page-header,.user-profile').printThis();
+			});
+		</script>
+	</th:block>
+</body>
+</html>

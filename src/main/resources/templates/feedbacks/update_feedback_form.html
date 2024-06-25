@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:th="http://www.w3.org/1999/xhtml"
+	layout:decorate="~{layouts/default}">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta charset="utf-8" />
+<title>Update Feedback Page</title>
+<th:block layout:fragment="styles">
+	<style>
+.checked {
+	color: gold;
+}
+</style>
+</th:block>
+</head>
+<body>
+	<div layout:fragment="content">
+		<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+			<ul class="breadcrumb">
+				<li><i class="ace-icon fa fa-home home-icon"></i> <a href="#">Home</a>
+				</li>
+				<li><a href="/editfeedbackdata">Feedback</a></li>
+				<li class="active">Update Feedback Form</li>
+			</ul>
+			<!-- /.breadcrumb -->
+		</div>
+
+		<div class="page-content">
+			<div class="row">
+				<div class="col-xs-12">
+					<!-- PAGE CONTENT BEGINS -->
+					<div th:if="${message}">
+						<h2 class="alert alert-danger" th:text="${message}" />
+					</div>
+					<div th:if="${successMessage}">
+						<div class="alert alert-success">
+							<button type="button" class="close" data-dismiss="alert">
+								<i class="ace-icon fa fa-times"></i>
+							</button>
+							<strong th:text="${successMessage}">Success!</strong> <br />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="page-header">
+				<h1>
+					<i class="ace-icon fa fa-comments"></i> Update Customer Feedback Form
+				</h1>
+			</div>
+			<!-- /.page-header -->
+			<div class="page-content">
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="position-relative">
+						<div class="signup-box visible widget-box no-border">
+							<div class="widget-body">
+								<div class="widget-main">
+									<form method="POST" th:object="${feedback}"
+										modelAttribute="feedback" autocomplete="off"
+										th:action="@{/editfeedbackdata}" data-toggle="validator"
+										role="form">
+										<input type="hidden" th:value="${feedbackValue?.id}" name="id" />
+
+										<div class="row">
+											<div class="col-xs-12 col-sm-4">
+												<div class="form-group">
+													<label class="block clearfix" for="idClientCode">Client
+														Code</label> <input type="number" class="form-control"
+														name="clientCode" id="idClientCode"
+														th:value="${feedbackValue.clientCode}" readonly required />
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+											<div class="col-xs-12 col-sm-4">
+												<div class="form-group">
+													<label class="block clearfix" for="idCustName">Customer
+														Name</label> <input type="text" class="form-control"
+														name="custName" id="idCustName"
+														style="text-transform: uppercase;" 
+                                               			onkeyup="this.value = this.value.toUpperCase();"
+														placeholder="Enter Customer Name"
+														th:value="${feedbackValue.custName}"
+														data-error="Please fill Customer name field." required />
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+											<div class="col-xs-12 col-sm-4">
+												<div class="form-group">
+													<label class="block clearfix" for="idAccountNumber">Account
+														Number(s)</label> <input type="number" class="form-control"
+														name="accountNumber" id="idAccountNumber"
+														th:value="${feedbackValue.accountNumber}" readonly />
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-xs-12 col-sm-4">
+												<div class="form-group">
+													<label class="block clearfix" for="idMobileNumber">Mobile
+														Number</label> <input type="text" class="form-control"
+														name="mobileNumber" id="idMobileNumber"
+														placeholder="Enter Mobile Number"
+														th:value="${feedbackValue.mobileNumber}"
+														data-error="Please fill Mobile Number field." />
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+											<div class="col-xs-12 col-sm-4">
+												<div class="form-group">
+													<label class="block clearfix" for="idTelephoneNumber">Telephone
+														Number</label> <input type="text" class="form-control"
+														name="telNumber" id="idTelephoneNumber"
+														th:value="${feedbackValue.telNumber}"
+														placeholder="Telephone Number">
+												</div>
+											</div>
+											<div class="col-xs-12 col-sm-4">
+												<div class="form-group">
+													<label class="block clearfix" for="idTypeOfService">
+														Type of Service Taken <span
+														th:text="${feedbackValue.typeOfService}"
+														class="label label-info"></span>
+													</label> <select class="chosen-select col-xs-10 col-sm-12"
+														id="idCategory" name="typeOfService"
+														data-placeholder="Choose type of service..." required>
+														<option value="Deposit">Deposit</option>
+														<option value="Loan">Loan</option>
+														<option value="Deposit & Loan">Deposit & Loan</option>
+														<option value="Locker">Locker</option>
+														<option value="Mobile Banking">Mobile Banking</option>
+														<option value="ATM">ATM</option>
+														<option value="CASBA">CASBA</option>
+														<option value="Remittance">Remittance</option>
+														<option value="Other">Other</option>
+													</select>
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+											
+										</div>
+										<div class="row">
+											<div class="col-xs-12 col-sm-4">
+												<div class="form-group">
+													<label class="block clearfix" for="idAccountType">Product/Service Details
+														</label> <input type="text" class="form-control"
+														name="accountType" id="idAccountType"
+														placeholder="Enter Account Type"
+														th:value="${feedbackValue.accountType}"
+														data-error="Please fill Product/Service
+															Details." required />
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+											<div class="col-xs-12 col-sm-4">
+												<div class="form-group">
+													<label class="block clearfix" for="idTimeTaken">Time
+														Take for Service</label> <input type="text" class="form-control"
+														name="timeTakenForService" id="idTimeTaken"
+														placeholder="Time Taken for Service"
+														th:value="${feedbackValue.timeTakenForService}"
+														data-error="Please fill Time Taken for Service field."
+														required>
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+											<div class="col-xs-12 col-sm-4">
+												<div class="form-group">
+													<label class="block clearfix" for="idBranchName">
+														Branch <span th:text="${feedbackValue.branchName}"
+														class="label label-info"></span>
+													</label> 
+													<select class="chosen-select col-xs-10 col-sm-12"
+														data-placeholder="Choose Branch..." id="branchNameType"
+														name="branchName" required>
+														<option th:each="branch : ${branchNameVal}"
+															th:value="${branch?.branchName}"
+															th:text="${branch?.branchName}"></option>
+													</select>
+												</div>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-xs-12 col-sm-4 ">
+												<div class="form-group">
+													<label class="block clearfix">Rating of Service (By
+														Customer)<small class="red"> *</small><span
+														th:text="${feedbackValue.rating}" class="label label-info"></span>
+													</label>
+													<div class="hr hr-6"></div>
+													<div class="radio">
+														<div class="rating inline">
+															<span class="fa fa-star checked bigger-160"></span> <span
+																class="star-off-png bigger-160"></span> <span
+																class="star-off-png bigger-160"></span> <span
+																class="star-off-png bigger-160"></span> <span
+																class="star-off-png bigger-160"></span> <span
+																class="star-off-png bigger-160"></span>
+														</div>
+														<label> <input name="newRating" value="Worst"
+															type="radio" class="ace input-lg" /> <span class="lbl">
+																Worst </span>
+														</label>
+													</div>
+													<div class="radio">
+														<div class="rating inline">
+															<span class="fa fa-star checked bigger-160"></span> <span
+																class="fa fa-star checked bigger-160"></span> <span
+																class="star-off-png bigger-160"></span> <span
+																class="star-off-png bigger-160"></span> <span
+																class="star-off-png bigger-160"></span> <span
+																class="star-off-png bigger-160"></span>
+														</div>
+														<label> <input name="newRating" value="Poor"
+															type="radio" class="ace input-lg" /> <span class="lbl">
+																Poor </span>
+														</label>
+													</div>
+													<div class="radio">
+														<div class="rating inline">
+															<span class="fa fa-star checked bigger-160"></span> <span
+																class="fa fa-star checked bigger-160"></span> <span
+																class="fa fa-star checked bigger-160"></span> <span
+																class="star-off-png bigger-160"></span> <span
+																class="star-off-png bigger-160"></span> <span
+																class="star-off-png bigger-160"></span>
+														</div>
+														<label> <input name="newRating"
+															value="Needed_Improvement" type="radio"
+															class="ace input-lg" /> <span class="lbl"> Needed
+																Improvement </span>
+														</label>
+													</div>
+													<div class="radio">
+														<div class="rating inline">
+															<span class="fa fa-star checked bigger-160"></span> <span
+																class="fa fa-star checked bigger-160"></span> <span
+																class="fa fa-star checked bigger-160"></span> <span
+																class="fa fa-star checked bigger-160"></span> <span
+																class="star-off-png bigger-160"></span> <span
+																class="star-off-png bigger-160"></span>
+														</div>
+														<label> <input name="newRating"
+															value="Satisfactory" type="radio" class="ace input-lg" />
+															<span class="lbl"> Satisfactory </span>
+														</label>
+													</div>
+													<div class="radio">
+														<div class="rating inline">
+															<span class="fa fa-star checked bigger-160"></span> <span
+																class="fa fa-star checked bigger-160"></span> <span
+																class="fa fa-star checked bigger-160"></span> <span
+																class="fa fa-star checked bigger-160"></span> <span
+																class="fa fa-star checked bigger-160"></span> <span
+																class="star-off-png bigger-160"></span>
+														</div>
+														<label> <input name="newRating" value="Good"
+															type="radio" class="ace input-lg" /> <span class="lbl">
+																Good </span>
+														</label>
+													</div>
+													<div class="radio">
+														<div class="rating inline">
+															<span class="fa fa-star checked bigger-160"></span> <span
+																class="fa fa-star checked bigger-160"></span> <span
+																class="fa fa-star checked bigger-160"></span> <span
+																class="fa fa-star checked bigger-160"></span> <span
+																class="fa fa-star checked bigger-160"></span> <span
+																class="fa fa-star checked bigger-160"></span>
+														</div>
+														<label> <input name="newRating" value="Excellent"
+															type="radio" class="ace input-lg" /> <span class="lbl">
+																Excellent </span>
+														</label>
+													</div>
+												</div>
+											</div>
+											<div class="col-xs-12 col-sm-4">
+												<div class="form-group">
+													<label class="block clearfix" for="idFeedback">Customer's
+														Feedback </label>
+													<textarea name="custFeedback"
+														placeholder="Write customer's feedback here..."
+														class="form-control" maxlength="1200" id="idFeedback"
+														rows="9"
+														data-error="Please fill Customer's Feedback field."
+														th:value="${feedbackValue?.custFeedback}"
+														th:text="${feedbackValue.custFeedback}" required></textarea>
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+											<div class="col-sm-4">
+												<div class="row">
+													<div class="col-xs-12 col-sm-12">
+														<div class="form-group">
+															<label class="block clearfix" for="idFeedbackColBy">Feedback
+																Collected By</label> <input type="text" name="collectedBy"
+																class="form-control" id="idFeedbackColBy"
+																placeholder="Feedback Collected By"
+																style="text-transform: uppercase;" 
+                                               			onkeyup="this.value = this.value.toUpperCase();"
+																th:value="${feedbackValue.collectedBy}"
+																data-error="Please fill Feedback Collected By field."
+																required />
+															<div class="help-block with-errors"></div>
+														</div>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-xs-12 col-sm-12">
+														<div class="form-group">
+															<label class="block clearfix" for="date-timepicker1">Date</label>
+															<div class="input-group">
+																<input id="date-timepicker1" type="text" name="date"
+																	placeholder="Select date and time" class="form-control"
+																	data-date-format="YYYY-MM-DD hh:mm:ss A"
+																	th:value="${{feedbackValue?.date}}"
+																	data-error="Please select Date." required /> <span
+																	class="input-group-addon"> <i
+																	class="fa fa-clock-o bigger-110"></i>
+																</span>
+															</div>
+															<div class="help-block with-errors"></div>
+														</div>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-sm-12">
+														<div class="col-xs-6 col-sm-6">
+															<div class="clearfix">
+																<button class="pull-right btn btn-sm" type="button"
+																	id="reset">
+																	<i class="ace-icon fa fa-refresh"></i> <span
+																		class="bigger-110">Reset</span>
+																</button>
+															</div>
+														</div>
+														<div class="col-xs-6 col-sm-6">
+															<div class="clearfix">
+																<button class="pull-left btn btn-sm btn-success"
+																	type="submit">
+																	<span class="bigger-110">Submit</span> <i
+																		class="ace-icon fa fa-arrow-right icon-on-right"></i>
+																</button>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			</div>
+		</div>
+	</div>
+	<!-- basic scripts -->
+	<th:block layout:fragment="scripts">
+
+		<script th:inline="javascript">
+			/*<![CDATA[*/
+			var categoryVal = /*[[${feedbackValue.typeOfService}]]*/'typeOfService';
+			var branchNameVal = /*[[${feedbackValue.branchName}]]*/'branchName';
+			var ratingVal = /*[[${feedbackValue.rating}]]*/'rating';
+			/*]]>*/
+			function setSelectedIndex(s, v) {
+				for (var i = 0; i < s.options.length; i++) {
+					if (s.options[i].value == v) {
+						s.options[i].selected = true;
+						break;
+					}
+				}
+				return;
+			}
+			setSelectedIndex(document.getElementById('idCategory'), categoryVal);
+			setSelectedIndex(document.getElementById('branchNameType'),
+					branchNameVal);
+
+			$(function() {
+				$("input[name=newRating][value=" + ratingVal + "]").attr(
+						'checked', true);
+
+			});
+		</script>
+
+
+		<script>
+			autosize(document.querySelectorAll('textarea'));
+		</script>
+
+		<script type="text/javascript">
+			$('.chosen-select').chosen();
+			$(window).off('resize.chosen').on('resize.chosen', function() {
+				$('.chosen-select').each(function() {
+					var $this = $(this);
+					$this.next().css({
+						minWidth : '380px'
+					});
+				})
+			}).trigger('resize.chosen');
+		</script>
+
+		<script>
+			if (!ace.vars['old_ie'])
+				$('#date-timepicker1').datetimepicker({
+					//format: 'MM/DD/YYYY h:mm',//use this option to display seconds
+					icons : {
+						time : 'fa fa-clock-o',
+						date : 'fa fa-calendar',
+						up : 'fa fa-chevron-up',
+						down : 'fa fa-chevron-down',
+						previous : 'fa fa-chevron-left',
+						next : 'fa fa-chevron-right',
+						today : 'fa fa-arrows ',
+						clear : 'fa fa-trash',
+						close : 'fa fa-times'
+					}
+				}).next().on(ace.click_event, function() {
+					$(this).prev().focus();
+				});
+		</script>
+	</th:block>
+</body>
+</html>

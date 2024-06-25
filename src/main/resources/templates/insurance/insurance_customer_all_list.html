@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/default}">
+<head>
+<meta charset="ISO-8859-1" />
+<title>Insurance Customer All Reports</title>
+<th:block layout:fragment="styles">
+	  <!-- <link rel="stylesheet" href="../static/css/daterangepicker.min.css" th:href="@{/css/daterangepicker.min.css}" /> -->
+	  
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+</th:block>
+</head>
+<body>
+
+	<div layout:fragment="content">
+		<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+			<ul class="breadcrumb">
+				<li><i class="ace-icon fa fa-home home-icon"></i> <a href="#">Home</a>
+				</li>
+				<li class="active">Insurance Customer All Reports</li>
+			</ul>
+			<!-- /.breadcrumb -->
+		</div>
+
+		<div class="page-content">
+			<div class="row">
+				<div class="col-xs-12">
+					<!-- PAGE CONTENT BEGINS -->
+					<div th:if="${message}">
+						<h2 class="alert alert-danger" th:text="${message}"/>
+					</div>
+					<div th:if="${successMessage}">
+						<div class="alert alert-success">
+							<button type="button" class="close" data-dismiss="alert">
+								<i class="ace-icon fa fa-times"></i>
+							</button>
+							<strong th:text="${successMessage}">Success!</strong> <br />
+						</div>
+					</div>
+				</div>				
+			</div>	
+			<div th:if="${insCustRegisterList != null}" class="row">
+				<div class="col-xs-12">
+					<!-- PAGE CONTENT BEGINS -->
+					<div class="clearfix">
+						<div class="pull-right tableTools-container"></div>
+					</div>
+					<div class="table-header">Report for "Registered Insurance Customer"
+					</div>
+					<div>
+						<table id="dynamic-table"
+							class="table table-striped table-bordered table-hover">
+							<thead>
+								<tr>
+									<th> Client Code </th>
+									<th> Insurance Company </th>
+									<th data-class='hidden'> Company Code </th>
+									<th> Scheme </th>
+									<th data-class='hidden'> Scheme Code </th>
+									<th> Master Policy ID </th>
+									<th> Start Date </th>
+									<th> End Date </th>
+									<th> Insured Amount </th>
+									<th> Installment Amount </th>
+									<th data-class='hidden'> Payment Frequency </th>
+									<th> Status </th>
+									<th> Branch Name </th>
+									<th> Marketed By </th>	
+									<th data-class='hidden'> Remarks </th>								
+								</tr>								
+							</thead>
+							<tbody>
+								<tr th:each="insCustList,row:*{insCustRegisterList}">								
+									<td class="center" th:text="${insCustList?.clientCode}"></td>
+									<td th:text="${insCustList?.insCompanyName}"></td>
+									<td th:text="${insCustList?.insCompanyCode}"></td>
+									<td th:text="${insCustList?.insSchemaName}"></td>
+									<td th:text="${insCustList?.insSchemaCode}"></td>
+									<td class="center" th:text="${insCustList?.masterPolicyId}"></td>
+									<td th:text="${{insCustList?.insStartedDate}}"></td>
+									<td th:text="${{insCustList?.insEndDate}}"></td>
+									<td th:text="${insCustList?.insuredAmount}"></td>
+									<td th:text="${insCustList?.insInstallmentAmount}"></td>
+									<td th:text="${insCustList?.insPaymentFrequency}"></td>
+									<td class="center">
+										<span class="label label-success arrowed-in arrowed-in-right" th:if="${insCustList?.insStatus == 'Open'}">Open</span>
+									    <span class="label label-sm label-warning" th:unless="${insCustList?.insStatus == 'Open'}">Closed</span>
+								    </td>
+									<td th:text="${insCustList?.bankBranchName}"></td>
+									<td th:text="${insCustList?.insMarketedBy}"></td>
+									<td th:text="${insCustList?.remarks}"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					
+					<!-- PAGE CONTENT ENDS -->
+				</div>
+				<!-- /.col -->
+			</div>		
+		</div>
+		<!-- /.content -->
+	</div>
+	<!-- /.main-content -->
+
+	<th:block layout:fragment="scripts">		
+	
+		<script src="../static/js/jquery.dataTables.min.js"	th:src="@{/js/jquery.dataTables.min.js/}"></script>
+		<script src="../static/js/jquery.dataTables.bootstrap.min.js" th:src="@{/js/jquery.dataTables.bootstrap.min.js/}"></script>
+		<script src="../static/js/dataTables.buttons.min.js" th:src="@{/js/dataTables.buttons.min.js/}"></script>
+		<script src="../static/js/buttons.flash.min.js"	th:src="@{/js/buttons.flash.min.js/}"></script>
+		<script src="../static/js/buttons.html5.min.js"	th:src="@{/js/buttons.html5.min.js/}"></script>
+		<script src="../static/js/buttons.print.min.js"	th:src="@{/js/buttons.print.min.js/}"></script>
+		<script src="../static/js/dataTables.select.min.js"	th:src="@{/js/dataTables.select.min.js/}"></script>
+		<script type="text/javascript">
+			jQuery(function($) {
+				//initiate dataTables plugin
+				var myTable = 
+				$('#dynamic-table')
+				.DataTable( {
+					bAutoWidth: false,
+					"aoColumns": [					 
+					  null, null,null, null,null, null,null, null,null, null,null, null,null, null,
+					  { "bSortable": false }
+					],
+					"aaSorting": [ 12, "asc" ]				
+			});
+				$.fn.dataTable.Buttons.defaults.dom.container.className = 'dt-buttons btn-overlap btn-group btn-overlap';
+				new $.fn.dataTable.Buttons( myTable, {
+					buttons: [
+					  {
+						"extend": "copy",
+						"text": "<i class='fa fa-copy bigger-110 pink'></i> <span class='hidden'>Copy to clipboard</span>",
+						"className": "btn btn-white btn-primary btn-bold"
+					  },
+					  {
+						"extend": "csv",
+						"text": "<i class='fa fa-database bigger-110 orange'></i> <span class='hidden'>Export to CSV</span>",
+						"className": "btn btn-white btn-primary btn-bold"
+					  },
+					  {
+						"extend": "excel",
+						"text": "<i class='fa fa-file-excel-o bigger-110 green'></i> <span class='hidden'>Export to Excel</span>",
+						"className": "btn btn-white btn-primary btn-bold",
+						"exportOptions": { modifier: { page: 'all'} }
+					  },
+					  {
+						"extend": "pdf",
+						"text": "<i class='fa fa-file-pdf-o bigger-110 red'></i> <span class='hidden'>Export to PDF</span>",
+						"className": "btn btn-white btn-primary btn-bold",
+						"exportOptions": { modifier: { page: 'all'} }
+					  },
+					  {
+						"extend": "print",
+						"text": "<i class='fa fa-print bigger-110 grey'></i> <span class='hidden'>Print</span>",
+						"className": "btn btn-white btn-primary btn-bold",
+						autoPrint: true,
+						message: 'This print was produced using the Print button for DataTables'
+					  }		  
+					]
+				} );
+				myTable.buttons().container().appendTo( $('.tableTools-container') );
+				setTimeout(function() {
+					$($('.tableTools-container')).find('a.dt-button').each(function() {
+						var div = $(this).find(' > div').first();
+						if(div.length == 1) div.tooltip({container: 'body', title: div.parent().text()});
+						else $(this).tooltip({container: 'body', title: $(this).text()});
+					});
+				}, 500);
+			})
+		</script>
+	</th:block>
+</body>
+</html>

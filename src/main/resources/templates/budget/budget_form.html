@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/default}">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta charset="utf-8" />
+<title>Budget/Target Page</title>
+
+<th:block layout:fragment="styles">
+
+</th:block>
+</head>
+<body>
+	<div>
+		<div class="main-container">
+			<div class="main-content">
+				<div class="page-content" layout:fragment="content">
+					<div class="page-header">
+						<h1>
+							<i class="ace-icon fa fa-money"></i> Budget/Target/Achievement
+						</h1>
+					</div>
+					<!-- /.page-header -->
+					<div class="row">
+						<div class="col-xs-12">
+							<div th:if="${message}">
+								<h2 class="alert alert-danger" th:text="${message}" />
+							</div>
+							<div th:if="${successMessage}">
+								<div class="alert alert-success">
+									<button type="button" class="close" data-dismiss="alert">
+										<i class="ace-icon fa fa-times"></i>
+									</button>
+									<strong th:text="${successMessage}">Success!</strong> <br />
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-12">
+							<form method="POST" role="form" autocomplete="off"
+								th:action="@{/addbudget}" data-toggle="validator"
+								th:object="${budget}" class="form-horizontal">
+								<div class="form-group">
+									<label class="col-sm-4 control-label no-padding-right"
+										for="idTitle"><span class="bolder"> Title: </span></label>
+									<div class="col-sm-8">
+										<input name="budgetTitle" id="idTitle"
+											placeholder="Enter Budget Title here..." type="text"
+											class="col-xs-10 col-sm-6"
+											data-error=" Please enter Budget Title field." required>
+										<div class="help-block with-errors" id="showBudgetTitle"></div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label no-padding-right"
+										for="targetType"><span class="bolder">
+											Budget/Target Type: </span></label>
+									<div class="col-xs-10 col-sm-4">
+										<select class="chosen-select"
+											data-placeholder="Choose budget/target..." id="targetType"
+											name="targetType" required>
+											<option value=""></option>
+											<option value="Annual">Annual</option>
+											<option value="Quarterly">Quarterly</option>
+											<option value="Monthly">Monthly</option>
+										</select>
+									</div>
+									<div class="help-block with-errors"></div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label no-padding-right"
+										for="idFiscalYear"><span class="bolder"> Fiscal
+											Year: </span></label>
+									<div class="col-xs-10 col-sm-4">
+
+										<select class="fiscalYear-dropdown " id="idFiscalYear"
+											name="fiscalYear" data-placeholder="Choose fiscal year"
+											data-error="Please select Fiscal Year field." required>
+										</select>
+
+
+
+									</div>
+									<div class="help-block with-errors"></div>
+								</div>
+								<textarea id="editor" name="budgetData">
+									<h1>Budget</h1>
+							</textarea>
+
+								<div class="col-sm-6 col-sm-offset-2 clearfix form-actions">
+									<button class="width-30 pull-left btn btn-sm" type="reset">
+										<i class="ace-icon fa fa-refresh"></i> <span
+											class="bigger-110">Reset</span>
+									</button>
+									<button type="submit"
+										class="width-65 pull-right btn btn-sm btn-success">
+										<span class="bigger-110"> Submit </span> <i
+											class="ace-icon fa fa-arrow-right icon-on-right"></i>
+									</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<th:block layout:fragment="scripts">
+	<script src="../static/js/ckeditor.js" th:src="@{/js/ckeditor.js/}"></script>
+	<script src="../static/js/sample.js" th:src="@{/js/sample.js/}"></script>
+	<script>
+	 $(document).ready(function () {
+		 initSample();
+	 });
+		
+	</script>
+	<script type="text/javascript">
+	
+	$("#idTitle").focusout(function(){
+		$.post('/getbudgetval',   // url
+	            {
+					budgetTitle: $("#idTitle").val()
+	            },
+	            function (result, status, jqXHR) {// success callback
+	                if (result.status) {
+	                    $('#showBudgetTitle').html("<span class='label label-yellow'><i class='ace-icon fa fa-exclamation-triangle bigger-120'></i>" +
+	                        "Please insert new Budget Title!!!" 
+	                        + "</span>");
+	                    return false;
+	                } else {
+	                    $('#showBudgetTitle').html("<strong style='color: #d50c56'>* Make sure to enter all the required fields.</strong>");
+	                    return true;
+	                }
+	            });
+		
+		});
+	
+	
+		$('.chosen-select').chosen({
+			width : "100%"
+		});
+	</script>
+</th:block>
+</html>

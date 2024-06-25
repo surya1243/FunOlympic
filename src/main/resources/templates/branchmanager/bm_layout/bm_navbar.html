@@ -1,0 +1,172 @@
+<div id="sidebar" class="sidebar responsive ace-save-state" th:fragment="navbar">
+		<script type="text/javascript">
+			try{ace.settings.loadState('sidebar')}catch(e){}
+		</script>
+		<ul sec:authorize="isAuthenticated()" class="nav nav-list">
+		
+			<li class="active">
+				<a th:href="@{/bm/dashboard}">
+					<i class="menu-icon fa fa-desktop"></i>
+					<span class="menu-text"> Dashboard </span>
+				</a>
+				<b class="arrow"></b>
+			</li>
+			<li class="" sec:authorize="hasAuthority('BM')">
+				<a th:href="@{/bm/addaccountinfo}">
+					<i class="menu-icon fa fa-calendar"></i>
+					<span class="menu-text"> Daily Report </span>
+				</a>
+				<b class="arrow"></b>
+			</li>
+			<li class="" sec:authorize="hasAuthority('BM')">
+				<a href="#" class="dropdown-toggle">
+					<i class="menu-icon fa fa-plug"></i>
+					<span class="menu-text"> Utility Expenses </span>
+					<b class="arrow fa fa-angle-down"></b>
+				</a>
+				<b class="arrow"></b>
+				<ul class="submenu">
+					<li class="" sec:authorize="hasAuthority('BM')">
+						<a th:href="@{/bm/getutility}">
+							<i class="menu-icon fa fa-caret-right"></i>
+							Add Utility
+						</a>
+						<b class="arrow"></b>
+					</li>
+					<li class="" sec:authorize="hasAuthority('BM')">
+						<a th:href="@{/bm/getutilitylist}">
+							<i class="menu-icon fa fa-caret-right"></i>
+							Utility List
+						</a>
+						<b class="arrow"></b>
+					</li>
+				</ul>
+			</li>
+						
+			<li class="" sec:authorize="hasAuthority('BM')">
+				<a href="#" class="dropdown-toggle">
+					<i class="menu-icon fa fa-money"></i>
+					<span class="menu-text"> Budget/Target </span>
+					<b class="arrow fa fa-angle-down"></b>
+				</a>
+				<b class="arrow"></b>
+				<ul class="submenu">
+					<li class="" sec:authorize="hasAuthority('BM')">
+						<a th:href="@{/bm/budgetlist}">
+							<i class="menu-icon fa fa-caret-right"></i>
+							Budget/Target List
+						</a>
+						<b class="arrow"></b>
+					</li>
+				</ul>
+			</li>
+			
+			<li class="" sec:authorize="hasAuthority('BM')">
+				<a href="#" class="dropdown-toggle">
+					<i class="menu-icon fa fa-book"></i>
+					<span class="menu-text"> Minutes </span>
+					<b class="arrow fa fa-angle-down"></b>
+				</a>
+				<b class="arrow"></b>
+				<ul class="submenu">
+					<li class="" sec:authorize="hasAuthority('BM')">
+						<a th:href="@{/bm/minuteslist}">
+							<i class="menu-icon fa fa-caret-right"></i>
+							Minutes List
+						</a>
+						<b class="arrow"></b>
+					</li>					
+				</ul>
+			</li>
+			
+			<li class="" sec:authorize="hasAuthority('BM')">
+				<a href="#" class="dropdown-toggle">
+					<i class="menu-icon fa fa-certificate"></i>
+					<span class="menu-text"> MC's Records  </span>
+					<b class="arrow fa fa-angle-down"></b>
+				</a>
+				<b class="arrow"></b>
+				<ul class="submenu">
+					<li class="" sec:authorize="hasAuthority('BM')">
+						<a th:href="@{/bm/mc}">
+							<i class="menu-icon fa fa-caret-right"></i>
+							MC Record Form
+						</a>
+
+						<b class="arrow"></b>
+					</li>
+
+					<li class="" sec:authorize="hasAuthority('BM')">
+						<a th:href="@{/bm/mclist}">
+							<i class="menu-icon fa fa-caret-right"></i>
+							MC Record List
+						</a>
+
+						<b class="arrow"></b>
+					</li>
+				</ul>
+			</li>			
+			
+			<li class="" sec:authorize="hasAuthority('BM')">
+					<a href="#" class="dropdown-toggle">
+						<i class="menu-icon fa fa-bullhorn"></i>
+						<span class="menu-text">
+							GFP's Records
+						</span>
+
+						<b class="arrow fa fa-angle-down"></b>
+					</a>
+
+					<b class="arrow"></b>
+					<ul class="submenu">
+						<li class="" sec:authorize="hasAuthority('BM')">
+							<a th:href="@{/bm/gfp}">
+								<i class="menu-icon fa fa-caret-right"></i>
+								GFP Record Form
+							</a>
+
+							<b class="arrow"></b>
+						</li>
+
+						<li class="" sec:authorize="hasAuthority('BM')">
+							<a th:href="@{/bm/gfplist}">
+								<i class="menu-icon fa fa-caret-right"></i>
+								GFP Record List
+							</a>
+
+							<b class="arrow"></b>
+						</li>
+					</ul>
+				</li>
+					
+						
+			<li class="" sec:authorize="hasAuthority('BM')">
+				<a href="#" class="dropdown-toggle">
+					<i class="menu-icon fa fa-cogs"></i>
+					<span class="menu-text"> Error/Issues Log  </span>
+					<b class="arrow fa fa-angle-down"></b>
+				</a>
+				<b class="arrow"></b>
+				<ul class="submenu">
+					<li class="" sec:authorize="hasAuthority('BM')">
+						<a th:href="@{/bm/errorissuelog}">
+							<i class="menu-icon fa fa-caret-right"></i>
+							Error/Issues Form
+						</a>
+						<b class="arrow"></b>
+					</li>
+					<li class="" sec:authorize="hasAuthority('BM')">
+						<a th:href="@{/bm/errorissueloglist}">
+							<i class="menu-icon fa fa-caret-right"></i>
+							Error/Issues List
+						</a>
+						<b class="arrow"></b>
+					</li>
+				</ul>
+			</li>
+				
+		</ul><!-- /.nav-list -->
+		<div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
+			<i id="sidebar-toggle-icon" class="ace-icon fa fa-angle-double-left ace-save-state" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
+		</div>
+</div>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/default}">
+<head>
+<meta charset="ISO-8859-1" />
+<title>Error/Issue/Log List</title>
+<th:block layout:fragment="styles">
+	<link rel="stylesheet" href="../static/css/daterangepicker.min.css"
+		th:href="@{/css/daterangepicker.min.css}" />
+	<style type="text/css">
+td.details-control {
+	text-align: center;
+	color: forestgreen;
+	cursor: pointer;
+}
+
+tr.shown td.details-control {
+	text-align: center;
+	color: red;
+}
+</style>
+</th:block>
+</head>
+<body>
+
+	<div layout:fragment="content">
+		<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+			<ul class="breadcrumb">
+				<li><i class="ace-icon fa fa-home home-icon"></i> <a href="#">Home</a>
+				</li>
+				<li class="active">Error/Issue List</li>
+			</ul>
+			<!-- /.breadcrumb -->
+		</div>
+
+		<div class="page-content">
+			<div class="row">
+				<div class="col-xs-12">
+					<!-- PAGE CONTENT BEGINS -->
+					<div th:if="${message}">
+						<h2 class="alert alert-danger" th:text="${message}" />
+					</div>
+					<div th:if="${successMessage}">
+						<div class="alert alert-success">
+							<button type="button" class="close" data-dismiss="alert">
+								<i class="ace-icon fa fa-times"></i>
+							</button>
+							<strong th:text="${successMessage}">Success!</strong> <br />
+						</div>
+					</div>
+					<!-- PAGE CONTENT ENDS -->
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="space-4"></div>
+					<div class="search-area well well-sm">
+						<div class="search-filter-header bg-primary">
+							<h5 class="smaller no-margin-bottom">
+								<i class="ace-icon fa fa-sliders light-green bigger-130"></i>&nbsp;
+								Refine your Search
+							</h5>
+						</div>
+						<div class="space-10"></div>
+						<fieldset class="form-inline">
+							<div class="col-sm-12">
+								<div class="col-sm-3">
+									<select class="input-group" id="branchName-dropdown"
+										name="branchName" data-placeholder="Choose Branch...">
+									</select>
+								</div>
+								<div class="col-sm-3">
+									<select class="chosen-select" id="idNatureVal"
+										name="natureOfError"
+										data-placeholder="Choose a nature of Error..." required>
+										<option value=""></option>
+										<option value="Transaction Input Error">Transaction
+											Input Error</option>
+										<option value="System Error">System Error</option>
+										<option value="Both (Transaction and System Error)">Both
+											(Transaction and System Error)</option>
+										<option value="Others">Others</option>
+									</select>
+								</div>
+
+								<div class="inline pull-right">
+									<label for="idDateRange"> Incident Date Range Picker: </label>
+									<div class="input-group">
+										<span class="input-group-addon"><i
+											class="fa fa-calendar bigger-110"></i></span> <input
+											class="form-control" type="text" name="date-range-picker"
+											data-date-format="yyyy-mm-dd" id="idIncidentDateRange" />
+									</div>
+								</div>
+							</div>
+						</fieldset>
+					</div>
+
+					<div th:if="${errorListValue != null}" class="row">
+						<div class="table-responsive">
+							<!-- PAGE CONTENT BEGINS -->
+							<div class="clearfix">
+								<div class="pull-right tableTools-container"></div>
+							</div>
+							<div class="table-header">Report for "Error/Issue/Log"</div>
+							<div>
+								<table width="100%" id="error-table" aria-hidden="true"
+									class="table table-striped table-bordered table-hover">
+									<thead>
+										<tr>
+											<th width="4%" class="detail-col"></th>
+											<th width="10%">Incident Date</th>
+											<th width="10%">Branch</th>
+											<th>Department</th>
+											<th data-class='hidden'>Transaction ID</th>
+											<th data-class='hidden'>Amount (Rs.)</th>
+											<th data-class='hidden'>Tran Entered By</th>
+											<th data-class='hidden'>Tran Approved By</th>
+											<th>Nature of Error</th>
+											<th>Details of Error</th>
+											<th data-class='hidden'>Reported By</th>
+											<th>Cause of Error</th>
+											<th>Necessary Steps</th>
+											<th width="18%">Resolution Details</th>
+											<th data-class='hidden'>Approved By</th>
+											<th>Progress Status</th>
+											<th>Error Lodged By</th>
+											<th data-class='hidden'>Error Lodged Modified By</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block layout:fragment="scripts">
+		<script src="../static/js/filterErrorIssue.js"
+			th:src="@{/js/filterErrorIssue.js/}"></script>
+		<script>
+			$(function() {
+				var start = moment().subtract(29, 'days');
+				var end = moment();
+
+				$('#idIncidentDateRange')
+						.daterangepicker(
+								{
+									startDate : start,
+									endDate : end,
+									opens : 'left',
+									autoclose : true,
+									todayHighlight : true,
+									ranges : {
+										'Today' : [ moment(), moment() ],
+										'Yesterday' : [
+												moment().subtract(1, 'days'),
+												moment().subtract(1, 'days') ],
+										'Last 7 Days' : [
+												moment().subtract(6, 'days'),
+												moment() ],
+										'Last 30 Days' : [
+												moment().subtract(29, 'days'),
+												moment() ],
+										'This Month' : [
+												moment().startOf('month'),
+												moment().endOf('month') ],
+										'Last Month' : [
+												moment().subtract(1, 'month')
+														.startOf('month'),
+												moment().subtract(1, 'month')
+														.endOf('month') ]
+									},
+									locale : {
+										format : 'YYYY-MM-DD'
+									}
+								},
+								function(start, end, label) {
+									ajaxGetErrorByIncidentDateBetween(start,
+											end);
+								});
+
+			});
+		</script>
+
+		<script type="text/javascript">
+			$('.chosen-select').chosen({
+				width : "100%"
+			});
+		</script>
+	</th:block>
+</body>
+</html>

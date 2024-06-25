@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/default}">
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta charset="utf-8" />
+	<title>Sports</title>
+</head>
+
+<body>
+	<div layout:fragment="content">
+		<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+			<ul class="breadcrumb">
+				<li>
+					<i class="ace-icon fa fa-home home-icon"></i>
+					<a href="#">Home</a>
+				</li>
+				<li>
+					<a href="#">Sports</a>
+				</li>
+				<li class="active">Add Sports Name</li>
+			</ul><!-- /.breadcrumb -->
+		</div>
+		<div class="page-content">
+			<div class="row">
+				<div class="col-xs-12">
+					<!-- PAGE CONTENT BEGINS -->
+					<div th:if="${message}">
+						<h2 class="alert alert-danger" th:text="${message}" />
+					</div>
+					<div th:if="${successMessage}">
+						<div class="alert alert-success">
+							<button type="button" class="close" data-dismiss="alert">
+								<i class="ace-icon fa fa-times"></i>
+							</button>
+							<strong th:text="${successMessage}">Success!</strong> <br />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="page-header">
+				<h1>
+					Add New Sports Details
+				</h1>
+			</div><!-- /.page-header -->
+			<div class="row">
+				<div class="col-xs-12">
+					<!-- PAGE CONTENT BEGINS -->
+					<div class="row">
+						<div class="col-sm-4">
+							<div class="tabbable">
+								<ul class="nav nav-tabs" id="myTab">
+									<li class="active">
+										<a data-toggle="tab" href="#home">
+											<i class="green ace-icon fa fa-key bigger-120"></i>
+											Add New Sports
+										</a>
+									</li>
+
+								</ul>
+								<div class="tab-content">
+									<div id="home" class="tab-pane fade in active">
+										<form th:action="@{/addsports}" method="POST" enctype="multipart/form-data" data-toggle="validator"
+											th:object="${sports}" modelAttribute="sports" role="form" autocomplete="off">
+											<fieldset>
+												<div class="form-group">
+													<div>
+														<label class="block clearfix" for="idSportsCode"> Sports CODE
+															<small class="text-danger">*</small> <span
+																class="bolder">001-HOC</span> </label>
+														<span class="block input-icon input-icon-right">
+															<input class="form-control" name="sportsCode"
+																data-error="Please enter Locker CODE field."
+																id="idSportsCode" placeholder="Sports CODE" type="text"
+																style="text-transform: uppercase;"
+																onkeyup="this.value = this.value.toUpperCase();"
+																required />
+														</span>
+														<small class="text-danger" id="textExample">Follow the pattern,
+															e.g.
+															<span class="bolder">(001-HOC)</span>
+															Here, 001 = Sports Id and HOC = Sports with Three CAPITAL
+															alphabet</small>
+														<div class="help-block with-errors"></div>
+													</div>
+													<div class="hidden">
+														<label class="radio-inline">
+															<input type="radio" name="enabled" value="true"
+																class="ace input-lg" checked><span class="lbl green">
+																Enabled </span>
+														</label>
+														<label class="radio-inline">
+															<input type="radio" name="enabled" value="false"
+																class="ace input-lg"><span class="lbl orange"> Disabled
+															</span>
+														</label>
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="block clearfix" for="idSportsName"> Name of Sports
+														<small class="text-danger">*</small></label>
+													<span class="block input-icon input-icon-right">
+														<input class="form-control" name="sportsName"
+															data-error="Please enter name of sports." id="idSportsName"
+															placeholder="Enter Name of Sports" type="text" required />
+													</span>
+													<div class="help-block with-errors"></div>
+												</div>
+												<div class="form-group">
+													<label class="block clearfix" for="idSportsFile"> Upload Sports
+														Document
+														<small class="text-danger">*</small></label>
+														<div class="block input-icon input-icon-right">
+															<input type="file" name="file"
+																accept="video/*,image/png, image/jpeg"
+																id="idSportsFile" required />
+														</div>
+													<div class="help-block with-errors"></div>
+												</div>
+												<div class="form-group">
+													<label for="inputRemark" class="block clearfix">Remark </label>
+													<span class="block input-icon input-icon-right">
+														<textarea class="form-control" placeholder="Describe here..."
+															name="remark" data-error="Please enter remark field."
+															id="remark"></textarea>
+													</span>
+													<div class="help-block with-errors"></div>
+												</div>
+												<div class="space-10"></div>
+
+												<div class="clearfix">
+													<button type="reset" class="width-30 pull-left btn btn-sm">
+														<i class="ace-icon fa fa-refresh"></i> <span
+															class="bigger-110">Reset</span>
+													</button>
+
+													<button type="submit"
+														class="width-65 pull-right btn btn-sm btn-success">
+														<span class="bigger-110">Register</span> <i
+															class="ace-icon fa fa-arrow-right icon-on-right"></i>
+													</button>
+												</div>
+											</fieldset>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="vspace-6-sm"></div>
+						<div class="col-sm-8">
+							<div class="tabbable">
+								<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab4">
+									<li class="active"><a data-toggle="tab" href="#home4" aria-expanded="true">Sports
+											List</a></li>
+								</ul>
+								<div class="tab-content">
+									<div id="home4" class="tab-pane active">
+										<div th:if="${not #lists.isEmpty(sportsList)}">
+											<div class="clearfix">
+												<div class="pull-right tableTools-container"></div>
+											</div>
+											<table class="dynamic-table table table-striped table-bordered table-hover">
+												<thead>
+													<tr>
+														<th width="10%" class="center">S.N.</th>
+														<th width="20%">Sports CODE</th>
+														<th width="22%" class="center">Name of Sports</th>
+														<th width="12%" class="center hidden-xs">Status</th>
+														<th data-class='hidden'>Remark</th>
+														<th width="12%" class="center"
+															sec:authorize="hasAnyAuthority('ADMIN')">
+															Action</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr th:each="sportsList, row :${sportsList}">
+														<td class="center" th:text="${row.index+1}">test</td>
+														<td th:text="${sportsList?.sportsCode}" class="hidden-480">test
+														</td>
+														<td th:text="${sportsList?.sportsName}" class="hidden-480">test
+														</td>
+														<td class="center hidden-xs">
+															<span
+																class="label label-success arrowed-in arrowed-in-right"
+																th:if="${sportsList?.enabled}">Enabled</span>
+															<span class="label label-sm label-warning"
+																th:unless="${sportsList?.enabled}">Disabled</span>
+														</td>
+														<td th:text="${sportsList?.remark}" class="hidden-xs">test
+														</td>
+														<td class="center" sec:authorize="hasAnyAuthority('ADMIN')">
+															<div class="hidden-sm hidden-xs action-buttons">
+																<a class="green" title="Edit"
+																	th:href="@{'/updatesports/'+${sportsList.id}}">
+																	<i class="ace-icon fa fa-pencil bigger-130"></i>
+																</a>
+																<a class="red" title="Delete" id="btndeleteSports"
+																	th:data-thing="${sportsList?.id}"
+																	th:onclick="deleteSports(this.getAttribute('data-thing'));">
+																	<i class="ace-icon fa fa-trash-o bigger-130"></i>
+																</a>
+															</div>
+															<div class="hidden-md hidden-lg action-buttons">
+																<div class="inline pos-rel">
+																	<button
+																		class="btn btn-minier btn-yellow dropdown-toggle"
+																		data-position="auto" data-toggle="dropdown">
+																		<i
+																			class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
+																	</button>
+																	<div
+																		class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+																		<a class="green" title="Edit"
+																			th:href="@{'/updatesports/'+${sportsList.id}}">
+																			<i
+																				class="ace-icon fa fa-pencil bigger-130"></i>
+																		</a>
+																		<a class="red" id="btndeleteSports"
+																			th:data-thing="${sportsList?.id}"
+																			th:onclick="deleteSports(this.getAttribute('data-thing'));">
+																			<i
+																				class="ace-icon fa fa-trash-o bigger-130"></i>
+																		</a>
+																	</div>
+																</div>
+															</div>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div><!-- /.col -->
+			</div><!-- /.row -->
+		</div><!-- /.page-content -->
+	</div>
+
+	<th:block layout:fragment="scripts">
+		<script>
+			autosize(document.querySelectorAll('textarea'));
+		</script>
+
+
+		<script>
+			$(document).ready(function () {
+				$('#textExample').hide();
+				$("#idSportsCode")
+					.mouseover(function () {
+						$('#textExample').show();
+					})
+					.mouseleave(function () {
+						$('#textExample').hide();
+					});
+			});
+			$.mask.definitions['A'] = '[A-Z]';
+			$("#idSportsCode").mask("999-AAA", {autoclear: false});
+
+			$('#idSportsFile').ace_file_input({
+				style : 'well',
+				btn_choose : 'Drop files here or click to choose',
+				btn_change : null,
+				no_icon : 'ace-icon fa fa-cloud-upload',
+				droppable : true,
+				thumbnail : 'fit'//large | fit
+				,
+				preview_error : function(filename, error_code) {
+				}
+
+			}).on('change', function() {
+			});
+
+		</script>
+
+		<script>
+			$(document).ready(function () {
+				$('.select2').css('width', '100%').select2({});
+			});
+		</script>
+		<script type="text/javascript">
+			$('.chosen-select').chosen();
+			$(window)
+				.off('resize.chosen')
+				.on('resize.chosen', function () {
+					$('.chosen-select').each(function () {
+						var $this = $(this);
+						$this.next().css({minWidth: '380px'});
+					})
+				}).trigger('resize.chosen');  
+		</script>
+
+		<script type="text/javascript">
+			jQuery(function ($) {
+				//initiate dataTables plugin
+				var myTable = $('.dynamic-table')
+					.DataTable({
+
+						bAutoWidth: false,
+						"aoColumns": [null, null, null, null, null,
+
+							{
+								"bSortable": false
+							}],
+						"aaSorting": [],
+					});
+				$.fn.dataTable.Buttons.defaults.dom.container.className = 'dt-buttons btn-overlap btn-group btn-overlap';
+				new $.fn.dataTable.Buttons(
+					myTable,
+					{
+						buttons: [
+							{
+								"extend": "copy",
+								"text": "<i class='fa fa-copy bigger-110 pink'></i> <span class='hidden'>Copy to clipboard</span>",
+								"className": "btn btn-white btn-primary btn-bold"
+							},
+							{
+								"extend": "csv",
+								"text": "<i class='fa fa-database bigger-110 orange'></i> <span class='hidden'>Export to CSV</span>",
+								"className": "btn btn-white btn-primary btn-bold"
+							},
+							{
+								"extend": "excel",
+								"text": "<i class='fa fa-file-excel-o bigger-110 green'></i> <span class='hidden'>Export to Excel</span>",
+								"className": "btn btn-white btn-primary btn-bold",
+								"exportOptions": {
+									modifier: {
+										page: 'all'
+									}
+								}
+							},
+							{
+								"extend": "pdf",
+								"text": "<i class='fa fa-file-pdf-o bigger-110 red'></i> <span class='hidden'>Export to PDF</span>",
+								"className": "btn btn-white btn-primary btn-bold",
+								"exportOptions": {
+									modifier: {
+										page: 'all'
+									}
+								}
+							},
+							{
+								"extend": "print",
+								"text": "<i class='fa fa-print bigger-110 grey'></i> <span class='hidden'>Print</span>",
+								"className": "btn btn-white btn-primary btn-bold",
+								autoPrint: true,
+								message: 'This print was produced using the Print button for DataTables'
+							}]
+					});
+				myTable.buttons().container().appendTo(
+					$('.tableTools-container'));
+				setTimeout(function () {
+					$($('.tableTools-container')).find('a.dt-button').each(
+						function () {
+							var div = $(this).find(' > div').first();
+							if (div.length == 1)
+								div.tooltip({
+									container: 'body',
+									title: div.parent().text()
+								});
+							else
+								$(this).tooltip({
+									container: 'body',
+									title: $(this).text()
+								});
+						});
+				}, 500);
+			})
+		</script>
+		<script>
+			function deleteSports(control) {
+				var dialog = bootbox
+					.dialog({
+						title: 'Delete Sports!!!',
+						message: '<p>Are you sure you want to delete recorded sports data?</p>',
+						size: 'md',
+						onEscape: true,
+						backdrop: true,
+						buttons: {
+							cancel: {
+								label: '<i class="fa fa-times"></i> Cancel',
+								className: 'btn-danger pull-right margin-left-10px',
+							},
+							ok: {
+								label: '<i class="fa fa-check"></i> Confirm',
+								className: 'btn-info',
+								callback: function (result) {
+									if (result) {
+										$
+											.ajax({
+												type: 'DELETE',
+												url: '/updatesports/delete/'
+													+ control,
+												success: function (
+													result) {
+													$('#showMessage')
+														.append(
+															"<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'><i class='ace-icon fa fa-times'></i></button><br>"
+															+ result.message
+															+ ' '
+															+ result.data
+															+ "</div>");
+													alert(result.message
+														+ ': '
+														+ result.data);
+													window.location.href = "/addsports";
+												},
+												error: function (jqXHR,
+													textStatus,
+													errorThrown) {
+													alert(jqXHR.status
+														+ ' '
+														+ jqXHR.responseText);
+												}
+											});
+									}
+								}
+							}
+						},
+					});
+			}
+		</script>
+
+		<!-- basic scripts -->
+
+		<!--[if IE]>
+<script src="assets/js/jquery-1.11.3.min.js"></script>
+<![endif]-->
+		<script type="text/javascript">
+			if ('ontouchstart' in document.documentElement) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
+		</script>
+
+		<!-- inline scripts related to this page -->
+	</th:block>
+</body>
+
+</html>

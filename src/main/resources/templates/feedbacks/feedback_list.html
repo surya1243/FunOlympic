@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layouts/default">
+<head>
+<meta charset="ISO-8859-1" />
+<title>Feedback List</title>
+
+
+<th:block layout:fragment="styles">
+<link rel="stylesheet" href="../static/css/daterangepicker.min.css" th:href="@{/css/daterangepicker.min.css}" />
+    <style type="text/css">
+		  td.details-control {
+		            text-align:center;
+		            color:forestgreen;
+		    cursor: pointer;
+		}
+		tr.shown td.details-control {
+		    text-align:center; 
+		    color:red;
+		}
+    </style>
+  </th:block>  
+ </head>
+<body>
+
+	<div layout:fragment="content">
+		<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+			<ul class="breadcrumb">
+				<li><i class="ace-icon fa fa-home home-icon"></i> <a href="/dashboard">Home</a>
+				</li>
+
+				<li class="active">Feedback List</li>
+			</ul>
+			<!-- /.breadcrumb -->
+		</div>
+
+		<div class="page-content">
+			<div class="row">
+				<div class="col-xs-12">
+					<!-- PAGE CONTENT BEGINS -->
+					<div th:if="${message}">
+						<h2 class="alert alert-danger" th:text="${message}"/>
+					</div>
+					<div th:if="${successMessage}">
+						<div class="alert alert-success">
+							<button type="button" class="close" data-dismiss="alert">
+								<i class="ace-icon fa fa-times"></i>
+							</button>
+							<strong th:text="${successMessage}">Success!</strong> <br />
+						</div>
+					</div>
+				</div>				
+			</div>	
+			<div class="row">
+				<div class="col-xs-12 col-sm-12">
+					<div class="search-area well well-sm">
+						<div class="search-filter-header bg-primary">
+							<h5 class="smaller no-margin-bottom">
+								<i class="ace-icon fa fa-sliders light-green bigger-130"></i>&nbsp; Refine your Search
+							</h5>
+						</div>
+							<div class="space-10"></div>								
+						<fieldset class="form-inline">
+							<div class="input-group col-sm-2"> 
+								<select class="form-control" id="branchName-dropdown" name="branchName" required></select>                                               
+                                 </div>
+                             <div class="input-group col-sm-2">
+                              <select
+									class="chosen-select form-control" id="idServiceType"
+									name="typeOfService"
+									data-placeholder="Choose a Type of Service..."
+									data-error="Please select type of service taken field."
+									required>
+									<option value=""></option>
+									<option value="Deposit">Deposit</option>
+									<option value="Loan">Loan</option>
+									<option value="Deposit & Loan">Deposit & Loan</option>
+									<option value="Locker">Locker</option>
+									<option value="Mobile Banking">Mobile Banking</option>
+									<option value="ATM">ATM</option>
+									<option value="CASBA">CASBA</option>
+									<option value="Remittance">Remittance</option>
+									<option value="Other">Other</option>
+								</select>                                         
+                             </div>
+                             <div class="input-group col-sm-3">
+                              <select
+									class="chosen-select form-control" id="idRating"
+									name="rating"
+									data-placeholder="Choose a Rating..."
+									data-error="Please select Rating field."
+									required>
+									<option value=""></option>
+									<option value="Worst">Worst</option>
+									<option value="Poor">Poor</option>
+									<option value="Needed_Improvement">Needed Improvement</option>
+									<option value="Satisfactory">Satisfactory</option>
+									<option value="Good">Good</option>
+									<option value="Excellent">Excellent</option>
+								</select>                                         
+                             </div>  
+                             <div class="inline pull-right">
+                              <label for="idDateRange"> Date Range Picker: </label>                   
+	                        <div class="input-group">
+								<span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span> 
+								<input class="form-control" type="text" name="date-range-picker"
+											data-date-format="yyyy-mm-dd" id="idDateRange" />
+							</div></div>                          
+						</fieldset>
+						<div class="space-4"></div>	
+					</div>
+				</div>
+			</div>					
+			<div class="row">
+				<div class="col-xs-12">
+					<!-- PAGE CONTENT BEGINS -->
+					
+					<div class="table-responsive">					
+						<div class="table-header">Customer's Feedback
+						</div>
+						 <table width="100%" id="dynamic-table" aria-hidden="true"
+								class="table table-striped table-bordered table-hover" >
+					        <thead>
+					            <tr>
+					                    <th width="5%" class="detail-col"></th>
+	    								<th width="12%">Date</th>
+	    								<th width="12%">Branch Name</th>
+	    								<th width="18%">Customer Name</th>
+	    								<th width="10%">Type of Service</th>
+	    								<th width="10%">Rating</th>
+	    								<th width="10%" data-class='hidden'>Feedback</th>
+	    								<th width="10%" data-class='hidden'>A/C Type</th>
+	    								<th width="10%">Client Code</th>
+	    								<th width="10%" data-class='hidden'>Mobile</th>
+	    								<th width="10%">Time Taken</th>
+										<th width="15%">Collected By</th>
+					            </tr>
+					        </thead>
+					    </table>   
+					</div>
+					<!-- PAGE CONTENT ENDS -->
+				</div>
+				<!-- /.col -->
+			</div>
+			<!-- /.row -->
+		</div>
+		<!-- /.content -->
+	</div>
+	<!-- /.main-content -->
+
+	<th:block layout:fragment="scripts">
+ 		
+ 		<script>
+ 		$(function() {
+ 			var start = moment().subtract(29, 'days');
+ 		    var end = moment();
+ 		    
+ 			  $('#idDateRange').daterangepicker({
+ 				startDate: start,
+ 		        endDate: end,
+ 			    opens: 'left',
+ 			    autoclose: true,
+ 				todayHighlight: true,
+ 				ranges: {
+ 		           'Today': [moment(), moment()],
+ 		           'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+ 		           'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+ 		           'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+ 		           'This Month': [moment().startOf('month'), moment().endOf('month')],
+ 		           'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+ 		        },
+ 		       locale: {
+ 	 				format: 'YYYY-MM-DD'
+ 	 			    }
+ 			  }, function(start, end, label) {
+ 				ajaxGetFeedbackByDateBetween(start, end);
+ 			  });
+ 			  
+ 			});
+ 		</script>
+ 		
+ 		
+    <script>
+		if (!ace.vars['touch']) {
+			$('.chosen-select').chosen({
+				allow_single_deselect : true
+			});
+			//resize the chosen on window resize
+			$(window).off('resize.chosen').on('resize.chosen',
+					function() {
+						$('.chosen-select').each(function() {
+							var $this = $(this);
+							$this.next().css({
+								'width' : $this.parent().width()
+							});
+						})
+					}).trigger('resize.chosen');
+			//resize chosen on sidebar collapse/expand
+			$(document).on('settings.ace.chosen',
+					function(e, event_name, event_val) {
+						if (event_name != 'sidebar_collapsed')
+							return;
+						$('.chosen-select').each(function() {
+							var $this = $(this);
+							$this.next().css({
+								'width' : $this.parent().width()
+							});
+						})
+					});
+		}
+	</script>
+
+    
+<script th:inline="javascript">
+/*<![CDATA[*/
+var testdata = /*[[${feedbackListValue}]]*/ 'feedback';
+/*]]>*/ 
+
+     $(document).ready(function () {
+    	 ajaxGetAllFeedback();
+     });
+    	 
+ 		$("#branchName-dropdown").change(function() {
+			ajaxgetfeedbackByBranchName();
+	    });
+ 		
+ 		$("#idServiceType").change(function() {
+			ajaxgetfeedbackByTypeOfService();
+	    });
+ 		
+ 		$("#idRating").change(function() {
+			ajaxgetfeedbackByRating();
+	    });
+ 		
+ 		$("#idServiceType").change(function() {
+ 			if(!$('#branchName-dropdown').val()){
+ 				ajaxgetfeedbackByTypeOfService();
+ 			 }else{
+ 				ajaxgetfeedbackByBranchAndService();
+ 			 }
+	    });
+ 		
+		$("#branchName-dropdown").change(function() {
+ 			if(!$('#idServiceType').val()){
+ 				ajaxgetfeedbackByBranchName();
+ 			 }else{
+ 				ajaxgetfeedbackByBranchAndService();
+ 			 }
+	    });
+		
+		$("#idRating").change(function() {
+ 			if(!$('#branchName-dropdown').val()){
+ 				ajaxgetfeedbackByRating();
+ 			 }else{
+ 				ajaxgetfeedbackByBranchAndRating();
+ 			 }
+	    });
+		
+		$("#idServiceType").change(function() {
+ 			if(!$('#idRating').val()){
+ 				ajaxgetfeedbackByTypeOfService();
+ 			 }else{
+ 				ajaxgetfeedbackByServiceAndRating();
+ 			 }
+	    });
+		
+		$("#idRating").change(function() {
+ 			if(!$('#idServiceType').val()){
+ 				ajaxgetfeedbackByRating();
+ 			 }else{
+ 				ajaxgetfeedbackByServiceAndRating();
+ 			 }
+	    });
+		
+		$("#branchName-dropdown").change(function() {
+ 			if(!$('#idRating').val()){
+ 				ajaxgetfeedbackByBranchName();
+ 			 }else{
+ 				ajaxgetfeedbackByBranchAndRating();
+ 			 }
+	    });
+		
+		$("#branchName-dropdown").change(function() {
+ 			if(!($('#idRating').val() && $('#idServiceType').val())){
+ 				ajaxgetfeedbackByBranchName();
+ 			 }else{
+ 				ajaxgetfeedbackByBranchAndRatingAndService();
+ 			 }
+	    });
+		
+		$("#idRating").change(function() {
+ 			if(!($('#branchName-dropdown').val() && $('#idServiceType').val())){
+ 				ajaxgetfeedbackByRating();
+ 			 }else{
+ 				ajaxgetfeedbackByBranchAndRatingAndService();
+ 			 }
+	    });
+		
+		$("#idServiceType").change(function() {
+ 			if(!($('#branchName-dropdown').val() && $('#idRating').val())){
+ 				ajaxgetfeedbackByTypeOfService();
+ 			 }else{
+ 				ajaxgetfeedbackByBranchAndRatingAndService();
+ 			 }
+	    });
+		
+		
+		
+ 		
+ 		
+ 		function ajaxgetfeedbackByBranchName(){
+ 			let branchName = $('#branchName-dropdown').val();
+ 			const url = '/getfeedback/branchname/'+branchName;
+ 			$.getJSON(url, function (data) {
+ 				createDataTable(data);
+ 			});
+ 		}
+ 		
+ 		function ajaxgetfeedbackByTypeOfService(){
+ 			let typeOfService = $('#idServiceType').val();
+ 			const url = '/getfeedback/servicetype/'+typeOfService;
+ 			$.getJSON(url, function (data) {
+ 				createDataTable(data);
+ 			});
+ 		}
+ 		
+ 		function ajaxgetfeedbackByRating(){
+ 			let ratings = $('#idRating').val();
+ 			const url = '/getfeedback/rating/'+ratings;
+ 			$.getJSON(url, function (data) {
+ 				createDataTable(data);
+ 			});
+ 		}
+ 		
+ 		function ajaxgetfeedbackByBranchAndRating(){
+ 			let branchValue1 = $('#branchName-dropdown').val();
+ 			let ratingValue1 = $('#idRating').val();
+ 			const url = '/getfeedback/brgroup/'+ branchValue1 +'/'+ratingValue1;
+ 			$.getJSON(url, function (data) {
+ 				createDataTable(data);
+ 			});
+ 		}
+ 		
+ 		function ajaxgetfeedbackByBranchAndService(){
+ 			let branchValue2 = $('#branchName-dropdown').val();
+ 			let serviceValue2 = $('#idServiceType').val();
+ 			const url = '/getfeedback/bsgroup/'+ branchValue2 +'/'+serviceValue2;
+ 			$.getJSON(url, function (data) {
+ 				createDataTable(data);
+ 			});
+ 		}
+ 		
+ 		function ajaxgetfeedbackByServiceAndRating(){
+ 			let ratingValue3 = $('#idRating').val();
+ 			let serviceValue3 = $('#idServiceType').val();
+ 			const url = '/getfeedback/srgroup/'+ serviceValue3 +'/'+ratingValue3;
+ 			$.getJSON(url, function (data) {
+ 				createDataTable(data);
+ 			});
+ 		}
+ 		
+ 		function ajaxgetfeedbackByBranchAndRatingAndService(){
+ 			let branchValue4 = $('#branchName-dropdown').val();
+ 			let serviceValue4 = $('#idServiceType').val();
+ 			let ratingValue4 = $('#idRating').val();
+ 			const url = '/getfeedback/bsrgroup/'+ branchValue4 +'/'+serviceValue4+'/'+ratingValue4;
+ 			$.getJSON(url, function (data) {
+ 				createDataTable(data);
+ 			});
+ 		}
+ 		
+ 		function ajaxGetAllFeedback(){
+ 			const url = '/getfeedback/all';
+ 			$.getJSON(url, function (data) {
+ 				createDataTable(data);
+ 			});
+ 		}
+ 		
+		function ajaxGetFeedbackByDateBetween(start, end){
+ 			let startDate=start.format('YYYY-MM-DD');
+ 			let endDate=end.format('YYYY-MM-DD');
+ 			const url = '/getfeedbackdaterange/'+startDate+'/'+endDate;
+ 			$.getJSON(url, function (data) {
+ 				createDataTable(data);
+ 			});
+ 		}
+ 		
+ 		function createDataTable(data){
+	         var table = $('#dynamic-table').DataTable({
+	        	 "order": [ 1, "desc" ],
+	        	 destroy: true,
+	             "data": data,
+	             select:"single",
+	             "columns": [
+ 	                 {
+ 	                     "className": 'details-control',
+ 	                     "orderable": false,
+ 	                     "data": null,
+ 	                     "defaultContent": '',
+ 	                     "render": function () {
+ 	                         return '<i class="ace-icon fa fa-angle-double-down fa-2x" title="Show details" aria-hidden="true"></i>';
+ 	                     },
+ 	                     width:"15px"
+ 	                 },
+ 	                 { "data": "date",
+ 	                	 "render" : function(data, type, row, meta) {
+ 								if (data === null) return "";
+ 								var thisDate = moment(new Date(data)).format("YYYY-MM-DD hh:mm a");
+ 								return thisDate
+ 							}
+ 	                 },
+ 	                 { "data": "branchName" },
+ 	                { "data": "custName",
+ 	                	"render": function(data,type,row,meta) { // render event defines the markup of the cell text 
+ 	                       var a = '<a href="feedbacklist/detailpage/' + row["id"]+ '">' + row.custName +'</a>';
+ 	                       return a;}
+ 	                 },
+ 	                 { "data": "typeOfService" },
+ 	                 { "data": "rating" },
+ 	                 { "data": "custFeedback" },
+ 	                 { "data": "accountType" },
+ 	                 { "data": "clientCode" },
+ 	                 { "data": "mobileNumber" },
+ 	                 { "data": "timeTakenForService" },
+ 	                 { "data": "collectedBy" }
+ 	             ],             
+ 	             dom: 'Blfrtip',
+ 	             buttons: [
+ 	            	 {
+ 							"extend": "copy",
+ 							"text": "<i class='fa fa-copy bigger-110 pink'></i> <span class='hidden'>Copy to clipboard</span>",
+ 							"className": "btn btn-white btn-primary btn-bold"
+ 						  },
+ 						  {
+ 							"extend": "csv",
+ 							"text": "<i class='fa fa-file-excel-o bigger-110 blue'></i> <span class='hidden'>Export to CSV</span>",
+ 							"className": "btn btn-white btn-primary btn-bold"
+ 						  },
+ 						  {
+ 							"extend": "excel",
+ 							"text": "<i class='fa fa-file-excel-o bigger-110 green'></i> <span class='hidden'>Export to Excel</span>",
+ 							"className": "btn btn-white btn-primary btn-bold",
+ 							"exportOptions": { modifier: { page: 'all'} }
+ 						  },
+ 						  {
+ 							"extend": "pdf",
+ 							"text": "<i class='fa fa-file-pdf-o bigger-110 red'></i> <span class='hidden'>Export to PDF</span>",
+ 							"className": "btn btn-white btn-primary btn-bold",
+ 							"exportOptions": { modifier: { page: 'all'} }
+ 						  },
+ 						  {
+ 							"extend": "print",
+ 							"text": "<i class='fa fa-print bigger-110 grey'></i> <span class='hidden'>Print</span>",
+ 							"className": "btn btn-white btn-primary btn-bold",							
+ 							autoPrint: true,
+ 							orientation:'landscape',
+ 							title: 'Customer Feedback'
+ 						  }		  
+ 	             ]
+	            
+	         });
+	        
+	         // Add event listener for opening and closing details
+	         $('#dynamic-table tbody').on('click', 'td.details-control', function () {
+	             var tr = $(this).closest('tr');
+	             var tdi = tr.find("i.fa");
+	             var row = table.row(tr);
+
+	             if (row.child.isShown()) {
+	                 // This row is already open - close it
+	                 row.child.hide();
+	                 tr.removeClass('shown');
+	                 tdi.first().removeClass('fa fa-angle-double-up fa-2x');
+	                 tdi.first().addClass('fa fa-angle-double-down fa-2x');
+	             }
+	             else {
+	                 // Open this row
+	                 row.child(format(row.data())).show();
+	                 tr.addClass('shown');
+	                 tdi.first().removeClass('fa fa-angle-double-down fa-2x');
+	                 tdi.first().addClass('fa fa-angle-double-up fa-2x');
+	             }
+	         });
+
+	         table.on("user-select", function (e, dt, type, cell, originalEvent) {
+	             if ($(cell.node()).hasClass("details-control")) {
+	                 e.preventDefault();
+	             }
+	         });
+	         
+	  	    function format(d){
+	 	         // `d` is the original data object for the row
+	 	         return '<table class="table table-striped table-bordered table-hover">' +
+	 	             '<tr>' +
+	 	                 '<td width="15%"><strong>Feedback: </strong></td>' +
+	 	                 '<td>' + d.custFeedback + '</td>' +
+	 	             '</tr>' +
+	 	             '<tr>' +
+	 	                 '<td width="15%"><strong>Account Type: </strong></td>' +
+	 	                 '<td>' + d.accountType + '</td>' +
+	 	             '</tr>' +
+	 	             '<tr>' +
+	 		             '<td width="15%"><strong>Client Code: </strong></td>' +
+	 		             '<td>' + d.clientCode + '</td>' +
+	 		         '</tr>' +
+	 		         '<tr>' +
+	 			         '<td width="15%"><strong>Account Number: </strong></td>' +
+	 			         '<td>' + d.accountNumber + '</td>' +
+	 			     '</tr>' +
+	 			     '<tr>' +
+	 			         '<td width="15%"><strong>Mobile Number: </strong></td>' +
+	 			         '<td><i class="fa fa-mobile light-red bigger-110"> </i> ' + d.mobileNumber + '</td>' +
+	 			     '</tr>' +
+	 			     '<tr>' +
+	 				     '<td width="15%"><strong>Telephone Number: </strong></td>' +
+	 				     '<td><i class="fa fa-phone light-orange bigger-110"> </i> ' + d.telNumber + '</td>' +
+	 				 '</tr>' +
+	 	         '</table>';  
+	 	    }
+		}
+    
+     
+		
+</script>
+					
+	</th:block>
+
+</body>
+</html>

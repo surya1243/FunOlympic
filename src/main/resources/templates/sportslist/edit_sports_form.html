@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/default}">
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta charset="utf-8" />
+	<title>Update Sports Page</title>
+
+	<th:block layout:fragment="styles">
+		<link rel="stylesheet" href="../static/css/summernote.css" th:href="@{/css/summernote.css}" />
+	</th:block>
+</head>
+
+<body>
+	<div>
+		<div class="main-container">
+			<div class="main-content">
+				<div class="page-content" layout:fragment="content">
+					<div class="page-header">
+						<h1>
+							<i class="ace-icon fa fa-object-group"></i> Update Sports details
+						</h1>
+					</div>
+					<!-- /.page-header -->
+					<div class=" col-sm-12 ">
+						<div th:if="${message}">
+							<h2 class="alert alert-danger" th:text="${message}" />
+						</div>
+						<div class="space-12"></div>
+						<form th:action="@{/updatesports}" action="/updatesports" class="form-horizontal"
+							enctype="multipart/form-data" data-toggle="validator" role="form" th:object="${sports}"
+							method="POST" modelAttribute="sports">
+							<input type="hidden" name="id" th:value="${sportsValue.id}" />
+							<input type="hidden" name="fileLocationUrl" th:value="${sportsValue?.fileLocationUrl}" />
+
+
+							<div class="col-sm-8 row">
+								<div class="profile-user-info profile-user-info-striped">
+									<div class="profile-info-row">
+										<div class="profile-info-name">Sports CODE<small class="text-danger">*</small>:
+										</div>
+										<div class="profile-info-value form-group">
+											<input class="form-control" name="sportsCode"
+												th:value="${sportsValue.sportsCode}"
+												data-error="Please enter Sports CODE field." id="idSportsCode"
+												placeholder="Sports CODE" type="text" style="text-transform: uppercase;"
+												onkeyup="this.value = this.value.toUpperCase();" required />
+											<small class="text-danger" id="textExample">Follow the pattern,
+												e.g.
+												<span class="bolder">(001-HOC)</span>
+												Here, 001 = Sports Id and HOC = Sports with Three CAPITAL
+												alphabet</small>
+											<div class="help-block with-errors"></div>
+										</div>
+
+
+									</div>
+									<div class="profile-info-row">
+										<div class="profile-info-name">Name of Sports<small
+												class="text-danger">*</small>:</div>
+										<div class="profile-info-value form-group">
+											<input class="form-control" name="sportsName"
+												th:value="${sportsValue.sportsName}"
+												data-error="Please enter name of sports." id="idSportsName"
+												placeholder="Enter Name of Sports" type="text" required />
+											<div class="help-block with-errors"></div>
+										</div>
+									</div>
+									<div class="profile-info-row">
+										<div class="profile-info-name">Upload Sports Document<small
+												class="text-danger">* (This will replace the previous file!!!)</small>:
+										</div>
+										<div class="profile-info-value form-group">
+											<input type="file" name="file" accept="video/*,image/png, image/jpeg"
+												id="customFile" />
+											<div class="help-block with-errors"></div>
+										</div>
+									</div>
+									<div class="profile-info-row">
+										<div class="profile-info-name">Remarks:</div>
+										<div class="profile-info-value form-group">
+											<textarea name="remark" placeholder="Describe here..."
+												th:value="${sportsValue.remark}" th:text="${sportsValue.remark}"
+												id="inputRemark" class="form-control"></textarea>
+
+
+											<div class="help-block with-errors"></div>
+										</div>
+									</div>
+									<div class="profile-info-row">
+										<div class="profile-info-name">Status:</div>
+										<div class="profile-info-value form-group">
+											<label class="radio-inline">
+												<input type="radio" name="enabled" value="true"
+													class="ace input-lg"><span class="lbl green"> Enabled </span>
+											</label>
+											<label class="radio-inline">
+												<input type="radio" name="enabled" value="false"
+													class="ace input-lg"><span class="lbl orange"> Disabled </span>
+											</label>
+										</div>
+									</div>
+								</div>
+								<div class="clearfix form-actions col-xs-offset-2 col-sm-8">
+									<a class="btn btn-sm btn-danger" th:href="@{/addsports}">
+										Cancel </a>
+									<button type="submit" class="width-65 pull-right btn btn-sm btn-success">
+										<span class="bigger-110"> Update </span> <i
+											class="ace-icon fa fa-arrow-right icon-on-right"></i>
+									</button>
+								</div>
+							</div>
+						</form>
+
+						<div class=" col-sm-4" id="pictures" th:if="${sportsValue.fileLocationUrl != null}">
+							<ul class="ace-thumbnails">
+								<li>
+									<a th:href="@{'/file/'+${sportsValue.fileLocationUrl}}" data-rel="colorbox">
+										<img alt="Image file" th:src="@{'/file/'+${sportsValue.fileLocationUrl}}"
+											class="img-responsive" />
+										<div class="text"><i class="ace-icon fa fa-search-plus"></i>
+											<div class="inner">
+												Click</div>
+										</div>
+									</a>
+								</li>
+							</ul>
+							
+							<div class="text-center"> <!-- Center content horizontally -->
+								<span th:text="${sportsValue?.fileLocationUrl}"
+									class="badge badge-pink label-lg"></span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block layout:fragment="scripts">
+		<script>
+			$(document).ready(function () {
+				$('#textExample').hide();
+				$("#idSportsCode")
+					.mouseover(function () {
+						$('#textExample').show();
+					})
+					.mouseleave(function () {
+						$('#textExample').hide();
+					});
+				$.mask.definitions['A'] = '[A-Z]';
+				$("#idSportsCode").mask("999-AAA", {autoclear: false});
+			});
+
+			$('#customFile').ace_file_input({
+				style: 'well',
+				btn_choose: 'Drop files here or click to choose',
+				btn_change: null,
+				no_icon: 'ace-icon fa fa-cloud-upload',
+				droppable: true,
+				thumbnail: 'fit'//large | fit
+				,
+				preview_error: function (filename, error_code) {
+				}
+
+			}).on('change', function () {
+			});
+
+		</script>
+		<script type="text/javascript">
+			jQuery(function ($) {
+				var $overflow = '';
+				var colorbox_params = {
+					rel: 'colorbox',
+					reposition: true,
+					scalePhotos: true,
+					scrolling: false,
+					previous: '<i class="ace-icon fa fa-arrow-left"></i>',
+					next: '<i class="ace-icon fa fa-arrow-right"></i>',
+					close: '&times;',
+					current: '{current} of {total}',
+					maxWidth: '100%',
+					maxHeight: '100%',
+					onOpen: function () {
+						$overflow = document.body.style.overflow;
+						document.body.style.overflow = 'hidden';
+					},
+					onClosed: function () {
+						document.body.style.overflow = $overflow;
+					},
+					onComplete: function () {
+						$.colorbox.resize();
+					}
+				};
+
+				$('.ace-thumbnails [data-rel="colorbox"]').colorbox(
+					colorbox_params);
+				$("#cboxLoadingGraphic")
+					.html(
+						"<i class='ace-icon fa fa-spinner orange fa-spin'></i>");//let's add a custom loading icon
+
+				$(document).one('ajaxloadstart.page', function (e) {
+					$('#colorbox, #cboxOverlay').remove();
+				});
+			})
+		</script>
+		<script th:inline="javascript">
+			/*<![CDATA[*/
+			var enabledVal = /*[[${sportsValue.enabled}]]*/ 'Enabled';
+			/*]]>*/
+
+			function setSelectedIndex(s, v) {
+				for (var i = 0; i < s.options.length; i++) {
+					if (s.options[i].value == v) {
+						s.options[i].selected = true;
+						break;
+					}
+				}
+				return;
+			}
+			$(function () {
+				$("input[name=enabled][value=" + enabledVal + "]").attr(
+					'checked', true);
+
+			});
+		</script>
+	</th:block>
+
+</body>
+
+</html>

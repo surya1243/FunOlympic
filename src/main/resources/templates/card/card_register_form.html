@@ -1,0 +1,1901 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/default}">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta charset="utf-8" />
+<title>Card Request Page</title>
+
+<th:block layout:fragment="styles">
+<link rel="stylesheet" href="../static/css/daterangepicker.min.css" th:href="@{/css/daterangepicker.min.css}" />
+    <style type="text/css">
+		  td.details-control {
+		            text-align:center;
+		            color:forestgreen;
+		    cursor: pointer;
+		}
+		tr.shown td.details-control {
+		    text-align:center; 
+		    color:red;
+		}
+    </style>
+
+</th:block>
+</head>
+<body>
+	<div>
+		<div layout:fragment="content">
+			<div class="page-content">
+				<div class="row">
+					<div class="col-xs-12">
+						<!-- PAGE CONTENT BEGINS -->
+						<div th:if="${message}">
+							<h2 class="alert alert-danger" th:text="${message}" />
+						</div>
+						<div th:if="${successMessage}">
+							<div class="alert alert-success">
+								<button type="button" class="close" data-dismiss="alert">
+									<i class="ace-icon fa fa-times"></i>
+								</button>
+								<strong th:text="${successMessage}">Success!</strong> <br />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="tabbable">
+							<ul
+								class="nav nav-tabs padding-12 tab-color-blue background-blue"
+								id="myTab4">
+								<li sec:authorize="hasAnyAuthority('ADMIN','HIGHSUPERVISOR', 'SUPERVISOR','CARDMAKER','CARDSUPERVISOR', 'CARDCUSTODIAN')"><a data-toggle="tab"
+									href="#newCardRequest" aria-expanded="true">New Card
+										Request</a></li>
+								
+								<li class="dropdown" sec:authorize="hasAnyAuthority('ADMIN','HIGHSUPERVISOR', 'SUPERVISOR','CARDMAKER','CARDSUPERVISOR', 'CARDCUSTODIAN')">
+									<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+										New Card Request List &nbsp;
+										<i class="ace-icon fa fa-caret-down bigger-110 width-auto"></i>
+									</a>
+	
+									<ul class="dropdown-menu dropdown-info">
+										<li>
+											<a data-toggle="tab" href="#idInProcess" id="drop1InProcess"> In-Process &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="badge badge-pink idInTransitVal1" id="idInProcesssitVal1"></span> </a>
+										</li>
+	
+										<li>
+											<a data-toggle="tab" href="#idActive" id="drop2Active"> Active &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="badge badge-warning idInTransitVal2" id="idActiveVal"></span></a>
+										</li>
+									</ul>
+								</li>
+								
+								<li class="active" sec:authorize="hasAnyAuthority('ADMIN','HIGHSUPERVISOR', 'SUPERVISOR','CARDMAKER','CARDSUPERVISOR', 'CARDCUSTODIAN')"><a data-toggle="tab" href="#cardPieChart">Card
+								 Statistics&nbsp;&nbsp;<i class="ace-icon fa fa-pie-chart red bigger-120"></i></a></li>
+
+							<li sec:authorize="hasAnyAuthority('ADMIN','HIGHSUPERVISOR', 'SUPERVISOR','CARDMAKER','CARDSUPERVISOR')"><a data-toggle="tab" href="#editNewCardRequest"
+								aria-expanded="false">Edit Card Request List</a></li>
+						</ul>
+
+							<div class="tab-content">
+								<div id="newCardRequest" class="tab-pane" sec:authorize="hasAnyAuthority('ADMIN','HIGHSUPERVISOR', 'SUPERVISOR','CARDMAKER','CARDSUPERVISOR', 'CARDCUSTODIAN')">
+									<div class="position-relative">
+										<div class="signup-box visible widget-box no-border">
+											<div class="widget-body">
+												<div class="widget-main">
+													<form th:object="${card}" method="POST" autocomplete="off"
+														id="validation-form" th:action="@{/cardrequest}"
+														data-toggle="validator" role="form">
+
+														<div class="row">
+															<div class="col-xs-6 col-sm-3">
+																<div class="form-group">
+																	<label class="control-label block" for="idAppDate">Customer's
+																		App Date<small class="red"> *</small>
+																	</label>
+																	<div class="input-group">
+																		<input id="idAppDate" type="text"
+																			name="customerAppDate" data-date-format="YYYY-MM-DD"
+																			placeholder="Select date..."
+																			class="form-control date-pickerForm"
+																			data-error="Please select Date." required /> <span
+																			class="input-group-addon"> <i
+																			class="fa fa-clock-o bigger-110"></i>
+																		</span>
+																	</div>
+																	<div class="help-block with-errors"></div>
+																</div>
+															</div>
+															<div class="col-xs-6 col-sm-3">
+																<div class="form-group">
+																	<label class="control-label block" for="idRequestDate">Request
+																		Date
+																	</label>
+																	<div class="input-group">
+																		<input id="idRequestDate" type="text"
+																			name="requestDate" data-date-format="YYYY-MM-DD"
+																			placeholder="Select date..."
+																			class="form-control date-pickerForm"
+																			data-error="Please select Date." /> <span
+																			class="input-group-addon"> <i
+																			class="fa fa-clock-o bigger-110"></i>
+																		</span>
+																	</div>
+																	<div class="help-block with-errors"></div>
+																</div>
+															</div>
+
+															<div class="col-xs-6 col-sm-3">
+																<div class="form-group">
+																	<label class="control-label block" for="idAccOperation">Account
+																		Operation <small class="red"> *</small>
+																	</label> <select class="select2 form-control"
+																		id="idAccOperation" name="accountOperation"
+																		data-placeholder="Choose account operation..."
+																		data-error="Please select account operation." required>
+																		<option value=""></option>
+																		<option value="Single">Single</option>
+																		<option value="Joint">Joint</option>
+																	</select>
+																	<div class="help-block with-errors"></div>
+																</div>
+															</div>
+
+															<div class="col-xs-6 col-sm-3">
+																<div class="form-group">
+																	<label class="control-label block" for="idAccountType">Account
+																		Type </label> <select class="select2 form-control"
+																		id="idAccountType" name="accountType" required
+																		data-placeholder="Choose an account type..."
+																		data-error="Please select account type.">
+																		<option value=""></option>
+																		<option value="10">Savings</option>
+																		<option value="20">Current</option>
+																	</select>
+																	<div class="help-block with-errors"></div>
+																</div>
+															</div>
+
+														</div>
+														<div class="hr hr-dotted hr-4"></div>
+														<div class="row">
+															<div class="col-xs-6 col-sm-3">
+																<div class="form-group">
+																	<label class="control-label block"
+																		for="idAccountNumber">Account Number <small
+																		class="red"> *</small>
+																	</label> <input type="text"
+																		class="form-control input-mask-accountNo"
+																		name="accountNumber" id="idAccountNumber" required
+																		pattern="^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$"
+																		onblur="this.parentNode.parentNode.style.backgroundColor=/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/.test(this.value)?'inherit':'transparent'"
+																		placeholder="Enter account number (20 digits)"
+																		data-error="Please fill 20 digit Account No. field.">
+																	<div class="help-block with-errors"></div>
+																</div>
+															</div>
+															<div class="col-xs-6 col-sm-3">
+																<div class="form-group">
+																	<label class="control-label block" for="idClientCode">Client
+																		Code </label> <input type="text"
+																		class="form-control input-mask-clientCode" readonly
+																		name="clientCode" id="idClientCode" data-minlength="8"
+																		placeholder="Client Code">
+																	<div class="help-block with-errors"></div>
+																</div>
+															</div>
+															<div class="col-xs-6 col-sm-3">
+																<div class="form-group">
+																	<label class="control-label block" for="idBranchCode">Branch
+																		Code </label> <input type="text"
+																		class="form-control input-mask-branchCode" readonly
+																		name="branchCode" id="idBranchCode" data-minlength="3"
+																		placeholder="Branch Code">
+																	<div class="help-block with-errors"></div>
+																</div>
+															</div>
+															<div class="col-xs-6 col-sm-3">
+																<div class="form-group">
+																	<label class="control-label block" for="idCurrencyCode">Currency
+																		<small class="red"> *</small>
+																	</label> <input type="text" class="form-control"
+																		name="currency" id="idCurrencyCode" th:Value="524"
+																		readonly>
+																	<div class="help-block with-errors"></div>
+																</div>
+															</div>
+														</div>
+
+														<div class="hr hr-dotted hr-4"></div>
+
+														<div class="row">
+															<div class="col-xs-6 col-sm-3">
+																<div class="form-group">
+																	<label class="control-label block" for="idFname">First
+																		Name <small class="red"> *</small>
+																	</label> <input type="text" class="form-control" name="fName"
+																		id="idFname" placeholder="Enter first name"
+																		style="text-transform: uppercase;" maxlength ="18"
+																		onkeyup="this.value = this.value.toUpperCase();"
+																		data-error="Please fill first name field." required />
+																	<div class="help-block with-errors"></div>
+																</div>
+															</div>
+															<div class="col-xs-6 col-sm-3">
+																<div class="form-group">
+																	<label class="control-label block" for="idLname">Last
+																		Name <small class="red"> *</small>
+																	</label> <input type="text" class="form-control" name="lName"
+																		id="idLname" placeholder="Enter last name"
+																		style="text-transform: uppercase;" maxlength ="18"
+																		onkeyup="this.value = this.value.toUpperCase();"
+																		data-error="Please fill last name field." required />
+																	<div class="help-block with-errors"></div>
+																</div>
+															</div>
+															<div class="col-xs-6 col-sm-3">
+																<div class="form-group">
+																	<label class="control-label block">Gender
+																		<small class="red"> *</small>
+																	</label>
+																	<div class="hr hr-6"></div>
+																	<div>
+																		<label class="line-height-1 blue"> <input
+																			name="gender" value="0" type="radio" class="ace"
+																			required /> <span class="lbl"> Male [0]
+																				&nbsp;&nbsp;&nbsp;&nbsp;</span>
+																		</label> <label class="line-height-1 blue"> <input
+																			name="gender" value="1" type="radio" class="ace"
+																			required /> <span class="lbl"> Female [1]
+																				&nbsp;&nbsp;&nbsp;&nbsp;</span>
+																		</label> <label class="line-height-1 blue"> <input
+																			name="gender" value="2" type="radio" class="ace"
+																			required /> <span class="lbl"> Others</span>
+																		</label>
+																	</div>
+
+																	<div class="help-block with-errors"></div>
+																</div>
+															</div>
+															<div class="col-xs-6 col-sm-3">
+																<div class="form-group">
+																	<label class="control-label block"
+																		for="idMaritalStatus">Marital Status <small
+																		class="red"> *</small>
+																	</label>
+																	<div class="hr hr-6"></div>
+																	<div id="idMaritalStatus">
+																		<label class="line-height-1 blue"> <input
+																			name="maritalStatus" value="0" type="radio"
+																			class="ace" required /> <span class="lbl">
+																				Unmarried [0] &nbsp;&nbsp;&nbsp;&nbsp;</span>
+																		</label> <label class="line-height-1 blue"> <input
+																			name="maritalStatus" value="1" type="radio"
+																			class="ace" required /> <span class="lbl">
+																				Married [1]</span>
+																		</label>
+																	</div>
+																	<div class="help-block with-errors"></div>
+																</div>
+															</div>
+														</div>
+
+														<div class="hr hr-dotted hr-4"></div>
+
+														<div class="row">
+															<div class="col-xs-6 col-sm-3">
+																<div class="form-group">
+																	<label class="control-label block"
+																		for="idContactAddress">Contact Address <small
+																		class="red"> *</small>
+																	</label> <input type="text" class="form-control"
+																		name="contactAddress" id="idContactAddress"
+																		placeholder="Enter contact address"
+																		style="text-transform: uppercase;"
+																		onkeyup="this.value = this.value.toUpperCase();"
+																		data-error="Please fill contact address." required />
+																	<div class="help-block with-errors"></div>
+																</div>
+															</div>
+															<div class="col-xs-6 col-sm-3">
+																<div class="form-group">
+																	<label class="control-label block" for="idEmail">Email
+																	</label> <input type="email" class="form-control"
+																		name="emailAddress" id="idEmail"
+																		data-error="Please fill valid email."
+																		placeholder="Enter email address">
+																	<div class="help-block with-errors"></div>
+																</div>
+															</div>
+															<div class="col-xs-6 col-sm-3">
+																<div class="form-group">
+																	<label class="control-label block" for="idMobileNumber">Mobile
+																		Number <small class="red"> *</small>
+																	</label> <input type="text"
+																		class="form-control input-mask-mobile"
+																		name="mobileNumber" id="idMobileNumber"
+																		placeholder="Enter Mobile Number"
+																		pattern="^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$"
+																		onblur="this.parentNode.parentNode.style.backgroundColor=/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/.test(this.value)?'inherit':'transparent'"
+																		data-error="Please fill Mobile number field." required />
+																	<div class="help-block with-errors"></div>
+																</div>
+															</div>
+															<div class="col-xs-6 col-sm-3">
+																<div class="form-group">
+																	<label class="control-label block" for="idPhoneNumber">Phone
+																		Number
+																	</label> <input type="text" class="form-control"
+																		name="phoneNumber" id="idPhoneNumber">
+																	<div class="help-block with-errors"></div>
+																</div>
+															</div>
+														</div>
+
+														<div class="hr hr-dotted hr-4"></div>
+
+														<div class="row">
+															<div class="col-xs-6 col-sm-3">
+																<div class="form-group">
+																	<label class="control-label block"
+																		for="idBranchName">Card Req. Originating Branch <small class="red"> *</small>
+																	</label> <select class="form-control select2" id="idBranchName"
+																		name="cardReqOriginatingBranch"
+																		data-placeholder="Choose Branch..."
+																		data-error="Please select Branch field." required>
+																		<option value=""></option>
+										                                <option th:each="branches : ${branchLists}"
+										                                        th:value="${branches.branchName}"
+										                                        th:text="${branches.branchName}"
+										                                        th:selected="${branches.branchName == currentUser.branchName}"></option>
+																	</select>
+																	<div class="help-block with-errors"></div>
+																</div>
+															</div>
+															<div class="col-xs-6 col-sm-3">
+																<div class="form-group">
+																	<label class="control-label block" for="idCardRemarks">Request
+																		Remarks <small class="red"> *</small>
+																	</label> <select class="select2 form-control" name="requestRemark"
+																		id="idCardRemarks"
+																		data-placeholder="Choose card remarks..."
+																		data-error="Please select card remarks field.">
+																		<option value="New" selected="selected">New</option>
+																	</select>
+																	<div class="help-block with-errors"></div>
+																</div>
+															</div>
+															<div class="col-xs-6 col-sm-3">
+																<div class="form-group">
+																	<label class="control-label block" for="idCardStatus">Card
+																		Status </label> <select class="select2 form-control"
+																		id="idCardStatus" name="cardStatus"
+																		data-placeholder="Choose a card status..."
+																		data-error="Please select card status.">
+																		<option value="In-process(step 1)" selected="selected">In-process(step 1)</option>
+																		
+																	</select>
+																	<div class="help-block with-errors"></div>
+																</div>
+															</div>
+															<div class="col-xs-6 col-sm-3">
+																<div class="form-group">
+																	<label class="control-label block"
+																		for="idStatusUpdatedDate">Status Updated Date
+																	</label>
+																	<div class="input-group">
+																		<input id="idStatusUpdatedDate" type="text"
+																			name="statusUpdatedDate"
+																			data-date-format="YYYY-MM-DD"
+																			placeholder="Select date"
+																			class="form-control date-pickerForm"
+																			data-error="Please select Date." /> <span
+																			class="input-group-addon"> <i
+																			class="fa fa-clock-o bigger-110"></i>
+																		</span>
+																	</div>
+																	<div class="help-block with-errors"></div>
+																</div>
+															</div>
+
+															
+														</div>
+
+														<div class="hr hr-dotted hr-4"></div>
+
+														<div class="row">
+															<div class="col-xs-6 col-sm-6">
+																<div class="form-group">
+																	<label class="control-label block" for="idOtherRemarks">Other
+																		Remarks </label>
+																	<textarea name="otherRemarks"
+																		placeholder="Write the descriptions here..."
+																		class="form-control limited" maxlength="1200"
+																		id="idOtherRemarks" rows="4"
+																		data-error="Please fill the remarks"></textarea>
+																	<div class="help-block with-errors"></div>
+																</div>
+															</div>
+															<div class="col-xs-6 col-sm-3">
+																<div class="form-group">
+																	<label class="control-label block" for="idLodgedBy">Lodged
+																		By </label>
+																	<div class="input-group">
+																		<input id="idLodgedBy" type="text" name="lodgedBy"
+																			th:value="${currentUser.email}" class="form-control"
+																			readonly /> <span class="input-group-addon">
+																			<i class="fa fa-clock-o bigger-110"></i>
+																		</span>
+																	</div>
+																	<div class="help-block with-errors"></div>
+																</div>
+															</div>
+															<div class="space-12"></div>
+															<div class="col-xs-6 col-sm-3">
+																<div class="form-group">
+																	<div class="row">
+																		<div class="col-xs-6 col-sm-6" id="btnCollection">
+																			<div class="clearfix">
+																				<button class="pull-right btn btn-sm" type="button"
+																					id="reset">
+																					<i class="ace-icon fa fa-refresh"></i> <span
+																						class="bigger-110">Reset</span>
+																				</button>
+																			</div>
+																		</div>
+																		<div class="col-xs-6 col-sm-6">
+																			<div class="clearfix">
+																				<button class="pull-left btn btn-sm btn-success"
+																					type="submit">
+																					<span class="bigger-110">Submit</span> <i
+																						class="ace-icon fa fa-arrow-right icon-on-right"></i>
+																				</button>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+
+													</form>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div id="idInProcess" class="tab-pane fade" sec:authorize="hasAnyAuthority('ADMIN','HIGHSUPERVISOR', 'SUPERVISOR','CARDMAKER','CARDSUPERVISOR', 'CARDCUSTODIAN')">
+									<div class="row">
+										<div class="col-xs-12 col-sm-12">
+											<div class="search-area well well-sm">
+												<div class="search-filter-header bg-primary">
+													<h5 class="smaller no-margin-bottom">
+														<i class="ace-icon fa fa-sliders light-green bigger-130"></i>&nbsp; Refine your Search
+													</h5>
+												</div>
+													<div class="space-10"></div>								
+												<fieldset class="form-inline">
+													<div class="input-group col-sm-2"> 
+													
+												<select class="form-control select2" id="branchNameSearchProcess" name="branchName" 
+													data-placeholder="Choose Branch..."  required>
+														 <option value=""></option>
+														 <option th:each="branchList : ${branchLists}"
+					                           										 th:value="${branchList.branchName}"
+					                          										 th:text="${branchList.branchName}">Branch</option>
+													</select>
+													
+																										
+														</div>
+													<div class="input-group col-sm-2">
+													<select
+															class="select2 form-control" id="idCardStatusValue"
+															name="cardStatus"
+															data-placeholder="Choose a Card Status..."
+															data-error="Please select Card Status field."
+															required>
+															<option value=""></option>
+															<option value="In-process(step 1)">In-process(step 1)</option>
+															<option value="In-process(step 2)">In-process(step 2)</option>
+														</select>                                         
+													</div> 
+													<div class="inline pull-right">
+													<label for="idDateRange">Request Date Range Picker: </label>                   
+													<div class="input-group">
+														<span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span> 
+														<input class="form-control idDateRange" type="text" name="date-range-picker"
+																	data-date-format="yyyy-mm-dd" id="idDateRange" />
+													</div></div>                          
+												</fieldset>
+												<div class="space-4"></div>	
+											</div>
+										</div>
+									</div>					
+									<div class="row">
+										<div class="col-xs-12">
+											<!-- PAGE CONTENT BEGINS -->
+											
+											<div class="table-responsive">					
+												<div class="table-header">Card Request List - In Process
+												</div>
+												<table width="100%" id="dynamic-table" aria-hidden="true"
+														class="table table-striped table-bordered table-hover" >
+													<thead>
+														<tr>
+																<th width="4%" class="detail-col"></th>
+																<th width="12%" data-class='hidden'>Customer's App Date</th>
+																<th width="10%">Card Req. Originating Branch</th>
+																<th width="8%">Request Date</th>
+																<th width="10%">Account Operation</th>
+																<th width="10%">Account Type</th>
+																<th width="10%" data-class='hidden'>Account Number</th>
+																<th width="10%">Client Code</th>
+																<th width="10%" data-class='hidden'>Branch Code</th>
+																<th width="10%" data-class='hidden'>Currency</th>
+																<th width="10%">First Name</th>
+																<th width="10%" >Last Name</th>
+																<th width="10%">Gender</th>
+																<th width="8%">Marital Status</th>
+																<th width="10%" data-class='hidden'>Contact Address</th>
+																<th width="10%">Mobile Number</th>
+																<th width="10%"  data-class='hidden'>Email</th>
+																<th width="12%">Card Status</th>
+																<th width="10%" data-class='hidden'>Status Updated Date</th>
+																<th width="10%">Request Remarks</th>
+																<th width="10%" data-class='hidden'>Other Remarks</th>
+																<th width="10%" class="center" sec:authorize="hasAnyAuthority('ADMIN','HIGHSUPERVISOR', 'SUPERVISOR','CARDMAKER','CARDSUPERVISOR', 'CARDCUSTODIAN')">Action</th>
+														</tr>
+													</thead>
+												</table>   
+											</div>
+											<!-- PAGE CONTENT ENDS -->
+										</div>
+										<!-- /.col -->
+									</div>
+								</div>
+
+								<div id="idActive" class="tab-pane fade" sec:authorize="hasAnyAuthority('ADMIN','HIGHSUPERVISOR', 'SUPERVISOR','CARDMAKER','CARDSUPERVISOR', 'CARDCUSTODIAN')">
+									<div class="row">
+										<div class="col-xs-12 col-sm-12">
+											<div class="search-area well well-sm">
+												<div class="search-filter-header bg-primary">
+													<h5 class="smaller no-margin-bottom">
+														<i class="ace-icon fa fa-sliders light-green bigger-130"></i>&nbsp; Refine your Search
+													</h5>
+												</div>
+													<div class="space-10"></div>								
+												<fieldset class="form-inline">
+													<div class="input-group col-sm-2"> 
+												<select class="form-control select2" id="branchNameActive" name="branchName" 
+													data-placeholder="Choose Branch..."  required>
+														 <option value=""></option>
+														 <option th:each="branchList : ${branchLists}"
+					                           										 th:value="${branchList.branchName}"
+					                          										 th:text="${branchList.branchName}">Branch</option>
+													</select>
+														</div>
+
+													<div class="inline pull-right">
+													<label for="idDateRange">Request Date Range Picker: </label>                   
+													<div class="input-group">
+														<span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span> 
+														<input class="form-control idDateRange" type="text" name="date-range-picker"
+																	data-date-format="yyyy-mm-dd" id="idDateRangeActive" />
+													</div></div>                          
+												</fieldset>
+												<div class="space-4"></div>	
+											</div>
+										</div>
+									</div>					
+									<div class="row">
+										<div class="col-xs-12">
+											<!-- PAGE CONTENT BEGINS -->
+											
+											<div class="table-responsive">					
+												<div class="table-header">Card Request List - Active
+												</div>
+												<table width="100%" id="dynamic-tableActive" aria-hidden="true"
+														class="table table-striped table-bordered table-hover" >
+													<thead>
+														<tr>
+																<th width="4%" class="detail-col"></th>
+																<th width="12%" data-class='hidden'>Customer's App Date</th>
+																<th width="10%">Card Req. Originating Branch</th>
+																<th width="8%">Request Date</th>
+																<th width="10%">Account Operation</th>
+																<th width="6%">Account Type</th>
+																<th width="10%" data-class='hidden'>Account Number</th>
+																<th width="10%">Client Code</th>
+																<th width="10%" data-class='hidden'>Branch Code</th>
+																<th width="10%" data-class='hidden'>Currency</th>
+																<th width="10%">First Name</th>
+																<th width="10%" >Last Name</th>
+																<th width="10%">Gender</th>
+																<th width="8%">Marital Status</th>
+																<th width="10%" data-class='hidden'>Contact Address</th>
+																<th width="10%">Mobile Number</th>
+																<th width="10%"  data-class='hidden'>Email</th>
+																<th width="10%">Card Status</th>
+																<th width="10%" data-class='hidden'>Status Updated Date</th>
+																<th width="10%">Expiry Date</th>
+																<th width="10%" data-class='hidden'>Other Remarks</th>
+																<th width="10%" sec:authorize="hasAnyAuthority('ADMIN','HIGHSUPERVISOR', 'SUPERVISOR','CARDMAKER','CARDSUPERVISOR', 'CARDCUSTODIAN')">Action</th>
+														</tr>
+													</thead>
+												</table>   
+											</div>
+										</div>
+									</div>
+								</div>
+
+							<div id="cardPieChart" class="tab-pane in active" sec:authorize="hasAnyAuthority('ADMIN','HIGHSUPERVISOR', 'SUPERVISOR','CARDMAKER','CARDSUPERVISOR', 'CARDCUSTODIAN')">
+								<div class="row">
+									<div id="container" ></div>
+								</div>
+							</div>
+
+								<div id="editNewCardRequest" class="tab-pane" sec:authorize="hasAnyAuthority('ADMIN','HIGHSUPERVISOR', 'SUPERVISOR','CARDMAKER','CARDSUPERVISOR')">
+								<div class="row">
+										<div class="col-xs-12 col-sm-12">
+											<div class="search-area well well-sm">
+												<div class="search-filter-header bg-primary">
+													<h5 class="smaller no-margin-bottom">
+														<i class="ace-icon fa fa-sliders light-green bigger-130"></i>&nbsp; Refine your Search
+													</h5>
+												</div>
+													<div class="space-10"></div>								
+												<fieldset class="form-inline">
+													<div class="input-group col-sm-2"> 
+												<select class="form-control select2" id="idBranchNameEdit" name="cardReqOriginatingBranch" 
+													data-placeholder="Choose Branch..."  required>
+														 <option value=""></option>
+														 <option th:each="branchList : ${branchLists}"
+					                           										 th:value="${branchList.branchName}"
+					                          										 th:text="${branchList.branchName}">Branch</option>
+													</select>
+													
+													
+													</div>
+													<div class="input-group col-sm-2">
+													<select
+															class="select2 form-control" id="idCardStatusValEdit"
+															name="cardStatus"
+															data-placeholder="Choose a Card Status..."
+															data-error="Please select Card Status field."
+															required>
+															<option value=""></option>
+															<option value="In-process(step 1)">In-process(step 1)</option>
+															<option value="In-process(step 2)">In-process(step 2)</option>
+															<option value="Active">Active</option>
+														</select>                                         
+													</div>
+													<div class="inline pull-right">
+													<label for="idDateRange"> Request Date Range Picker: </label>                   
+													<div class="input-group">
+														<span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span> 
+														<input class="form-control" type="text" name="date-range-picker"
+																	data-date-format="yyyy-mm-dd" id="dateRangeEdit" />
+													</div></div>                          
+												</fieldset>
+												<div class="space-4"></div>	
+											</div>
+										</div>
+									</div>					
+									<div class="row">
+										 <div class="col-xs-12">
+											<div class="table-responsive">					
+												<div class="table-header">Card Request List
+												</div>
+												<table width="100%" id="dynamicEdit-table" aria-hidden="true"
+														class="table table-striped table-bordered table-hover" >
+													<thead>
+														<tr>
+																<th width="4%" class="detail-col"></th>
+																<th width="12%" data-class='hidden'>Customer's App Date</th>
+																<th width="10%">Card Req. Originating Branch</th>
+																<th width="8%">Request Date</th>
+																<th width="10%">Account Operation</th>
+																<th width="10%">Account Type</th>
+																<th width="10%" data-class='hidden'>Account Number</th>
+																<th width="8%">Client Code</th>
+																<th width="10%" data-class='hidden'>Branch Code</th>
+																<th width="10%" data-class='hidden'>Currency</th>
+																<th width="10%">First Name</th>
+																<th width="10%" >Last Name</th>
+																<th width="7%">Gender</th>
+																<th width="6%">Marital Status</th>
+																<th width="10%" data-class='hidden'>Contact Address</th>
+																<th width="10%">Mobile Number</th>
+																<th width="10%"  data-class='hidden'>Email</th>
+																<th width="10%">Card Status</th>
+																<th width="10%" data-class='hidden'>Status Updated Date</th>
+																<th width="10%">Request Remarks</th>
+																<th width="10%" data-class='hidden'>Other Remarks</th>
+																<th width="4%" sec:authorize="hasAnyAuthority('ADMIN','HIGHSUPERVISOR', 'SUPERVISOR','CARDMAKER','CARDSUPERVISOR')"></th>
+																<th width="4%" sec:authorize="hasAnyAuthority('ADMIN','HIGHSUPERVISOR','CARDSUPERVISOR')"></th>
+														</tr>
+													</thead>
+												</table>   
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- basic scripts -->
+	<th:block layout:fragment="scripts">
+		<script th:inline="javascript">
+					/*<![CDATA[*/
+					var countVal = /*[[${count}]]*/ 'Count';
+					/*]]>*/
+	$(window).load(function () {
+		$("#container").html('<div class="blue bigger-150">Loading  <i class="ace-icon fa fa-spinner fa-spin blue bigger-150"></i>  </div>')
+		var container = $("#container");
+
+
+		$.ajax({
+			url: '/count/cardStatus',
+		   	type: "GET",
+		   	dataType: 'json',
+		    contentType: 'application/json',   	
+		   	success: function(response){
+				var processed_json = new Array();
+		   		for (var key in response) {
+		   		    if (response.hasOwnProperty(key)) {
+		   		    	processed_json.push([key, response[key]]);
+		   		    	
+		   		    }
+		   		}
+
+		   		if(response){
+		   			for(var key in response){
+		   				var inProcess = countVal - response.Active;
+		   				$("#idInProcesssitVal1").html(inProcess);
+		   				$("#idActiveVal").html(response.Active);
+		   			}
+					   
+		   		}
+				   if(response){
+					Highcharts.setOptions({
+							colors: [ '#50B432', '#ED561B', '#058DC7','#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']
+						});
+
+		   			Highcharts.chart('container', {
+		   			    chart: {
+		   			        type: 'pie',
+		   			        options3d: {
+		   			            enabled: true,
+		   			            alpha: 45,
+		   			            beta: 0
+		   			        }
+		   			    },
+		   			    title: {
+		   			        text: 'Card Status'
+		   			    },
+		   			 legend: {
+		   		        labelFormat: '{name}: <span style="opacity: 0.9">{y}</span>'
+		   		    },
+		   			    credits: {
+		   			        enabled: false
+		   			    },	   			    
+		   			    tooltip: {
+		   			        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+		   			    },
+		   			    plotOptions: {
+		   			        pie: {
+		   			            allowPointSelect: true,
+		   			            cursor: 'pointer',
+		   			            depth: 35,
+		   			            dataLabels: {
+		   			                enabled: true,
+		   			                format: '{point.name}'
+		   			            }
+		   			        }
+		   			    },
+		   			    series: [{
+		   			        type: 'pie',
+		   			        name: 'Card Status',
+		   			        data: processed_json,
+		   			     showInLegend: true
+		   			    }]
+		   			});
+		   		}else{
+					$("#container").html("<strong>Oops, an error occured fetching the data.</strong>");
+				}
+
+
+		   	}
+		});
+	});
+
+	</script>
+	
+	
+		<script>
+ 		$(function() {
+ 			var start = moment().subtract(29, 'days');
+ 		    var end = moment();
+ 		    
+ 			  $('#dateRangeEdit').daterangepicker({
+ 				startDate: start,
+ 		        endDate: end,
+ 			    opens: 'left',
+ 			    autoclose: true,
+ 				todayHighlight: true,
+ 				ranges: {
+ 		           'Today': [moment(), moment()],
+ 		           'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+ 		           'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+ 		           'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+ 		           'This Month': [moment().startOf('month'), moment().endOf('month')],
+ 		           'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+ 		        },
+ 		       locale: {
+ 	 				format: 'YYYY-MM-DD'
+ 	 			    }
+ 			  }, function(start, end, label) {
+ 				 ajaxAllCardByDateBetween(start, end);
+ 			  });
+ 			  
+ 			});
+ 		</script>
+	<script>
+		$(document).ready(function(){
+	    	 ajaxGetAllCardEdit();
+	     });
+		
+		/* edit list filter */
+		$("#idBranchNameEdit").change(function() {
+ 			if(!$('#idCardStatusValEdit').val()){
+ 				ajaxEditCardRenewByBranchName();
+ 			 }else{
+ 				ajaxEditCardRenewByCardStatusBranch();
+ 			 }
+	    });
+		
+		$("#idCardStatusValEdit").change(function() {
+ 			if(!$('#idBranchNameEdit').val()){
+ 				ajaxEditCardRenewByCardStatus();
+ 			 }else{
+ 				ajaxEditCardRenewByCardStatusBranch();
+ 			 }
+	    });
+		
+ 		function ajaxEditCardRenewByBranchName(){
+ 			let branchName = $('#idBranchNameEdit').val();
+ 			const url = '/getallcard/branchname/'+branchName;
+ 			$.getJSON(url, function (data) {
+ 				createEditDataTableRenew(data);
+ 			});
+ 		}
+ 		
+ 		function ajaxEditCardRenewByCardStatus(){
+ 			let cardStatus = $('#idCardStatusValEdit').val();
+ 			const url = '/getallcard/cardstatus/'+cardStatus;
+ 			$.getJSON(url, function (data) {
+ 				createEditDataTableRenew(data);
+ 			});
+ 		}
+ 		
+ 		function ajaxEditCardRenewByCardStatusBranch(){
+ 			let branchName = $('#idBranchNameEdit').val();
+ 			let cardStatus = $('#idCardStatusValEdit').val();
+ 			const url = '/getallcard/group/'+branchName + '/' + cardStatus;
+ 			$.getJSON(url, function (data) {
+ 				createEditDataTableRenew(data);
+ 			});
+ 		}
+			
+	 		function ajaxGetAllCardEdit(){
+	 			const url = '/getallcard';
+	 			$.getJSON(url, function (data) {
+	 				createEditDataTableRenew(data);
+	 			});
+	 		}
+	 		
+			function ajaxAllCardByDateBetween(start, end){
+	 			let startDate=start.format('YYYY-MM-DD');
+	 			let endDate=end.format('YYYY-MM-DD');
+	 			const url = '/getallcard/'+startDate+'/'+endDate;
+	 			$.getJSON(url, function (data) {
+	 				createEditDataTableRenew(data);
+	 			});
+	 		}
+	 		
+	 		function createEditDataTableRenew(data){
+		         var table = $('#dynamicEdit-table').DataTable({
+		        	 "order": [ 3, "desc" ],
+		        	 destroy: true,
+		             "data": data,
+		             select:"single",
+		             "columns": [
+		                 {
+		                     "className": 'details-control',
+		                     "orderable": false,
+		                     "data": null,
+		                     "defaultContent": '',
+		                     "render": function () {
+		                         return '<i class="ace-icon fa fa-angle-double-down fa-2x" title="Show details" aria-hidden="true"></i>';
+		                     },
+		                     width:"15px"
+		                 },
+		                { "data": "customerAppDate",
+		                	 "render" : function(data, type, row, meta) {
+									if (data === null) return "";
+									var thisDate = moment(new Date(data)).format("YYYY-MM-DD");
+									return thisDate
+								}
+		                 },
+		                { "data": "cardReqOriginatingBranch" },
+		                 { "data": "requestDate",
+		                	 "render" : function(data, type, row, meta) {
+									if (data === null) return "";
+									var thisDate = moment(new Date(data)).format("YYYY-MM-DD");
+									return thisDate
+								}
+		                 },
+		                 { "data": "accountOperation" },
+		                { "data": "accountType"
+		                 },
+		                 { "data": "accountNumber" },
+		                 { "data": "clientCode",
+		                	"render": function(data,type,row,meta) { // render event defines the markup of the cell text 
+	 	                       var a = '<a href="/cardrequestlist/detailpage/' + row["id"]+ '" title="Click for more details">' + row.clientCode +'</a>';
+	 	                       return a;}
+		                 },
+		                 { "data": "branchCode" },
+		                 { "data": "currency" },
+		                 { "data": "fName" },
+		                 { "data": "lName" },
+		                 { "data": "gender"
+		                 },
+		                 { "data": "maritalStatus"
+		                 },
+		                 { "data": "contactAddress" },
+		                 { "data": "mobileNumber" },
+		                 { "data": "emailAddress" },
+		                 { "data": "cardStatus" },
+		                 { "data": "statusUpdatedDate" },
+		                 { "data": "requestRemark" },
+		                 { "data": "otherRemarks" },
+		                 { "data": null,
+		                	 "className": 'center',
+		                	 "orderable": false,
+		 	                	"render": function(data,type,row,meta) { // render event defines the markup of the cell text 
+		  	                       var a = '<div class="btn-group"><a class="btn btn-xs no-border btn-round btn-success" title="Click to view details." href="/cardrequest/editpage/' + row["id"]+ '"><i class="ace-icon fa fa-search-plus bigger-160" aria-hidden="true"></i></a></div>';
+		  	                       return a;}
+		 	                 },
+		                 { "data": null,
+		                	 "className": 'center',
+		                	 "orderable": false,
+		 	                	"render": function(data,type,row,meta) { // render event defines the markup of the cell text 
+		  	                       var a = '<div class="btn-group"><a class="btn btn-xs btn-danger care_delete" title="Delete details.">&nbsp;<i class="ace-icon fa fa-trash-o bigger-160" aria-hidden="true"></i></a></div>';
+		  	                       return a;}
+		 	                 }
+		             ],             
+		             dom: 'Blfrtip',
+		             buttons: [
+		            	 {
+								"extend": "copy",
+								"text": "<i class='fa fa-copy bigger-110 pink'></i> <span class='hidden'>Copy to clipboard</span>",
+								"className": "btn btn-white btn-primary btn-bold"
+							  },
+							  {
+								"extend": "csv",
+								"text": "<i class='fa fa-file-excel-o bigger-110 blue'></i> <span class='hidden'>Export to CSV</span>",
+								"className": "btn btn-white btn-primary btn-bold"
+							  },
+							  {
+								"extend": "excel",
+								"text": "<i class='fa fa-file-excel-o bigger-110 green'></i> <span class='hidden'>Export to Excel</span>",
+								"className": "btn btn-white btn-primary btn-bold",
+								"exportOptions": { modifier: { page: 'all'} }
+							  },
+							  {
+								"extend": "pdf",
+								"text": "<i class='fa fa-file-pdf-o bigger-110 red'></i> <span class='hidden'>Export to PDF</span>",
+								"className": "btn btn-white btn-primary btn-bold",
+								"exportOptions": { modifier: { page: 'all'} }
+							  },
+							  {
+								"extend": "print",
+								"text": "<i class='fa fa-print bigger-110 grey'></i> <span class='hidden'>Print</span>",
+								"className": "btn btn-white btn-primary btn-bold",							
+								autoPrint: false,
+								orientation:'landscape',
+								title: 'Card Request List'
+							  }		  
+		             ]
+		            
+		         });
+		        
+		         // Add event listener for opening and closing details
+		         $('#dynamicEdit-table tbody').on('click', 'td.details-control', function () {
+		             var tr = $(this).closest('tr');
+		             var tdi = tr.find("i.fa");
+		             var row = table.row(tr);
+
+		             if (row.child.isShown()) {
+		                 // This row is already open - close it
+		                 row.child.hide();
+		                 tr.removeClass('shown');
+		                 tdi.first().removeClass('fa fa-angle-double-up fa-2x');
+		                 tdi.first().addClass('fa fa-angle-double-down fa-2x');
+		             }
+		             else {
+		                 // Open this row
+		                 row.child(format(row.data())).show();
+		                 tr.addClass('shown');
+		                 tdi.first().removeClass('fa fa-angle-double-down fa-2x');
+		                 tdi.first().addClass('fa fa-angle-double-up fa-2x');
+		             }
+		         });
+
+		         table.on("user-select", function (e, dt, type, cell, originalEvent) {
+		             if ($(cell.node()).hasClass("details-control")) {
+		                 e.preventDefault();
+		             }
+		         });
+		         
+		  	    function format(d){
+		 	         // `d` is the original data object for the row
+		 	         return '<table class="table table-striped table-bordered table-hover">' +
+		 	        '<tr>' +
+	                '<td width="20"><strong>Customers App Date: </strong></td>' +
+	                '<td>' + moment(new Date(d.customerAppDate)).format("YYYY-MM-DD") + '</td>' +
+	            '</tr>' +
+	            '<tr>' +
+	                '<td width="15%"><strong>Request Date: </strong></td>' +
+	                '<td>' + moment(new Date(d.requestDate)).format("YYYY-MM-DD") + '</td>' +
+	            '</tr>' +
+		 	             '<tr>' +
+		 		             '<td width="22%"><strong>Account Operation: </strong></td>' +
+		 		             '<td>' + d.accountOperation + '</td>' +
+		 		         '</tr>' +
+		 		         '<tr>' +
+		 			         '<td width="15%"><strong>Account Type: </strong></td>' +
+		 			         '<td>' + d.accountType + '</td>' +
+		 			     '</tr>' +
+		 		         '<tr>' +
+		 			         '<td width="15%"><strong>Account Number: </strong></td>' +
+		 			         '<td>' + d.accountNumber + '</td>' +
+		 			     '</tr>' +
+		 		         '<tr>' +
+		 			         '<td width="15%"><strong>Client Code: </strong></td>' +
+		 			         '<td>' + d.clientCode + '</td>' +
+		 			     '</tr>' +
+		 		         '<tr>' +
+		 			         '<td width="15%"><strong>Branch Code: </strong></td>' +
+		 			         '<td>' + d.branchCode + '</td>' +
+		 			     '</tr>' +
+		 		         '<tr>' +
+		 			         '<td width="15%"><strong>Currency: </strong></td>' +
+		 			         '<td>' + d.currency + '</td>' +
+		 			     '</tr>' +
+		 		         '<tr>' +
+		 			         '<td width="15%"><strong>Full Name: </strong></td>' +
+		 			         '<td>' + d.fName +' ' + d.lName + '</td>' +
+		 			     '</tr>' +
+		 		         '<tr>' +
+		 			         '<td width="15%"><strong>Gender: </strong></td>' +
+		 			         '<td>' + d.gender  + '</td>' +
+		 			     '</tr>' +
+		 		         '<tr>' +
+		 			         '<td width="15%"><strong>Marital Status: </strong></td>' +
+		 			         '<td>' + d.maritalStatus  + '</td>' +
+		 			     '</tr>' +
+		 		         '<tr>' +
+		 			         '<td width="15%"><strong>Contact Address : </strong></td>' +
+		 			         '<td>' +  d.contactAddress + '</td>' +
+		 			     '</tr>' +
+		 		         '<tr>' +
+		 			         '<td width="15%"><strong>Email: </strong></td>' +
+		 			         '<td>' + d.emailAddress + '</td>' +
+		 			     '</tr>' +
+		 			     '<tr>' +
+		 			         '<td width="15%"><strong>Mobile Number: </strong></td>' +
+		 			         '<td><i class="fa fa-mobile light-red bigger-110"> </i> ' + d.mobileNumber + '</td>' +
+		 			     '</tr>' +
+		 			     '<tr>' +
+		 				     '<td width="15%"><strong>Telephone Number: </strong></td>' +
+		 				     '<td><i class="fa fa-phone light-orange bigger-110"> </i> ' + d.phoneNumber + '</td>' +
+		 				 '</tr>' +
+		 				'<tr>' +
+				         '<td width="15%"><strong>Card Req. Originating Branch: </strong></td>' +
+				         '<td>' + d.cardReqOriginatingBranch + '</td>' +
+					     '</tr>' +
+					     '<tr>' +
+					         '<td width="15%"><strong>Card Status: </strong></td>' +
+					         '<td>' + d.cardStatus + '</td>' +
+					     '</tr>' +
+					     '<tr>' +
+					         '<td width="15%"><strong>Status Updated Date: </strong></td>' +
+					         '<td>' + moment(new Date(d.statusUpdatedDate)).format("YYYY-MM-DD")   + '</td>' +
+					     '</tr>' +
+					     '<tr>' +
+					         '<td width="15%"><strong>Card Request Remarks: </strong></td>' +
+					         '<td>' + d.requestRemark + '</td>' +
+					     '</tr>' +
+					     '<tr>' +
+					         '<td width="15%"><strong>Other Remarks: </strong></td>' +
+					         '<td>' + d.otherRemarks  + '</td>' +
+					     '</tr>' +
+				     
+		 	         '</table>';  
+		 	    }
+		  	  // Delete record - In Transit
+		  	    $('#dynamicEdit-table').on('click', 'a.care_delete', function (e) {
+		  	        e.preventDefault();
+		  	      var row_val = table.row($(this).closest('tr'));
+		          var data_val= row_val.data();
+		  	       deleteCardRenw(data_val.id);
+		  	
+		  	    } );		         
+			}
+	 		
+    		function deleteCardRenw(control) {
+    	        var dialog = bootbox.dialog({
+    	        	title: 'Delete Card Data!!!',
+    	        	message: '<p>Are you sure you want to delete recorded card data?</p>',
+    	            size: 'md',
+    	            onEscape: true,
+    	            backdrop: true,
+    	            buttons: {
+    	                cancel: {
+    	                	label: '<i class="fa fa-times"></i> Cancel',
+    	                    className: 'btn-danger pull-right margin-left-10px',
+    	                },
+    	                ok: {
+    	                	label: '<i class="fa fa-check"></i> Confirm',
+    	                    className: 'btn-info',
+    	                    callback: function(result){
+    	                    	if(result){
+    	                    		$.ajax({
+    	                    	        type: 'DELETE',
+    	                    	        url:  '/updatecard/delete/' + control,
+    	                    	        success: function(result) {
+    	                    	        	$('#showMessage').append("<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'><i class='ace-icon fa fa-times'></i></button><br>"
+    	                    	        			+ result.message+  ': '+ result.data+"</div>");
+    	                    	        	alert(result.message
+    	                    	                + ': '+ result.data);
+    	                    	        	window.location.href = "/cardrequest";
+    	                    	        },
+    	                    	        error: function(jqXHR, textStatus, errorThrown) {
+    	                    	            alert(jqXHR.status + ' ' + jqXHR.responseText);
+    	                    	        }
+    	                    	    });
+    	                    	}
+    	                    }
+    	                }
+    	            },
+    	        });
+    		} 
+	</script>
+
+
+		<script>
+			$(document).ready(function() {
+				$('.select2').css('width', '100%').select2({
+				});
+				
+				$('#idRenewRemark').chosen({
+					width : "100%"
+				});
+
+				$("#idAccountNumber").focusout(function() {
+					var myStr = $("#idAccountNumber").val();
+					var trimmedSpace = $.trim(myStr).replace(/ /g, "").length;
+
+					if (trimmedSpace === 20) {
+						$("#idBranchCode").val(myStr.slice(0, 3));
+						$("#idClientCode").val(myStr.slice(6, 14));
+					}
+				});
+
+			});
+		</script>
+		<script>
+			$('.input-mask-branchCode').mask('999', {
+				autoclear : false
+			});
+			$('.input-mask-mobile').mask('9999999999', {
+				autoclear : false
+			});
+			$('.input-mask-clientCode').mask('99999999', {
+				autoclear : false
+			});
+			$('.input-mask-accountNo').mask('99999999999999999999', {
+				autoclear : false
+			});
+		</script>
+		<script type='text/javascript'>
+			$(function() {
+				$(".date-pickerForm").datepicker({
+					format : "yyyy-mm-dd",
+					autoclose : true,
+					todayBtn : "linked",
+					todayHighlight : true
+				}).datepicker('update', new Date());
+			});
+		</script>
+		<script>
+			autosize($('textarea[class*=autosize]'));
+
+			$('textarea.limited').inputlimiter({
+				remText : '%n character%s remaining...',
+				limitText : 'max allowed : %n.'
+			});
+		</script>
+
+		<!-- Renew page js -->
+		<script>
+			$('.modal-dialog').draggable({
+				"handle" : ".modal-header"
+			});
+		</script>
+		
+		
+ 		
+ 		<script>
+ 		$(function() {
+ 			var start = moment().subtract(29, 'days');
+ 		    var end = moment();
+ 		    
+ 			  $('.idDateRange').daterangepicker({
+ 				startDate: start,
+ 		        endDate: end,
+ 			    opens: 'left',
+ 			    autoclose: true,
+ 				todayHighlight: true,
+ 				ranges: {
+ 		           'Today': [moment(), moment()],
+ 		           'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+ 		           'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+ 		           'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+ 		           'This Month': [moment().startOf('month'), moment().endOf('month')],
+ 		           'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+ 		        },
+ 		       locale: {
+ 	 				format: 'YYYY-MM-DD'
+ 	 			    }
+ 			  }, function(start, end, label) {
+ 				 ajaxGetCardByDateBetween(start, end);
+ 			  });
+ 			  
+ 			});
+ 		</script>
+ 		<script>
+ 		$(function() {
+ 			var start = moment().subtract(29, 'days');
+ 		    var end = moment();
+ 		    
+ 			  $('#idDateRangeActive').daterangepicker({
+ 				startDate: start,
+ 		        endDate: end,
+ 			    opens: 'left',
+ 			    autoclose: true,
+ 				todayHighlight: true,
+ 				ranges: {
+ 		           'Today': [moment(), moment()],
+ 		           'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+ 		           'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+ 		           'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+ 		           'This Month': [moment().startOf('month'), moment().endOf('month')],
+ 		           'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+ 		        },
+ 		       locale: {
+ 	 				format: 'YYYY-MM-DD'
+ 	 			    }
+ 			  }, function(start, end, label) {
+ 				  
+ 				 if(!$('#branchNameActive').val()){
+ 					ajaxGetActiveCardByDateBetween(start, end);
+
+  					}else{
+  						ajaxGetActiveCardByDateBetweenActiveBranch(start, end);
+  					}
+ 				 
+ 				 
+ 				 
+ 			  });
+ 			  
+ 			});
+ 		</script>
+ 		
+ 		
+
+<script>
+
+		$(document).ready(function () {
+
+			$("#drop1InProcess").on('click', function () {
+				ajaxGetAllCard();
+			});
+			$("#drop2Active").on('click', function () {
+				ajaxGetAllActiveCard();
+			});
+
+    	
+     });
+		
+		
+		//Active List
+		
+		$("#branchNameActive").change(function() {
+			ajaxgetCardByBranchNameActive();
+	    });
+		
+ 		function ajaxgetCardByBranchNameActive(){
+ 			let branchName = $('#branchNameActive').val();
+ 			let statusVal = "Active";
+ 			const url = '/getallcard/group/'+branchName + '/' + statusVal ;
+ 			$.getJSON(url, function (data) {
+ 				createActiveDataTable(data);
+ 			});
+ 		}
+ 		
+		function ajaxGetActiveCardByDateBetween(start, end){
+ 			let startDate=start.format('YYYY-MM-DD');
+ 			let endDate=end.format('YYYY-MM-DD');
+ 			let statusVal = "Active";
+ 			const url = '/getactivecard/'+startDate+'/'+endDate + '/' + statusVal;
+ 			$.getJSON(url, function (data) {
+ 				createActiveDataTable(data);
+ 			});
+ 		}
+		
+		function ajaxGetActiveCardByDateBetweenActiveBranch(start, end){
+			
+ 			let cardReqOriginatingBranch=$('#branchNameActive').val();
+ 			let startDate=start.format('YYYY-MM-DD');
+ 			let endDate=end.format('YYYY-MM-DD');
+ 			let statusVal = "Active";
+ 			const url = '/getactivecard/date/'+ startDate+'/'+ endDate+ '/' + statusVal +'/'+cardReqOriginatingBranch;
+ 			$.getJSON(url, function (data) {
+ 				createActiveDataTable(data);
+ 			});
+ 		}
+		
+		//others
+    	 
+ 		$("#branchNameSearchProcess").change(function() {
+			ajaxgetCardByBranchName();
+	    });
+ 		
+ 		$("#idCardStatusValue").change(function() {
+			ajaxgetCardByCardStatus();
+	    });
+ 		
+		$("#branchNameSearchProcess").change(function() {
+ 			if(!$('#idCardStatusValue').val()){
+ 				ajaxgetCardByBranchName();
+ 			 }else{
+ 				ajaxgetCardByBranchAndCardStatus();
+ 			 }
+	    });
+		$("#idCardStatusValue").change(function() {
+ 			if(!$('#branchNameSearchProcess').val()){
+ 				ajaxgetCardByCardStatus();
+ 			 }else{
+ 				ajaxgetCardByBranchAndCardStatus();
+ 			 }
+	    });
+		
+
+ 		function ajaxGetAllCard(){
+ 			const url = '/getallcardrequest';
+ 			$.getJSON(url, function (data) {
+ 				createDataTable(data);
+ 			});
+ 		}
+ 		
+ 		
+ 		function ajaxgetCardByBranchName(){
+ 			let branchName = $('#branchNameSearchProcess').val();
+ 			const url = '/getcard/branchname/'+branchName;
+ 			$.getJSON(url, function (data) {
+ 				createDataTable(data);
+ 			});
+ 		}
+ 		
+ 		function ajaxgetCardByCardStatus(){
+ 			let cardStatus = $('#idCardStatusValue').val();
+ 			const url = '/getcard/cardstatus/'+cardStatus;
+ 			$.getJSON(url, function (data) {
+ 				createDataTable(data);
+ 			});
+ 		}
+
+ 		function ajaxgetCardByBranchAndCardStatus(){
+ 			let branchNameValue = $('#branchNameSearchProcess').val();
+ 			let cardStatusValue = $('#idCardStatusValue').val();
+ 			const url = '/getcard/group/'+ branchNameValue +'/'+cardStatusValue;
+ 			$.getJSON(url, function (data) {
+ 				createDataTable(data);
+ 			});
+ 		}
+ 		
+		function ajaxGetCardByDateBetween(start, end){
+ 			let startDate=start.format('YYYY-MM-DD');
+ 			let endDate=end.format('YYYY-MM-DD');
+ 			const url = '/getcard/'+startDate+'/'+endDate;
+ 			$.getJSON(url, function (data) {
+ 				createDataTable(data);
+ 			});
+ 		}
+		 
+		 /* active card list */
+		 function ajaxGetAllActiveCard(){
+ 			const url = '/getactivecard';
+ 			$.getJSON(url, function (data) {
+				createActiveDataTable(data);
+ 			});
+		 }
+		 
+
+ 		function createDataTable(data){
+	         var table = $('#dynamic-table').DataTable({
+	        	 "order": [ 3, "desc" ],
+	        	 destroy: true,
+	             "data": data,
+	             select:"single",
+	             "columns": [
+ 	                 {
+ 	                     "className": 'details-control',
+ 	                     "orderable": false,
+ 	                     "data": null,
+ 	                     "defaultContent": '',
+ 	                     "render": function () {
+ 	                         return '<i class="ace-icon fa fa-angle-double-down fa-2x" title="Show details" aria-hidden="true"></i>';
+ 	                     },
+ 	                     width:"15px"
+ 	                 },
+ 	                { "data": "customerAppDate",
+ 	                	 "render" : function(data, type, row, meta) {
+ 								if (data === null) return "";
+ 								var thisDate = moment(new Date(data)).format("YYYY-MM-DD");
+ 								return thisDate
+ 							}
+ 	                 },
+ 	                { "data": "cardReqOriginatingBranch" },
+ 	                 { "data": "requestDate",
+ 	                	 "render" : function(data, type, row, meta) {
+ 								if (data === null) return "";
+ 								var thisDate = moment(new Date(data)).format("YYYY-MM-DD");
+ 								return thisDate
+ 							}
+ 	                 },
+ 	                 { "data": "accountOperation" },
+ 	                { "data": "accountType"
+ 	                 },
+ 	                 { "data": "accountNumber" },
+ 	                 { "data": "clientCode",
+ 	                	"render": function(data,type,row,meta) { // render event defines the markup of the cell text 
+  	                       var a = '<a href="cardrequestlist/detailpage/' + row["id"]+ '" title="Click for more details">' + row.clientCode +'</a>';
+  	                       return a;}
+ 	                 },
+ 	                 { "data": "branchCode" },
+ 	                 { "data": "currency" },
+ 	                 { "data": "fName" },
+ 	                 { "data": "lName" },
+ 	                 { "data": "gender"
+ 	                 },
+ 	                 { "data": "maritalStatus"
+ 	                 },
+ 	                 { "data": "contactAddress" },
+ 	                 { "data": "mobileNumber" },
+ 	                 { "data": "emailAddress" },
+ 	                 { "data": "cardStatus" },
+ 	                 { "data": "statusUpdatedDate" },
+ 	                 { "data": "requestRemark" },
+ 	                 { "data": "otherRemarks" },
+  	                { "data": null,
+	                	 "className": 'center',
+	                	 "orderable": false,
+	 	                	"render": function(data,type,row,meta) { // render event defines the markup of the cell text 
+	  	                       var a = '<div class="btn-group"><a class="btn btn-xs no-border btn-round btn-success" title="Click to view details." href="/cardrequestlist/detailpage/' + row["id"]+ '">Next &nbsp;<i class="ace-icon fa fa-arrow-circle-right icon-on-right" aria-hidden="true"></i></a></div>';
+	  	                       return a;}
+	 	                 }
+ 	             ],             
+ 	             dom: 'Blfrtip',
+ 	             buttons: [
+ 	            	 {
+ 							"extend": "copy",
+ 							"text": "<i class='fa fa-copy bigger-110 pink'></i> <span class='hidden'>Copy to clipboard</span>",
+ 							"className": "btn btn-white btn-primary btn-bold"
+ 						  },
+ 						  {
+ 							"extend": "csv",
+ 							"text": "<i class='fa fa-file-excel-o bigger-110 blue'></i> <span class='hidden'>Export to CSV</span>",
+ 							"className": "btn btn-white btn-primary btn-bold"
+ 						  },
+ 						  {
+ 							"extend": "excel",
+ 							"text": "<i class='fa fa-file-excel-o bigger-110 green'></i> <span class='hidden'>Export to Excel</span>",
+ 							"className": "btn btn-white btn-primary btn-bold",
+ 							"exportOptions": { modifier: { page: 'all'} }
+ 						  },
+ 						  {
+ 							"extend": "pdf",
+ 							"text": "<i class='fa fa-file-pdf-o bigger-110 red'></i> <span class='hidden'>Export to PDF</span>",
+ 							"className": "btn btn-white btn-primary btn-bold",
+ 							"exportOptions": { modifier: { page: 'all'} }
+ 						  },
+ 						  {
+ 							"extend": "print",
+ 							"text": "<i class='fa fa-print bigger-110 grey'></i> <span class='hidden'>Print</span>",
+ 							"className": "btn btn-white btn-primary btn-bold",							
+ 							autoPrint: false,
+ 							orientation:'landscape',
+ 							title: 'Card Request List - (In process)'
+ 						  }		  
+ 	             ]
+	            
+	         });
+	        
+	         // Add event listener for opening and closing details
+	         $('#dynamic-table tbody').on('click', 'td.details-control', function () {
+	             var tr = $(this).closest('tr');
+	             var tdi = tr.find("i.fa");
+	             var row = table.row(tr);
+
+	             if (row.child.isShown()) {
+	                 // This row is already open - close it
+	                 row.child.hide();
+	                 tr.removeClass('shown');
+	                 tdi.first().removeClass('fa fa-angle-double-up fa-2x');
+	                 tdi.first().addClass('fa fa-angle-double-down fa-2x');
+	             }
+	             else {
+	                 // Open this row
+	                 row.child(format(row.data())).show();
+	                 tr.addClass('shown');
+	                 tdi.first().removeClass('fa fa-angle-double-down fa-2x');
+	                 tdi.first().addClass('fa fa-angle-double-up fa-2x');
+	             }
+	         });
+
+	         table.on("user-select", function (e, dt, type, cell, originalEvent) {
+	             if ($(cell.node()).hasClass("details-control")) {
+	                 e.preventDefault();
+	             }
+	         });
+	         
+	  	    function format(d){
+	 	         // `d` is the original data object for the row
+	 	         return '<table class="table table-striped table-bordered table-hover">' +
+	 	        '<tr>' +
+                 '<td width="20"><strong>Customers App Date: </strong></td>' +
+                 '<td>' + moment(new Date(d.customerAppDate)).format("YYYY-MM-DD") + '</td>' +
+             '</tr>' +
+             '<tr>' +
+                 '<td width="15%"><strong>Request Date: </strong></td>' +
+                 '<td>' + moment(new Date(d.requestDate)).format("YYYY-MM-DD") + '</td>' +
+             '</tr>' +
+	 	             '<tr>' +
+	 		             '<td width="15%"><strong>Account Operation: </strong></td>' +
+	 		             '<td>' + d.accountOperation + '</td>' +
+	 		         '</tr>' +
+	 		         '<tr>' +
+	 			         '<td width="15%"><strong>Account Type: </strong></td>' +
+	 			         '<td>' + d.accountType + '</td>' +
+	 			     '</tr>' +
+	 		         '<tr>' +
+	 			         '<td width="15%"><strong>Account Number: </strong></td>' +
+	 			         '<td>' + d.accountNumber + '</td>' +
+	 			     '</tr>' +
+	 		         '<tr>' +
+	 			         '<td width="15%"><strong>Client Code: </strong></td>' +
+	 			         '<td>' + d.clientCode + '</td>' +
+	 			     '</tr>' +
+	 		         '<tr>' +
+	 			         '<td width="15%"><strong>Branch Code: </strong></td>' +
+	 			         '<td>' + d.branchCode + '</td>' +
+	 			     '</tr>' +
+	 		         '<tr>' +
+	 			         '<td width="15%"><strong>Currency: </strong></td>' +
+	 			         '<td>' + d.currency + '</td>' +
+	 			     '</tr>' +
+	 		         '<tr>' +
+	 			         '<td width="15%"><strong>Full Name: </strong></td>' +
+	 			         '<td>' + d.fName +' ' + d.lName + '</td>' +
+	 			     '</tr>' +
+	 		         '<tr>' +
+	 			         '<td width="15%"><strong>Gender: </strong></td>' +
+	 			         '<td>' + d.gender  + '</td>' +
+	 			     '</tr>' +
+	 		         '<tr>' +
+	 			         '<td width="15%"><strong>Marital Status: </strong></td>' +
+	 			         '<td>' + d.maritalStatus  + '</td>' +
+	 			     '</tr>' +
+	 		         '<tr>' +
+	 			         '<td width="15%"><strong>Contact Address : </strong></td>' +
+	 			         '<td>' +  d.contactAddress + '</td>' +
+	 			     '</tr>' +
+	 		         '<tr>' +
+	 			         '<td width="15%"><strong>Email: </strong></td>' +
+	 			         '<td>' + d.emailAddress + '</td>' +
+	 			     '</tr>' +
+	 			     '<tr>' +
+	 			         '<td width="15%"><strong>Mobile Number: </strong></td>' +
+	 			         '<td><i class="fa fa-mobile light-red bigger-110"> </i> ' + d.mobileNumber + '</td>' +
+	 			     '</tr>' +
+	 			     '<tr>' +
+	 				     '<td width="15%"><strong>Telephone Number: </strong></td>' +
+	 				     '<td><i class="fa fa-phone light-orange bigger-110"> </i> ' + d.phoneNumber + '</td>' +
+	 				 '</tr>' +
+	 				'<tr>' +
+			         '<td width="15%"><strong>Card Req. Originating Branch: </strong></td>' +
+			         '<td>' + d.cardReqOriginatingBranch + '</td>' +
+				     '</tr>' +
+				     '<tr>' +
+				         '<td width="15%"><strong>Card Status: </strong></td>' +
+				         '<td>' + d.cardStatus + '</td>' +
+				     '</tr>' +
+				     '<tr>' +
+				         '<td width="15%"><strong>Status Updated Date: </strong></td>' +
+				         '<td>' + moment(new Date(d.statusUpdatedDate)).format("YYYY-MM-DD")   + '</td>' +
+				     '</tr>' +
+				     '<tr>' +
+				         '<td width="15%"><strong>Card Request Remarks: </strong></td>' +
+				         '<td>' + d.requestRemark + '</td>' +
+				     '</tr>' +
+				     '<tr>' +
+				         '<td width="15%"><strong>Other Remarks: </strong></td>' +
+				         '<td>' + d.otherRemarks  + '</td>' +
+				     '</tr>' +
+			     
+	 	         '</table>';  
+	 	    }
+		}
+
+ 		function createActiveDataTable(data){
+	         var table = $('#dynamic-tableActive').DataTable({
+	        	 "order": [ 19, "asc" ],
+	        	 destroy: true,
+	             "data": data,
+	             select:"single",
+	             "columns": [
+ 	                 {
+ 	                     "className": 'details-control',
+ 	                     "orderable": false,
+ 	                     "data": null,
+ 	                     "defaultContent": '',
+ 	                     "render": function () {
+ 	                         return '<i class="ace-icon fa fa-angle-double-down fa-2x" title="Show details" aria-hidden="true"></i>';
+ 	                     },
+ 	                     width:"15px"
+ 	                 },
+ 	                { "data": "customerAppDate",
+ 	                	 "render" : function(data, type, row, meta) {
+ 								if (data === null) return "";
+ 								var thisDate = moment(new Date(data)).format("YYYY-MM-DD");
+ 								return thisDate
+ 							}
+ 	                 },
+ 	                { "data": "cardReqOriginatingBranch" },
+ 	                 { "data": "requestDate",
+ 	                	 "render" : function(data, type, row, meta) {
+ 								if (data === null) return "";
+ 								var thisDate = moment(new Date(data)).format("YYYY-MM-DD");
+ 								return thisDate
+ 							}
+ 	                 },
+ 	                 { "data": "accountOperation" },
+ 	                { "data": "accountType"
+ 	                 },
+ 	                 { "data": "accountNumber" },
+ 	                 { "data": "clientCode",
+ 	                	"render": function(data,type,row,meta) { // render event defines the markup of the cell text 
+  	                       var a = '<a href="cardrequestlist/detailpage/' + row["id"]+ '" title="Click for more details">' + row.clientCode +'</a>';
+  	                       return a;}
+ 	                 },
+ 	                 { "data": "branchCode" },
+ 	                 { "data": "currency" },
+ 	                 { "data": "fName" },
+ 	                 { "data": "lName" },
+ 	                 { "data": "gender"
+ 	                 },
+ 	                 { "data": "maritalStatus"
+ 	                 },
+ 	                 { "data": "contactAddress" },
+ 	                 { "data": "mobileNumber" },
+ 	                 { "data": "emailAddress" },
+ 	                 { "data": "cardStatus" },
+					  { "data": "statusUpdatedDate" },
+					  { "data": "cardExpiryDate",
+ 	                	 "render" : function(data, type, row, meta) {
+								 if (data === null) return "";
+								var todayDate = moment(new Date()).format("YYYY-MM-DD");
+								 var thisDate = moment(new Date(data)).format("YYYY-MM-DD");
+								 let expiryVal = null;
+								 if (todayDate > thisDate) {    
+									expiryVal = '<span class="label label-lg label-pink" title="Card Expired!!!">' + thisDate +'</span>';   
+								 return expiryVal;
+								}else{
+									expiryVal = '<span class="label label-lg label-success" title="Active">' + thisDate +'</span>';   
+								 return expiryVal;
+								}
+ 							}
+ 	                 },
+ 	                 { "data": "otherRemarks" },
+ 	                { "data": null,
+	                	 "className": 'center',
+	                	 "orderable": false,
+	 	                	"render": function(data,type,row,meta) { // render event defines the markup of the cell text 
+	 	                		 var a = '<div class="btn-group"><a class="btn btn-xs no-border btn-round btn-success" title="Click to view details." href="/cardrequestlist/detailpage/' + row["id"]+ '">View &nbsp;</a></div>';
+		  	                       return a;}
+	 	                 }
+ 	             ],             
+ 	             dom: 'Blfrtip',
+ 	             buttons: [
+ 	            	 {
+ 							"extend": "copy",
+ 							"text": "<i class='fa fa-copy bigger-110 pink'></i> <span class='hidden'>Copy to clipboard</span>",
+ 							"className": "btn btn-white btn-primary btn-bold"
+ 						  },
+ 						  {
+ 							"extend": "csv",
+ 							"text": "<i class='fa fa-file-excel-o bigger-110 blue'></i> <span class='hidden'>Export to CSV</span>",
+ 							"className": "btn btn-white btn-primary btn-bold"
+ 						  },
+ 						  {
+ 							"extend": "excel",
+ 							"text": "<i class='fa fa-file-excel-o bigger-110 green'></i> <span class='hidden'>Export to Excel</span>",
+ 							"className": "btn btn-white btn-primary btn-bold",
+ 							"exportOptions": { modifier: { page: 'all'} }
+ 						  },
+ 						  {
+ 							"extend": "pdf",
+ 							"text": "<i class='fa fa-file-pdf-o bigger-110 red'></i> <span class='hidden'>Export to PDF</span>",
+ 							"className": "btn btn-white btn-primary btn-bold",
+ 							"exportOptions": { modifier: { page: 'all'} }
+ 						  },
+ 						  {
+ 							"extend": "print",
+ 							"text": "<i class='fa fa-print bigger-110 grey'></i> <span class='hidden'>Print</span>",
+ 							"className": "btn btn-white btn-primary btn-bold",							
+ 							autoPrint: false,
+ 							orientation:'landscape',
+ 							title: 'Card Request List - (Active)'
+ 						  }		  
+ 	             ]
+	            
+	         });
+	        
+	         // Add event listener for opening and closing details
+	         $('#dynamic-tableActive tbody').on('click', 'td.details-control', function () {
+	             var tr = $(this).closest('tr');
+	             var tdi = tr.find("i.fa");
+	             var row = table.row(tr);
+
+	             if (row.child.isShown()) {
+	                 // This row is already open - close it
+	                 row.child.hide();
+	                 tr.removeClass('shown');
+	                 tdi.first().removeClass('fa fa-angle-double-up fa-2x');
+	                 tdi.first().addClass('fa fa-angle-double-down fa-2x');
+	             }
+	             else {
+	                 // Open this row
+	                 row.child(format(row.data())).show();
+	                 tr.addClass('shown');
+	                 tdi.first().removeClass('fa fa-angle-double-down fa-2x');
+	                 tdi.first().addClass('fa fa-angle-double-up fa-2x');
+	             }
+	         });
+
+	         table.on("user-select", function (e, dt, type, cell, originalEvent) {
+	             if ($(cell.node()).hasClass("details-control")) {
+	                 e.preventDefault();
+	             }
+	         });
+	         
+	  	    function format(d){
+	 	         // `d` is the original data object for the row
+	 	         return '<table class="table table-striped table-bordered table-hover">' +
+	 	        '<tr>' +
+                 '<td width="22%"><strong>Customers App Date: </strong></td>' +
+                 '<td>' + moment(new Date(d.customerAppDate)).format("YYYY-MM-DD") + '</td>' +
+				'</tr>' +
+				'<tr>' +
+					'<td width="15%"><strong>Request Date: </strong></td>' +
+					'<td>' + moment(new Date(d.requestDate)).format("YYYY-MM-DD") + '</td>' +
+				'</tr>' +
+				'<tr>' +
+					'<td width="15%"><strong>Card Received Date: </strong></td>' +
+					'<td>' + moment(new Date(d.receivedDate)).format("YYYY-MM-DD") + '</td>' +
+				'</tr>' +
+				'<tr>' +
+					'<td width="15%"><strong>Card Expiry Date: </strong></td>' +
+					'<td>' + moment(new Date(d.cardExpiryDate)).format("YYYY-MM-DD") + '</td>' +
+				'</tr>' +
+	 	             '<tr>' +
+	 		             '<td width="15%"><strong>Account Operation: </strong></td>' +
+	 		             '<td>' + d.accountOperation + '</td>' +
+	 		         '</tr>' +
+	 		         '<tr>' +
+	 			         '<td width="15%"><strong>Account Type: </strong></td>' +
+	 			         '<td>' + d.accountType + '</td>' +
+	 			     '</tr>' +
+	 		         '<tr>' +
+	 			         '<td width="15%"><strong>Account Number: </strong></td>' +
+	 			         '<td>' + d.accountNumber + '</td>' +
+	 			     '</tr>' +
+	 		         '<tr>' +
+	 			         '<td width="15%"><strong>Client Code: </strong></td>' +
+	 			         '<td>' + d.clientCode + '</td>' +
+	 			     '</tr>' +
+	 		         '<tr>' +
+	 			         '<td width="15%"><strong>Branch Code: </strong></td>' +
+	 			         '<td>' + d.branchCode + '</td>' +
+	 			     '</tr>' +
+	 		         '<tr>' +
+	 			         '<td width="15%"><strong>Currency: </strong></td>' +
+	 			         '<td>' + d.currency + '</td>' +
+	 			     '</tr>' +
+	 		         '<tr>' +
+	 			         '<td width="15%"><strong>Full Name: </strong></td>' +
+	 			         '<td>' + d.fName +' ' + d.lName + '</td>' +
+	 			     '</tr>' +
+	 		         '<tr>' +
+	 			         '<td width="15%"><strong>Gender: </strong></td>' +
+	 			         '<td>' + d.gender  + '</td>' +
+	 			     '</tr>' +
+	 		         '<tr>' +
+	 			         '<td width="15%"><strong>Marital Status: </strong></td>' +
+	 			         '<td>' + d.maritalStatus  + '</td>' +
+	 			     '</tr>' +
+	 		         '<tr>' +
+	 			         '<td width="15%"><strong>Contact Address : </strong></td>' +
+	 			         '<td>' +  d.contactAddress + '</td>' +
+	 			     '</tr>' +
+	 		         '<tr>' +
+	 			         '<td width="15%"><strong>Email: </strong></td>' +
+	 			         '<td>' + d.emailAddress + '</td>' +
+	 			     '</tr>' +
+	 			     '<tr>' +
+	 			         '<td width="15%"><strong>Mobile Number: </strong></td>' +
+	 			         '<td><i class="fa fa-mobile light-red bigger-110"> </i> ' + d.mobileNumber + '</td>' +
+	 			     '</tr>' +
+	 			     '<tr>' +
+	 				     '<td width="15%"><strong>Telephone Number: </strong></td>' +
+	 				     '<td><i class="fa fa-phone light-orange bigger-110"> </i> ' + d.phoneNumber + '</td>' +
+	 				 '</tr>' +
+	 				'<tr>' +
+			         '<td width="15%"><strong>Card Req. Originating Branch: </strong></td>' +
+			         '<td>' + d.cardReqOriginatingBranch + '</td>' +
+				     '</tr>' +
+				     '<tr>' +
+				         '<td width="15%"><strong>Card Status: </strong></td>' +
+				         '<td>' + d.cardStatus + '</td>' +
+				     '</tr>' +
+				     '<tr>' +
+				         '<td width="15%"><strong>Status Updated Date: </strong></td>' +
+				         '<td>' + moment(new Date(d.statusUpdatedDate)).format("YYYY-MM-DD")   + '</td>' +
+				     '</tr>' +
+				     '<tr>' +
+				         '<td width="15%"><strong>Card Request Remarks: </strong></td>' +
+				         '<td>' + d.requestRemark + '</td>' +
+				     '</tr>' +
+				     '<tr>' +
+				         '<td width="15%"><strong>Other Remarks: </strong></td>' +
+				         '<td>' + d.otherRemarks  + '</td>' +
+				     '</tr>' +
+			     
+	 	         '</table>';  
+	 	    }
+		}
+    
+     
+		
+</script>
+
+	</th:block>
+</body>
+</html>

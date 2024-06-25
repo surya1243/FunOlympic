@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+	  layout:decorate="~{layouts/default}">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta charset="utf-8" />
+    <title> Edit Card</title>
+    <th:block layout:fragment="styles">
+        
+    </th:block>
+</head>
+<body>
+    <div layout:fragment="content" sec:authorize="hasAnyAuthority('ADMIN','HIGHSUPERVISOR', 'SUPERVISOR','CARDMAKER','CARDSUPERVISOR')">
+		<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+			<ul class="breadcrumb">
+				<li>
+					<i class="ace-icon fa fa-home home-icon"></i>
+					<a href="#">Home</a>
+				</li>
+				<li>
+					<a href="/cardrequest">New Card Request</a>
+				</li>
+				<li class="active">Edit Card Request Form</li>
+			</ul><!-- /.breadcrumb -->						
+		</div> 
+		
+		<div class="page-content">
+			<div class="row">
+				<div class="col-xs-12">
+					<!-- PAGE CONTENT BEGINS -->
+					<div th:if="${message}">
+						<h2 class="alert alert-danger" th:text="${message}" />
+					</div>
+					<div th:if="${successMessage}">
+						<div class="alert alert-success">
+							<button type="button" class="close" data-dismiss="alert">
+								<i class="ace-icon fa fa-times"></i>
+							</button>
+							<strong th:text="${successMessage}">Success!</strong> <br />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="page-header">
+				<h1>
+					<i class="ace-icon fa fa-credit-card"></i> Update Renew Card Record Form
+				</h1>
+			</div>
+			<!-- /.page-header -->
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="position-relative">
+						<div class="signup-box visible widget-box no-border">
+							<div class="widget-body">
+								<div class="widget-main">
+									<form th:object="${card}" method="POST" autocomplete="off"
+										id="validation-form" th:action="@{/updatecardreceived}"
+										data-toggle="validator" role="form">
+											<input type="text" name="id" th:value="${cardValById?.id}" hidden/>
+											<input type="text" name="lodgedBy" th:value="${cardValById?.lodgedBy}" hidden/>
+											<input type="text" name="enabledStatus" th:value="${cardValById?.enabledStatus}" hidden/>
+											<input type="text" name="modifiedBy" th:value="${cardValById?.modifiedBy}" hidden/>
+											<input type="text" name="modifiedFinalBy" th:value="${cardValById?.modifiedFinalBy}" hidden/>
+											
+											
+										<div class="row">
+											<div class="col-xs-6 col-sm-3">
+												<div class="form-group">
+													<label class="control-label block" for="idAppDate">Customer's
+														App Date<small class="red"> *</small>
+													</label>
+													<div class="input-group">
+														<input id="idAppDate" type="text"
+															name="customerAppDate" data-date-format="YYYY-MM-DD"
+															placeholder="Select date..." th:value="${{cardValById?.customerAppDate}}"
+															class="form-control date-picker1"
+															data-error="Please select Date." required /> <span
+															class="input-group-addon"> <i
+															class="fa fa-clock-o bigger-110"></i>
+														</span>
+													</div>
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+											<div class="col-xs-6 col-sm-3">
+												<div class="form-group">
+													<label class="control-label block" for="idRequestDate">Request
+														Date
+													</label>
+													<div class="input-group">
+														<input id="idRequestDate" type="text"
+															name="requestDate" data-date-format="YYYY-MM-DD"
+															placeholder="Select date..." th:value="${{cardValById?.requestDate}}"
+															class="form-control date-picker1"
+															data-error="Please select Date." /> <span
+															class="input-group-addon"> <i
+															class="fa fa-clock-o bigger-110"></i>
+														</span>
+													</div>
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+
+											<div class="col-xs-6 col-sm-3">
+												<div class="form-group">
+													<label class="control-label block" for="idAccOperation">Account
+														Operation <small class="red"> *</small>
+													</label> <select class="select2 form-control"
+														id="idAccOperation" name="accountOperation"
+														data-placeholder="Choose account operation..."
+														data-error="Please select account operation." required>
+														<option value=""></option>
+														<option value="Single">Single</option>
+														<option value="Joint">Joint</option>
+													</select>
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+
+											<div class="col-xs-6 col-sm-3">
+												<div class="form-group">
+													<label class="control-label block" for="idAccountType">Account
+														Type </label> <select class="select2 form-control"
+														id="idAccountType" name="accountType" required
+														data-placeholder="Choose an account type..."
+														data-error="Please select account type.">
+														<option value=""></option>
+														<option value="10">Savings</option>
+														<option value="20">Current</option>
+													</select>
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+
+										</div>
+										<div class="hr hr-dotted hr-4"></div>
+										<div class="row">
+											<div class="col-xs-6 col-sm-3">
+												<div class="form-group">
+													<label class="control-label block"
+														for="idAccountNumber">Account Number <small
+														class="red"> *</small>
+													</label> <input type="text"
+														class="form-control input-mask-accountNo" th:value="${cardValById?.accountNumber}"
+														name="accountNumber" id="idAccountNumber" required
+														pattern="^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$"
+														onblur="this.parentNode.parentNode.style.backgroundColor=/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/.test(this.value)?'inherit':'transparent'"
+														placeholder="Enter account number (20 digits)"
+														data-error="Please fill 20 digit Account No. field.">
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+											<div class="col-xs-6 col-sm-3">
+												<div class="form-group">
+													<label class="control-label block" for="idClientCode">Client
+														Code <span th:text="${cardValById?.clientCode}" class="badge badge-warning"> </span></label> <input type="text"
+														class="form-control input-mask-clientCode" readonly
+														name="clientCode" id="idClientCode" data-minlength="8"
+														placeholder="Client Code">
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+											<div class="col-xs-6 col-sm-3">
+												<div class="form-group">
+													<label class="control-label block" for="idBranchCode">Branch
+														Code <span th:text="${cardValById?.branchCode}" class="badge badge-warning"> </span> </label> <input type="text" 
+														class="form-control input-mask-branchCode" readonly
+														name="branchCode" id="idBranchCode" data-minlength="3"
+														placeholder="Branch Code">
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+											<div class="col-xs-6 col-sm-3">
+												<div class="form-group">
+													<label class="control-label block" for="idCurrencyCode">Currency
+														<small class="red"> *</small>
+													</label> <input type="text" class="form-control"
+														name="currency" id="idCurrencyCode" th:Value="524"
+														readonly>
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+										</div>
+
+										<div class="hr hr-dotted hr-4"></div>
+
+										<div class="row">
+											<div class="col-xs-6 col-sm-3">
+												<div class="form-group">
+													<label class="control-label block" for="idFname">First
+														Name <small class="red"> *</small>
+													</label> <input type="text" class="form-control" name="fName"
+														id="idFname" placeholder="Enter first name" th:value="${cardValById?.fName}"
+														style="text-transform: uppercase;" maxlength ="18"
+														onkeyup="this.value = this.value.toUpperCase();"
+														data-error="Please fill first name field." required />
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+											<div class="col-xs-6 col-sm-3">
+												<div class="form-group">
+													<label class="control-label block" for="idLname">Last
+														Name <small class="red"> *</small>
+													</label> <input type="text" class="form-control" name="lName"
+														id="idLname" placeholder="Enter last name" th:value="${cardValById?.lName}"
+														style="text-transform: uppercase;" maxlength ="18"
+														onkeyup="this.value = this.value.toUpperCase();"
+														data-error="Please fill last name field." required />
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+											<div class="col-xs-6 col-sm-3">
+												<div class="form-group">
+													<label class="control-label block">Gender
+														<small class="red"> *</small>
+													</label>
+													<div class="hr hr-6"></div>
+													<div>
+														<label class="line-height-1 blue"> <input
+															name="gender" value="0" type="radio" class="ace"
+															required /> <span class="lbl"> Male [0]
+																&nbsp;&nbsp;&nbsp;&nbsp;</span>
+														</label> <label class="line-height-1 blue"> <input
+															name="gender" value="1" type="radio" class="ace"
+															required /> <span class="lbl"> Female [1]
+																&nbsp;&nbsp;&nbsp;&nbsp;</span>
+														</label> <label class="line-height-1 blue"> <input
+															name="gender" value="2" type="radio" class="ace"
+															required /> <span class="lbl"> Others</span>
+														</label>
+													</div>
+
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+											<div class="col-xs-6 col-sm-3">
+												<div class="form-group">
+													<label class="control-label block"
+														for="idMaritalStatus">Marital Status <small
+														class="red"> *</small>
+													</label>
+													<div class="hr hr-6"></div>
+													<div id="idMaritalStatus">
+														<label class="line-height-1 blue"> <input
+															name="maritalStatus" value="0" type="radio"
+															class="ace" required /> <span class="lbl">
+																Unmarried [0] &nbsp;&nbsp;&nbsp;&nbsp;</span>
+														</label> <label class="line-height-1 blue"> <input
+															name="maritalStatus" value="1" type="radio"
+															class="ace" required /> <span class="lbl">
+																Married [1]</span>
+														</label>
+													</div>
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+										</div>
+
+										<div class="hr hr-dotted hr-4"></div>
+
+										<div class="row">
+											<div class="col-xs-6 col-sm-3">
+												<div class="form-group">
+													<label class="control-label block"
+														for="idContactAddress">Contact Address <small
+														class="red"> *</small>
+													</label> <input type="text" class="form-control"
+														name="contactAddress" id="idContactAddress"
+														placeholder="Enter contact address" th:value="${cardValById?.contactAddress}"
+														style="text-transform: uppercase;"
+														onkeyup="this.value = this.value.toUpperCase();"
+														data-error="Please fill contact address." required />
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+											<div class="col-xs-6 col-sm-3">
+												<div class="form-group">
+													<label class="control-label block" for="idEmail">Email
+													</label> <input type="email" class="form-control"
+														name="emailAddress" id="idEmail" th:value="${cardValById?.emailAddress}"
+														data-error="Please fill valid email."
+														placeholder="Enter email address">
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+											<div class="col-xs-6 col-sm-3">
+												<div class="form-group">
+													<label class="control-label block" for="idMobileNumber">Mobile
+														Number <small class="red"> *</small>
+													</label> <input type="text"
+														class="form-control input-mask-mobile"
+														name="mobileNumber" id="idMobileNumber"
+														placeholder="Enter Mobile Number" th:value="${cardValById?.mobileNumber}"
+														pattern="^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$"
+														onblur="this.parentNode.parentNode.style.backgroundColor=/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/.test(this.value)?'inherit':'transparent'"
+														data-error="Please fill Mobile number field." required />
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+											<div class="col-xs-6 col-sm-3">
+												<div class="form-group">
+													<label class="control-label block" for="idPhoneNumber">Phone
+														Number
+													</label> <input type="text" class="form-control"
+														name="phoneNumber" id="idPhoneNumber" th:value="${cardValById?.phoneNumber}">
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+										</div>
+
+										<div class="hr hr-dotted hr-4"></div>
+
+										<div class="row">
+											<div class="col-xs-6 col-sm-3">
+												<div class="form-group">
+													<label class="control-label block"
+														for="idBranchnameVal">Card Req. Originating Branch <small class="red"> *</small>
+													</label> <select class="form-control select2" id="idBranchnameVal" name="cardReqOriginatingBranch" data-placeholder="Choose Branch..." data-error="Select Bank branch" required>
+															<option th:each="branchList : ${branchLists}"
+	                     										 th:value="${branchList.branchName}"
+	                    										 th:text="${branchList.branchName}">Branch</option>
+										</select>
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+											<div class="col-xs-6 col-sm-3">
+												<div class="form-group">
+													<label class="control-label block" for="idCardRemarks">Request
+														Remarks <small class="red"> *</small>
+													</label> <input class="form-control" name="requestRemark" readonly
+														id="idCardRemarks"  th:value="${cardValById?.requestRemark}" >
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+											<div class="col-xs-6 col-sm-3">
+												<div class="form-group">
+													<label class="control-label block" for="idCardStatus">Card
+														Status </label> <input class="form-control" name="cardStatus" readonly
+														id="idCardStatus"  th:value="${cardValById?.cardStatus}" >
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+											<div class="col-xs-6 col-sm-3">
+												<div class="form-group">
+													<label class="control-label block"
+														for="idStatusUpdatedDate">Status Updated Date
+													</label>
+													<div class="input-group">
+														<input id="idStatusUpdatedDate" type="text"
+															name="statusUpdatedDate"
+															data-date-format="YYYY-MM-DD"
+															placeholder="Select date" th:value="${cardValById?.statusUpdatedDate}"
+															class="form-control date-picker1"
+															data-error="Please select Date." /> <span
+															class="input-group-addon"> <i
+															class="fa fa-clock-o bigger-110"></i>
+														</span>
+													</div>
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+
+											
+										</div>
+
+										<div class="hr hr-dotted hr-4"></div>
+
+										<div class="row">
+											<div class="col-xs-6 col-sm-3"  th:if="${cardValById?.receivedDate}">
+												<div class="form-group">
+													<label class="control-label block" for="idReceivedDate">Received Date<small class="red"> *</small>
+														 </label>
+													<div class="input-group">
+														<input id="idReceivedDate" type="text" name="receivedDate"
+															th:value="${{cardValById?.receivedDate}}" class="form-control date-picker1"
+															 /> <span class="input-group-addon">
+															<i class="fa fa-clock-o bigger-110"></i>
+														</span>
+													</div>
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+											<div class="col-xs-6 col-sm-3" th:if="${cardValById?.cardNumber}">
+												<div class="form-group">
+													<label class="control-label block" for="idCardNumber">Card Number
+														</label> <input type="text"
+														class="form-control" th:value="${cardValById?.cardNumber}"
+														name="cardNumber" id="idCardNumber" data-minlength="5" maxlength="5"
+														placeholder="Card Number">
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+											<div class="col-xs-6 col-sm-3" th:if="${cardValById?.cardExpiryDate}">
+												<div class="form-group">
+													<label class="control-label block" for="idCardExpiryDate">Card Expiry Date<small class="red"> *</small>
+														 </label>
+													<div class="input-group">
+														<input id="idCardExpiryDate" type="text" name="cardExpiryDate"
+															th:value="${{cardValById?.cardExpiryDate}}" class="form-control date-picker1"
+															 /> <span class="input-group-addon">
+															<i class="fa fa-clock-o bigger-110"></i>
+														</span>
+													</div>
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+											<div class="col-xs-6 col-sm-3 hide">
+												<div class="form-group">
+													<label class="control-label block" for="idLodgedEditedBy">Data Updated By
+														 </label>
+													<input id="idLodgedEditedBy" type="text"
+																		name="lodgedEditedBy" class="form-control"
+																		th:value="${currentUser.email}" readonly />
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+										</div>
+										<div class="hr hr-dotted hr-4"></div>
+										<div class="row">
+											<div class="col-xs-6 col-sm-3" th:if="${cardValById?.cardActivatedDate}">
+												<div class="form-group">
+													<label class="control-label block" for="idCardActivatedDate"> Card Activated Date<small class="red"> *</small>
+														 </label>
+													<div class="input-group">
+														<input id="idCardActivatedDate" type="text" name="cardActivatedDate"
+															th:value="${{cardValById?.cardActivatedDate}}" class="form-control date-picker1"
+															 /> <span class="input-group-addon">
+															<i class="fa fa-clock-o bigger-110"></i>
+														</span>
+													</div>
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>	
+											<div class="col-xs-6 col-sm-3">
+												<div class="form-group">
+													<label class="control-label block" for="idOtherRemarks">Other
+														Remarks </label>
+													<textarea name="otherRemarks" th:value="${cardValById?.otherRemarks}" th:text="${cardValById?.otherRemarks}"
+														placeholder="Write the descriptions here..."
+														class="form-control limited" maxlength="1200"
+														id="idOtherRemarks" rows="4"
+														data-error="Please fill the remarks"></textarea>
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>
+											<div class="col-xs-6 col-sm-3"  th:if="${cardValById?.activationRemarks}">
+												<div class="form-group">
+													<label class="control-label block" for="idActivationRemarks">Activation Remarks
+														 </label>
+													<textarea name="activationRemarks" th:value="${cardValById?.activationRemarks}" th:text="${cardValById?.activationRemarks}"
+														placeholder="Write the descriptions here..."
+														class="form-control limited" maxlength="1200"
+														id="idActivationRemarks" rows="4"
+														data-error="Please fill the remarks"></textarea>
+													<div class="help-block with-errors"></div>
+												</div>
+											</div>	
+											<div class="space-12"></div>							
+											<div class="col-xs-6 col-sm-3">
+												<div class="form-group">
+													<div class="row">
+														<div class="col-xs-6 col-sm-6" id="btnCollection">
+															<div class="clearfix">
+																<button class="pull-right btn btn-sm" type="button"
+																	id="reset">
+																	<i class="ace-icon fa fa-refresh"></i> <span
+																		class="bigger-110">Reset</span>
+																</button>
+															</div>
+														</div>
+														<div class="col-xs-6 col-sm-6">
+															<div class="clearfix">
+																<button class="pull-left btn btn-sm btn-success"
+																	type="submit">
+																	<span class="bigger-110">Submit</span> <i
+																		class="ace-icon fa fa-arrow-right icon-on-right"></i>
+																</button>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>	
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+									
+															
+				</div>
+			</div>
+		</div>
+	</div>                     
+<!-- basic scripts -->
+	<th:block layout:fragment="scripts">
+			
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		var branchNameType = /*[[${cardValById.cardReqOriginatingBranch}]]*/ 'CardReqOriginatingBranch';
+		var accountOperationType = /*[[${cardValById.accountOperation}]]*/ 'AccountOperation';
+		var accountTypeType = /*[[${cardValById.accountType}]]*/ 'AccountType';
+		var genderType = /*[[${cardValById.gender}]]*/ 'Gender';
+		var maritalStatusType = /*[[${cardValById.maritalStatus}]]*/ 'MaritalStatus';
+		var branchCodeType = /*[[${cardValById.branchCode}]]*/ 'BranchCode';
+		var clientCodeType = /*[[${cardValById.clientCode}]]*/ 'ClientCode';
+		var cardStatusType = /*[[${cardValById.cardStatus}]]*/ 'CardStatus';
+		/*]]>*/
+		function setSelectedIndex(s, v) {
+		    for ( var i = 0; i < s.options.length; i++ ) {
+		        if ( s.options[i].value == v ) {
+		            s.options[i].selected = true;
+		            break;
+		        }
+		    }
+		    return;
+		}
+		
+		setSelectedIndex(document.getElementById('idBranchnameVal'), branchNameType);
+		setSelectedIndex(document.getElementById('idAccOperation'), accountOperationType);
+		setSelectedIndex(document.getElementById('idAccountType'), accountTypeType);
+		
+		$("input[name=gender][value=" + genderType + "]").attr('checked', true);
+		$("input[name=maritalStatus][value=" + maritalStatusType + "]").attr('checked', true);
+		$("#idBranchCode").val(branchCodeType);
+		$("#idClientCode").val(clientCodeType);
+		
+		 if(cardStatusType === 'In-process(step 2)'){
+			$("[name='receivedDate']").attr("required", true);
+			$("[name='cardNumber']").attr("required", true);
+			$("[name='cardExpiryDate']").attr("required", true);
+		}
+		else if(cardStatusType === 'Active'){
+			$("[name='cardActivatedDate']").attr("required", true);
+			$("[name='activationRemarks']").attr("required", true);
+		}
+		 
+		
+	</script>
+	 <script>
+			$(document).ready(function() {
+				
+				$("#idAccountNumber").focusout(function() {
+					var myStr = $("#idAccountNumber").val();
+					var trimmedSpace = $.trim(myStr).replace(/ /g, "").length;
+
+					if (trimmedSpace === 20) {
+						$("#idBranchCode").val(myStr.slice(0, 3));
+						$("#idClientCode").val(myStr.slice(6, 14));
+					}
+				});
+				
+				
+				$('.select2').css('width', '100%').select2({});
+
+				$(".date-picker").datepicker({
+					format : "yyyy-mm-dd",
+					autoclose : true,
+					todayBtn : "linked",
+					todayHighlight : true
+				}).datepicker('update', new Date());
+				
+				$(".date-picker1").datepicker({
+					format : "yyyy-mm-dd",
+					autoclose : true,
+					todayBtn : "linked",
+					todayHighlight : true
+				});
+				
+				$('#idRenewRemarks').inputlimiter({
+					remText : '%n character%s remaining...',
+					limitText : 'max allowed : %n.'
+				});
+				$('#idActivationRemarks').inputlimiter({
+					remText : '%n character%s remaining...',
+					limitText : 'max allowed : %n.'
+				});
+
+				$('#idCardNumber').mask('99999', {
+					autoclear : false
+				});
+				$('.input-mask-accountNo').mask('99999999999999999999', {
+					autoclear : false
+				});
+			});
+		</script>		
+
+	
+
+	<script>
+			autosize(document.querySelectorAll('textarea'));
+	</script>
+
+
+	</th:block>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1"/>
+<meta name="description" content="Admin Dashboard" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">POFIL Utility</title>
+	<th:block th:replace="fragments/style"></th:block>
+	<th:block layout:fragment="styles"></th:block>
+</head>
+<body class="no-skin">
+	<nav class="navbar navbar-default" th:replace="branchmanager/bm_layout/bm_header.html :: header"></nav>
+
+	<div class="main-container ace-save-state" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.loadState('main-container')}catch(e){}
+			</script>
+
+		<div id="sidebar" class="sidebar responsive ace-save-state" th:replace="branchmanager/bm_layout/bm_navbar.html :: navbar"></div>		
+				
+		<div class="main-content">		
+			<div class="main-content-inner">
+				
+				<div layout:fragment="content">
+				</div>
+				
+			</div>
+		</div>		
+		
+	<!--Footer-->
+	<footer class="footer" th:replace="fragments/footer"></footer>
+	<!--/Footer-->
+	
+	<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse pull-right">
+		<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+	</a>
+</div>	
+
+	<th:block th:replace="fragments/script"></th:block>
+	
+	<th:block layout:fragment="scripts"></th:block>
+	
+</body>
+</html>

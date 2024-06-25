@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+	  layout:decorate="~{layouts/default}">
+<head>
+	<meta charset="ISO-8859-1"/>
+	<title>Edit Utility Form</title>	
+</head>
+<body>
+    <div layout:fragment="content">
+			<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+				<ul class="breadcrumb">
+					<li>
+						<i class="ace-icon fa fa-home home-icon"></i>
+						<a href="#">Home</a>
+					</li>
+					<li class="active">Edit Utility Form</li>
+				</ul><!-- /.breadcrumb -->
+			</div>
+			<div class="page-content">						
+				<div class="page-header">
+					<h1>
+						Edit Utility Form
+						<small>
+							<i class="ace-icon fa fa-angle-double-right"></i>
+							Enter the Form details
+						</small>
+					</h1>
+				</div><!-- /.page-header -->
+				<div th:if="${message}">
+					<h2 th:text="${message}"></h2>
+				</div>														
+  <div class="row clearfix">
+   <div class="col-xs-12 table-responsive">
+	<form th:object="${utilityBills}" method="POST" th:action="@{/update/utility}" modelAttribute="utilityBills" data-toggle="validator" id="myform">
+	  <input type="hidden" name="id" th:value="${utilityValue.id}"/>
+	  <input id="idLodgedBy" type="text" name="lodgedBy" th:value="${utilityValue?.lodgedBy}" readonly class="hide" />
+	  <input type="text" name="lodgedModifiedBy" th:value="${currentUser.email}" readonly class="hide"/>
+		<div class="col-xs-12 col-sm-3">
+		 <div class="space-8"></div>
+			<div>
+				<label for="idBranch">Branch</label>
+				<br />
+					<input class="form-control"
+					id="idBranchName"
+					name="branchName"
+					th:value="${utilityValue.branchName}" readonly
+					required type="text" />
+			</div>	
+			<hr />
+			<div>
+				<label for="idFiscalYear">Fiscal Year</label>
+				<br />
+					<input class="form-control"
+					id="idfiscalYear"
+					name="fiscalYear"
+					th:value="${utilityValue.fiscalYear}" readonly
+					required type="text" />
+			</div>	
+			<hr />
+			<div>
+				<label for="idMonth">Month</label>
+				<br />
+					<input class="form-control"
+					id="idMonth"
+					name="month"
+					th:value="${utilityValue.month}" readonly
+					required type="text" />
+			</div>
+			<hr />	
+			 <div><p></p>
+			 </div>
+		</div>		  
+		<div class="col-xs-12 col-xs-9">								  
+			<table class="table table-striped table-bordered table-hover" id="dynamic-table">
+				<thead>
+                      <tr>
+                          <th width="27%" class="text-center">
+                              Utility Category
+                          </th>
+                          <th width="21%" class="text-center">
+                              Amount (Rs.)<small class="red"> *</small>
+                          </th>
+                          <th class="text-center">
+                              Remarks
+                          </th>
+                      </tr>
+				</thead>
+				<tbody >
+    				<tr>
+						<td>
+						    Electricity Expenses<small class="red"> *</small>
+						</td>
+						<td class="form-group">
+						    <input type="number" id="idElectricity" placeholder="0.00" min="0" step="any" 
+						    pattern="^\d+(?:\.\d{1,2})?$" 
+						    onblur="this.parentNode.parentNode.style.backgroundColor=/^\d+(?:\.\d{1,2})?$/.test(this.value)?'inherit':'red'" 
+						    name='electricityExpenseAmount' class="form-control" th:value ="${#numbers.formatDecimal(utilityValue.electricityExpenseAmount, 1,  2)}" required/>
+						</td>
+						<td class="form-group">
+						<textarea id="form-field-0" name="electricityExpenseRemarks" th:value ="${utilityValue.electricityExpenseRemarks}" th:text="${utilityValue.electricityExpenseRemarks}"
+						 class="autosize-transition form-control"></textarea>
+						</td>
+					</tr>
+					
+                            <tr>
+                                <td>
+                                    Fuel Expenses (Vehicle- 2 Wheeler)<small class="red"> *</small></td>
+                                <td class="form-group">
+                                    <input type="number" placeholder="0.00" min="0" step="any"
+                                           pattern="^\d+(?:\.\d{1,2})?$" th:value ="${#numbers.formatDecimal(utilityValue.fuelExpensesTwoWheelAmount, 1,  2)}"
+                                           onblur="this.parentNode.parentNode.style.backgroundColor=/^\d+(?:\.\d{1,2})?$/.test(this.value)?'inherit':'#f28c0e14'"
+                                           name='fuelExpensesTwoWheelAmount' class="form-control" required/>
+                                           <div class="help-block with-errors"></div>
+                                </td>
+                                <td>
+                                    <textarea name="fuelExpensesTwoWheelRemarks" placeholder="Description" th:value ="${utilityValue.fuelExpensesTwoWheelRemarks}"
+                                            th:text ="${utilityValue.fuelExpensesTwoWheelRemarks}"  class="form-control"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Fuel Expenses (Vehicle-4 Wheeler)<small class="red"> *</small>
+                                </td>
+                                <td class="form-group">
+                                    <input type="number" placeholder="0.00" min="0" step="any"
+                                           pattern="^\d+(?:\.\d{1,2})?$" th:value ="${#numbers.formatDecimal(utilityValue.fuelExpensesFourWheelAmount, 1,  2)}"
+                                           onblur="this.parentNode.parentNode.style.backgroundColor=/^\d+(?:\.\d{1,2})?$/.test(this.value)?'inherit':'#f28c0e14'"
+                                           name='fuelExpensesFourWheelAmount' class="form-control" required/>
+                                           <div class="help-block with-errors"></div>
+                                </td>
+                                <td>
+                                    <textarea name="fuelExpensesFourWheelRemarks" placeholder="Description" th:value ="${utilityValue.fuelExpensesFourWheelRemarks}"
+                                           th:text ="${utilityValue.fuelExpensesFourWheelRemarks}"   class="form-control"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Fuel Expenses (Genset)<small class="red"> *</small></td>
+                                <td class="form-group">
+                                    <input type="number" placeholder="0.00" min="0" step="any"
+                                           pattern="^\d+(?:\.\d{1,2})?$" th:value ="${#numbers.formatDecimal(utilityValue.fuelGensetAmount, 1,  2)}"
+                                           onblur="this.parentNode.parentNode.style.backgroundColor=/^\d+(?:\.\d{1,2})?$/.test(this.value)?'inherit':'#f28c0e14'"
+                                           name='fuelGensetAmount' class="form-control" required/>
+                                           <div class="help-block with-errors"></div>
+                                </td>
+                                <td>
+                                    <textarea name="fuelGensetRemarks" placeholder="Description" th:value ="${utilityValue.fuelGensetRemarks}"
+                                          th:text ="${utilityValue.fuelGensetRemarks}"    class="form-control"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Telephone Expenses<small class="red"> *</small>
+                                </td>
+                                <td class="form-group">
+                                    <input type="number" placeholder="0.00" min="0" step="any"
+                                           pattern="^\d+(?:\.\d{1,2})?$" th:value ="${#numbers.formatDecimal(utilityValue.telephoneExpenseAmount, 1,  2)}"
+                                           onblur="this.parentNode.parentNode.style.backgroundColor=/^\d+(?:\.\d{1,2})?$/.test(this.value)?'inherit':'#f28c0e14'"
+                                           name='telephoneExpenseAmount' class="form-control" required/>
+                                           <div class="help-block with-errors"></div>
+                                </td>
+                                <td>
+                                    <textarea name="telephoneExpenseRemarks" placeholder="Description" th:value ="${utilityValue.telephoneExpenseRemarks}"
+                                           th:text ="${utilityValue.telephoneExpenseRemarks}"   class="form-control"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Maintenance Expenses<small class="red"> *</small></td>
+                                <td class="form-group">
+                                    <input type="number" placeholder="0.00" min="0" step="any"
+                                           pattern="^\d+(?:\.\d{1,2})?$" th:value ="${#numbers.formatDecimal(utilityValue.maintenanceExpenseAmount, 1,  2)}"
+                                           onblur="this.parentNode.parentNode.style.backgroundColor=/^\d+(?:\.\d{1,2})?$/.test(this.value)?'inherit':'#f28c0e14'"
+                                           name='maintenanceExpenseAmount' class="form-control" required/>
+                                           <div class="help-block with-errors"></div>
+                                </td>
+                                <td>
+                                    <textarea name="maintenanceExpenseRemarks" placeholder="Description" th:value ="${utilityValue.maintenanceExpenseRemarks}"
+                                            th:text ="${utilityValue.maintenanceExpenseRemarks}"  class="form-control"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Others Expenses</td>
+                                <td class="form-group">
+                                    <input type="number" placeholder="0.00" min="0" step="any" id="idOtherExpenses"
+                                           pattern="^\d+(?:\.\d{1,2})?$" value="0.00" th:value ="${#numbers.formatDecimal(utilityValue.othersExpensesAmount, 1,  2)}"
+                                           onblur="this.parentNode.parentNode.style.backgroundColor=/^\d+(?:\.\d{1,2})?$/.test(this.value)?'inherit':'#f28c0e14'"
+                                           name='othersExpensesAmount' class="form-control" data-error="Null value, atleast enter 0." required/>
+                                           <div class="help-block with-errors" id ="errorMsg"></div>
+                                </td>
+                                <td>
+                                    <textarea name="othersExpensesRemarks" placeholder="Description" th:value ="${utilityValue.othersExpensesRemarks}"
+                                           th:text ="${utilityValue?.othersExpensesRemarks}"   class="form-control"></textarea>
+                                </td>
+                            </tr>					
+				</tbody>
+			</table>
+			<div class="clearfix form-actions">
+				<div class="col-md-offset-4 col-md-8">
+					<button class="btn btn-primary" type="submit" id="submit" value="Upload" >
+						<i class="ace-icon fa fa-check bigger-110"></i>
+						Submit
+					</button>
+				</div>
+			</div>
+		</div>
+		
+										
+		</form>	
+		</div>
+	</div>	
+		
+	</div>	
+	</div><!-- /.main-content -->
+   
+   
+    <th:block layout:fragment="scripts">
+<!--     	<script th:inline="javascript">
+			/*<![CDATA[*/
+			var fiscalYearVal = /*[[${utilityValue.fiscalYear}]]*/'fiscalYear';
+			var monthVal = /*[[${utilityValue.month}]]*/'month';
+			/*]]>*/
+			function setSelectedIndex(s, v) {
+				for (var i = 0; i < s.options.length; i++) {
+					if (s.options[i].value == v) {
+						s.options[i].selected = true;
+						break;
+					}
+				}
+				return;
+			}
+			setSelectedIndex(document.getElementById('idFiscalYear'), fiscalYearVal);
+			setSelectedIndex(document.getElementById('idMonth'),	monthVal);
+
+			
+		</script> -->
+	<script>
+		autosize(document.querySelectorAll('input'));
+	</script>
+	
+    <script>
+       $('.chosen-select').chosen();
+       $(window)
+           .off('resize.chosen')
+           .on('resize.chosen', function () {
+               $('.chosen-select').each(function () {
+                   var $this = $(this);
+                   $this.next().css({'width': $this.parent().width()});
+               })
+           }).trigger('resize.chosen');
+   </script>
+    
+	<script type="text/javascript">
+		$(document).ready(function(){
+		});
+	</script>
+    </th:block>
+</body>
+</html>

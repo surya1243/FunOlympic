@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/default}">
+<head>
+<meta charset="ISO-8859-1" />
+<title>GFP Record List</title>
+<th:block layout:fragment="styles">
+	  <!-- <link rel="stylesheet" href="../static/css/daterangepicker.min.css" th:href="@{/css/daterangepicker.min.css}" /> -->
+	  
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+</th:block>
+</head>
+<body>
+
+	<div layout:fragment="content">
+		<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+			<ul class="breadcrumb">
+				<li><i class="ace-icon fa fa-home home-icon"></i> <a href="#">Home</a>
+				</li>
+				<li class="active"> Good for Payment Record List </li>
+			</ul>
+			<!-- /.breadcrumb -->
+		</div>
+
+		<div class="page-content">
+		<div class="row">
+			<div class="col-xs-12">
+				<!-- PAGE CONTENT BEGINS -->
+				<div th:if="${message}">
+					<h2 class="alert alert-danger" th:text="${message}"/>
+				</div>
+				<div th:if="${successMessage}">
+					<div class="alert alert-success">
+						<button type="button" class="close" data-dismiss="alert">
+							<i class="ace-icon fa fa-times"></i>
+						</button>
+						<strong th:text="${successMessage}">Success!</strong> <br />
+					</div>
+				</div>
+			</div>				
+		</div>
+		<div class="row">
+		 <div class="col-xs-12">
+			<div class="row">
+				<div class="col-xs-12">
+					<!-- PAGE CONTENT BEGINS -->
+					<div class="clearfix">
+						<div class="pull-right tableTools-container"></div>
+					</div>
+					<div class="table-header">Report for "Good for Payment Record"
+					</div>
+					<div>
+						<table width="100%" id="gfpdata-table"
+							class="table table-striped table-bordered table-hover">
+							<thead>
+								<tr>
+									<th class="center"> S.N. </th>
+									<th> Issue Date </th>
+									<th class="hidden-xs"> Issued Branch </th>
+									<th> Cheque Date </th>
+									<th class="hidden-xs"> Party's Name </th>
+									<th class="hidden-xs"> Account Holder's Name </th>
+									<th data-class='hidden'> Account Number </th>
+									<th> Amount </th>
+									<th class="hidden-xs"> Purpose of Payment </th>
+									<th class="hidden-xs"> System Input By </th>
+									<th data-class='hidden'> System Approved By </th>
+									<th> GFP Status </th>
+									<th class="hidden-xs"> Paid/Cancel Date </th>
+									<th class="center" sec:authorize="hasAnyAuthority('ADMIN','HIGHSUPERVISOR', 'SUPERVISOR','BM','HOD','MAKER')"> Action </th>
+								</tr>								
+							</thead>
+							<tbody style="cursor:pointer">
+                        	<tr th:each="gfpList, row :${gfpListData}">
+
+                            <td th:text="${row.index+1}" class="center"></td>
+                            <td><a th:href="@{'/getgfp/'+${gfpList.id}}" th:text="${{gfpList?.issueDate}}">test</a></td>
+                            <td th:text="${gfpList?.branchName}" class="hidden-xs">test</td>
+                            <td th:text="${{gfpList?.chequeDate}}">test</td>
+                            <td th:text="${gfpList?.partiesName}" class="hidden-xs">test</td>
+                            <td th:text="${gfpList?.accountHolderName}" class="hidden-xs">test</td>
+                            <td th:text="${gfpList?.accountNumber}">test</td>
+                            <td th:text="${#numbers.formatDecimal(gfpList?.amount, 1, 'COMMA', 2, 'POINT')}"
+                           >test</td>
+                            <td th:text="${gfpList?.purposeOfPayment}" class="hidden-xs">test</td>
+                            <td th:text="${gfpList?.systemInputBy}" class="hidden-xs">test</td>
+                            <td th:text="${gfpList?.systemApprovedBy}">test</td>
+                            <td class="center" th:switch="${gfpList?.gfpStatus}">
+								<span class="label label-success arrowed-in arrowed-in-right" th:case="'Active'"> Active </span>
+							    <span class="label label-sm label-info" th:case="'Paid'"> Paid </span>
+							    <span class="label label-sm label-danger" th:case="'Cancel'"> Cancelled </span>
+						    </td>
+                            <td th:text="${{gfpList?.paidCancelDate}}" class="hidden-xs">test</td>
+                            
+                            <td class="center" sec:authorize="hasAnyAuthority('ADMIN','HIGHSUPERVISOR', 'SUPERVISOR','BM','HOD','MAKER')">
+                               <div class="hidden-sm hidden-xs action-buttons">
+									<a class="green" title="Edit"
+										th:href="@{'/updategfpdata/'+${gfpList.id}}">
+										<i class="ace-icon fa fa-pencil bigger-130"></i>
+									</a> <a class="red" sec:authorize="hasAnyAuthority('ADMIN','HIGHSUPERVISOR')"
+										th:data-thing="${gfpList?.id}"
+										th:onclick="deleteGfpData(this.getAttribute('data-thing'));">
+										<i class="ace-icon fa fa-trash-o bigger-130"></i>
+									</a>
+								</div>
+								<div class="hidden-md hidden-lg action-buttons">
+									<div class="inline pos-rel">
+										<button class="btn btn-minier btn-yellow dropdown-toggle"
+											data-position="auto" data-toggle="dropdown">
+											<i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
+										</button>
+										<div
+											class="dropdown-menu dropdown-only-icon center dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+											<a class="green" title="Edit"
+												th:href="@{'/updategfpdata/'+${gfpList.id}}"> <i
+												class="ace-icon fa fa-pencil bigger-130"></i>
+											</a> <a class="red" sec:authorize="hasAnyAuthority('ADMIN','HIGHSUPERVISOR')"
+												th:data-thing="${gfpList?.id}"
+												th:onclick="deleteGfpData(this.getAttribute('data-thing'));">
+												<i class="ace-icon fa fa-trash-o bigger-130"></i>
+											</a>
+										</div>
+									</div>
+								</div>
+							</td>
+                        </tr>
+                        </tbody>
+						</table>
+					</div>
+					
+<div class="modal modal-warning fade in" id="personModel" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">�</span></button>
+                <h5 class="modal-title">Delete User</h5>
+            </div>
+            <div class="modal-body">
+                <h3>Are you sure want to delete this user?</h3>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+					
+				</div>
+			</div>
+			</div></div>		
+		</div>
+	</div>
+	<th:block layout:fragment="scripts">		
+		<script>
+		function openPersonModel(id) {
+			$.ajax({
+				url: "/getgfp/" + id,
+				success: function(data){
+					//$("#personModalHolder").html(data);
+					$("#personModal").modal("show");
+				}
+			});
+		}
+		</script>
+    <script type="text/javascript">
+        jQuery(function ($) {
+            //initiate dataTables plugin
+            var myTable =
+                $('#gfpdata-table')
+
+                    .DataTable({
+                    	"order": [ 1, "desc" ],
+                        bAutoWidth: false,
+                        "aoColumns": [
+                           null,null,null, null, null, null, null, null, null,null,null,null,null,
+                            {"bSortable": false}
+                        ],
+                        "aaSorting": [],
+                    });
+            $.fn.dataTable.Buttons.defaults.dom.container.className = 'dt-buttons btn-overlap btn-group btn-overlap';
+
+            new $.fn.dataTable.Buttons(myTable, {
+                buttons: [
+                    {
+                        "extend": "copy",
+                        "text": "<i class='fa fa-copy bigger-110 pink'></i> <span class='hidden'>Copy to clipboard</span>",
+                        "className": "btn btn-white btn-primary btn-bold"
+                    },
+                    {
+                        "extend": "csv",
+                        "text": "<i class='fa fa-file-excel-o bigger-110 blue'></i> <span class='hidden'>Export to CSV</span>",
+                        "className": "btn btn-white btn-primary btn-bold"
+                    },
+                    {
+                        "extend": "excel",
+                        "text": "<i class='fa fa-file-excel-o bigger-110 green'></i> <span class='hidden'>Export to Excel</span>",
+                        "className": "btn btn-white btn-primary btn-bold"
+                    },
+                    {
+                        "extend": "pdf",
+                        "text": "<i class='fa fa-file-pdf-o bigger-110 red'></i> <span class='hidden'>Export to PDF</span>",
+                        "className": "btn btn-white btn-primary btn-bold"
+                    },
+                    {
+                        "extend": "print",
+                        "text": "<i class='fa fa-print bigger-110 grey'></i> <span class='hidden'>Print</span>",
+                        "className": "btn btn-white btn-primary btn-bold",
+                        autoPrint: true,
+                        message: 'DataTables from Utility Management Database'
+                    }
+                ]
+            });
+            myTable.buttons().container().appendTo($('.tableTools-container'));
+
+            //style the message box
+            var defaultCopyAction = myTable.button(1).action();
+            myTable.button(1).action(function (e, dt, button, config) {
+                defaultCopyAction(e, dt, button, config);
+                $('.dt-button-info').addClass('gritter-item-wrapper gritter-info gritter-center white');
+            });
+
+            setTimeout(function () {
+                $($('.tableTools-container')).find('a.dt-button').each(function () {
+                    var div = $(this).find(' > div').first();
+                    if (div.length == 1) div.tooltip({container: 'body', title: div.parent().text()});
+                    else $(this).tooltip({container: 'body', title: $(this).text()});
+                });
+            }, 500);
+
+        })
+    </script>
+    <script>
+		function deleteGfpData(control) {
+        var dialog = bootbox.dialog({
+        	title: 'Delete Good For Payment Record!!!',
+        	message: '<p>Are you sure you want to delete recorded Good For Payment data?</p>',
+            size: 'md',
+            onEscape: true,
+            backdrop: true,
+            buttons: {
+                cancel: {
+                	label: '<i class="fa fa-times"></i> Cancel',
+                    className: 'btn-danger pull-right margin-left-10px',
+                },
+                ok: {
+                	label: '<i class="fa fa-check"></i> Confirm',
+                    className: 'btn-info',
+                    callback: function(result){
+                    	if(result){
+                    		$.ajax({
+                    	        type: 'DELETE',
+                    	        url:  '/updategfpdata/delete/' + control,
+                    	        success: function(result) {
+                    	        	$('#showMessage').append("<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'><i class='ace-icon fa fa-times'></i></button><br>"
+                    	        			+ result.message+  ': '+ result.data+"</div>");
+                    	        	alert(result.message
+                    	                + ': '+ result.data);
+                    	        	window.location.href = "/gfplist";
+                    	        },
+                    	        error: function(jqXHR, textStatus, errorThrown) {
+                    	            alert(jqXHR.status + ' ' + jqXHR.responseText);
+                    	        }
+                    	    });
+                    	}
+                    }
+                }
+            },
+        });
+	}
+</script>		
+	</th:block>
+</body>
+</html>

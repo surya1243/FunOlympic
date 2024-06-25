@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{branchmanager/bm_layout/bm_default}">
+
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta charset="utf-8" />
+<title>Minutes Detail Page</title>
+
+<th:block layout:fragment="styles">
+
+</th:block>
+</head>
+
+<body>
+	<div layout:fragment="content">
+		<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+			<ul class="breadcrumb">
+				<li><i class="ace-icon fa fa-home home-icon"></i> <a href="#">Home</a>
+				</li>
+				<li><a th:href="@{/bm/minuteslist}">Minute's List</a></li>
+				<li class="active">Meeting Minute's Reports</li>
+			</ul>
+			<!-- /.breadcrumb -->
+		</div>
+		<div class="page-header">
+			<h1>
+				<i class="ace-icon fa fa-book blue"></i> Meeting Minute's Reports
+			</h1>
+		</div>
+		<div th:if="${message}">
+			<h2 class="alert alert-danger" th:text="${message}" />
+		</div>
+		<div class="page-content">
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="col-xs-6 col-sm-2">
+						<button class="btn btn-app btn-pink btn-xs" id="btnPrint"
+							title="Print Minute's Details!!!">
+							<i class="ace-icon fa fa-print bigger-160"></i> Print
+						</button>
+					</div>
+					<div class="col-xs-12 col-sm-6 user-profile">
+						<div class="profile-user-info profile-user-info-striped">
+							<div class="profile-info-row">
+								<div class="profile-info-name">Title</div>
+								<div class="profile-info-value form-group">
+									<span th:text="${minutesById.minuteTitle}"></span>
+								</div>
+							</div>
+							<div class="profile-info-row">
+								<div class="profile-info-name">Meeting's Date</div>
+								<div class="profile-info-value form-group">
+									<span th:text="${{minutesById.meetingsDate}}"></span>
+								</div>
+							</div>
+							<div class="profile-info-row">
+								<div class="profile-info-name">Category</div>
+								<div class="profile-info-value form-group"
+									th:switch="__${minutesById.category}__">
+									<span th:case="Management_HOD">Management/HOD</span> <span
+										th:case="Business_Operation">Business/Operation</span> <span
+										th:case="Branch">Branch</span>
+								</div>
+							</div>
+							<div class="profile-info-row">
+								<div class="profile-info-name">Issued Branch</div>
+								<div class="profile-info-value form-group">
+									<span th:text="${minutesById.branchName}"></span>
+								</div>
+							</div>
+							<div class="profile-info-row">
+								<div class="profile-info-name">Fiscal Year</div>
+								<div class="profile-info-value form-group">
+									<span th:text="${minutesById.fiscalYear}"></span>
+								</div>
+							</div>
+							<div class="profile-info-row">
+								<div class="profile-info-name">Remarks</div>
+								<div class="profile-info-value form-group">
+									<span th:text="${minutesById.remarks}"></span>
+								</div>
+							</div>
+							<div class="profile-info-row">
+								<div class="profile-info-name">Uploaded File</div>
+								<div class="profile-info-value form-group center">
+									<a th:href="@{'/file/'+${minutesById.fileLocationUrl}}"> <span
+										class="badge badge-pink label-lg"
+										th:text="${minutesById.fileLocationUrl}"></span></a>
+									<div id="pictures" class="tab-pane">
+										<ul class="ace-thumbnails">
+											<li><a
+												th:href="@{'/file/'+${minutesById.fileLocationUrl}}"
+												data-rel="colorbox"> <img alt="Image file"
+													th:src="@{'/file/'+${minutesById.fileLocationUrl}}"
+													width="350" />
+													<div class="text">
+														<i class="ace-icon fa fa-search-plus"></i>
+														<div class="inner">Click</div>
+													</div>
+											</a></li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block layout:fragment="scripts">
+		<script src="../static/js/jquery.colorbox.min.js"
+			th:src="@{/js/jquery.colorbox.min.js/}"></script>
+
+		<script>
+			$('#btnPrint').on("click", function() {
+				$('.page-header,.user-profile').printThis();
+			});
+		</script>
+		
+		<script type="text/javascript">
+			jQuery(function($) {
+				var $overflow = '';
+				var colorbox_params = {
+					rel : 'colorbox',
+					reposition : true,
+					scalePhotos : true,
+					scrolling : false,
+					previous : '<i class="ace-icon fa fa-arrow-left"></i>',
+					next : '<i class="ace-icon fa fa-arrow-right"></i>',
+					close : '&times;',
+					current : '{current} of {total}',
+					maxWidth : '100%',
+					maxHeight : '100%',
+					onOpen : function() {
+						$overflow = document.body.style.overflow;
+						document.body.style.overflow = 'hidden';
+					},
+					onClosed : function() {
+						document.body.style.overflow = $overflow;
+					},
+					onComplete : function() {
+						$.colorbox.resize();
+					}
+				};
+
+				$('.ace-thumbnails [data-rel="colorbox"]').colorbox(
+						colorbox_params);
+				$("#cboxLoadingGraphic")
+						.html(
+								"<i class='ace-icon fa fa-spinner orange fa-spin'></i>");//let's add a custom loading icon
+
+				$(document).one('ajaxloadstart.page', function(e) {
+					$('#colorbox, #cboxOverlay').remove();
+				});
+			})
+		</script>
+
+
+	</th:block>
+</body>
+
+</html>

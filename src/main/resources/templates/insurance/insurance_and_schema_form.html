@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layouts/default}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
+    <meta charset="utf-8"/>
+    <title>Insurance Page</title>
+    <th:block layout:fragment="styles">
+
+    </th:block>
+</head>
+<body>
+<div layout:fragment="content">
+    
+    <div class="page-content">
+        <div class="page-header">
+            <h1>
+                Add New Insurance Company and Scheme Details
+            </h1>
+        </div><!-- /.page-header -->
+
+        <div class="row">
+            <div class="col-xs-12">
+                <!-- PAGE CONTENT BEGINS -->
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="tabbable">
+                            <ul class="nav nav-tabs" id="myTab">
+                                <li class="active">
+                                    <a data-toggle="tab" href="#home">
+                                        <i class="green ace-icon fa fa-home bigger-120"></i>
+                                        Add Insurance Company
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a data-toggle="tab" href="#messages">
+                                        Add Insurance Scheme
+                                    </a>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content">
+                                <div class="tab-pane fade in active" id="home">
+                                    <form data-toggle="validator" method="POST" role="form"
+                                          th:action="@{/addinscompany}" th:object="${insCompany}">
+                                        <fieldset>
+                                            <div class="form-group">
+                                                <label class="block clearfix" for="insCode">Insurance Company
+                                                    Code</label>
+                                                <span class="block input-icon input-icon-right">
+					                      <input class="form-control" data-error="Please enter Insurance Company Code."
+                                                 id="insCode" name="insCompanyCode" pattern="[a-zA-Z]*" style="text-transform: uppercase;" 
+                                                 onkeyup="this.value = this.value.toUpperCase();"
+                                                 placeholder="Company Code" required type="text"/>
+						                    </span>
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="block clearfix" for="insName">Insurance Company
+                                                    Name</label>
+                                                <span class="block input-icon input-icon-right">
+				                      <input class="form-control" data-error="Please enter Insurance Company Name."
+                                             id="insName" name="insCompanyName"
+                                             placeholder="Company Name" required type="text"/>
+						               </span>
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="block clearfix" for="insCType">Insurance Type</label>
+                                               <select class="chosen-select form-control" data-placeholder="Choose insurance company type..." id="insCType"name="insCompanyType" required>
+                                                    <option value=""></option>
+                                                    <option value="Life">Life</option>
+                                                   	<option value="Non Life">Non Life</option>
+                                                    <option value="Life & Non Life">Life & Non Life</option>
+                                                </select>
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="block clearfix" for="inputRemark">Remark</label>
+                                                <textarea class="form-control" id="inputRemark" name="remark"
+                                                          placeholder="Description"></textarea>
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+
+
+                                            <div class="space-10"></div>
+
+                                            <div class="clearfix">
+                                                <button class="width-30 pull-left btn btn-sm" type="reset">
+                                                    <i class="ace-icon fa fa-refresh"></i> <span
+                                                        class="bigger-110">Reset</span>
+                                                </button>
+
+                                                <button class="width-65 pull-right btn btn-sm btn-success"
+                                                        type="submit">
+                                                    <span class="bigger-110">Register</span> <i
+                                                        class="ace-icon fa fa-arrow-right icon-on-right"></i>
+                                                </button>
+                                            </div>
+                                        </fieldset>
+                                    </form>
+                                </div>
+<!--  -->
+
+
+
+                                <div class="tab-pane fade" id="messages">
+                                    <form data-toggle="validator" method="POST" role="form"th:action="@{/addinsschema}" th:object="${insSchema}">
+                                        <fieldset>
+                                            <div class="form-group">
+                                                <label class="block clearfix" for="insCompanyName">Insurance Company Name</label>
+                                                <select class="form-control" id="insCompanyName" name="insCompanyName" required></select>
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div id="insCompanyCode"></div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="block clearfix" for="inscode">Scheme Code</label>
+                                                <span class="block input-icon input-icon-right">
+                                                      <input class="form-control" data-error="Please enter Insurance Scheme Code."
+                                                             id="inscode"
+                                                             name="insSchemaCode" placeholder="Scheme Code" required
+                                                             type="text"/>
+                                                       </span>
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="block clearfix" for="insName">Scheme Name</label>
+                                                <span class="block input-icon input-icon-right">
+                                                      <input class="form-control" data-error="Please enter Insurance Scheme Name."
+                                                             id="insName"
+                                                             name="insSchemaName" placeholder="Scheme Name" required
+                                                             type="text"/>
+                                                       </span>
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+											<div class="form-group">
+                                                <label class="block clearfix" for="schemeTenure">Scheme Tenure (Years)</label>
+                                                <span class="block input-icon input-icon-right">
+                                                      <input class="form-control" data-error="Please enter Insurance Scheme Tenure"
+                                                             id="schemeTenure"
+                                                             name="insSchemaTenure" placeholder="Insurance Scheme Tenure" required
+                                                             type="number"/>
+                                                       </span>
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="block clearfix" for="insSchemaType">Scheme Type</label>
+                                                <select class="chosen-select form-control" id="insSchemaType" name="schemaType" required>
+                                                    <option selected value=""> Please Select Insurance Company Type...
+                                                    </option>
+                                                    <option value="Life">Life</option>
+	                                                <option value="Non Life">Non Life</option>
+	                                                <option value="Life & Non Life">Life & Non Life</option>
+                                                </select>
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="block clearfix" for="inputRemark">Remark</label>
+                                                <textarea class="form-control" id="inputRemark" name="remark"
+                                                          placeholder="Description"></textarea>
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+
+
+                                            <div class="space-10"></div>
+
+                                            <div class="clearfix">
+                                                <button class="width-30 pull-left btn btn-sm" type="reset">
+                                                    <i class="ace-icon fa fa-refresh"></i> <span
+                                                        class="bigger-110">Reset</span>
+                                                </button>
+
+                                                <button class="width-65 pull-right btn btn-sm btn-success"
+                                                        type="submit">
+                                                    <span class="bigger-110">Register</span> <i
+                                                        class="ace-icon fa fa-arrow-right icon-on-right"></i>
+                                                </button>
+                                            </div>
+                                        </fieldset>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- /.col -->
+                    <div class="vspace-6-sm"></div>
+                    <div class="col-sm-8">
+                        <div class="tabbable">
+                            <ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab4">
+                                <li class="active">
+                                    <a aria-expanded="true" data-toggle="tab" href="#home4"> Insurance Company List </a>
+                                </li>
+
+                                <li class="">
+                                    <a aria-expanded="false" data-toggle="tab" href="#profile4" id="tab2"> Scheme
+                                        Product List </a>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="home4">
+                                    <div>
+                                        <table class="dynamic-table table table-striped table-bordered table-hover">
+                                            <thead>
+                                            <tr>
+                                            	<th data-class='hidden'></th>
+                                                <th width="25%">Insurance Company Code</th>
+                                                <th class="hidden-480" width="25%">Company Name</th>
+                                                <th class="hidden-480" width="25%">Insurance Type</th>
+                                                <th hidden width="25%"></th>
+                                                <th width="10%">Action</th>
+                                            </tr>
+                                            </thead>
+
+                                            <tbody>
+                                            <tr th:each="insCompanyList :${insCompanyList}">
+                                            	<td></td>
+                                                <td th:text="${insCompanyList?.insCompanyCode}">test</td>
+                                                <td class="hidden-480" th:text="${insCompanyList?.insCompanyName}">test</td>
+                                                <td class="hidden-480" th:text="${insCompanyList?.insCompanyType}">test</td>
+                                                <td hidden></td>
+                                                <td>
+                                                    <div class="hidden-sm hidden-xs action-buttons">
+														<a class="green" title="Edit"
+															th:href="@{'/updateinscompany/'+${insCompanyList.id}}">
+															<i class="ace-icon fa fa-pencil bigger-130"></i>
+														</a> <a class="red" id="btnDeleteInsCompany"
+															th:data-thing="${insCompanyList?.id}"
+															th:onclick="deleteInsCompany(this.getAttribute('data-thing'));">
+															<i class="ace-icon fa fa-trash-o bigger-130"></i>
+														</a>
+													</div>
+                                                    <div class="hidden-md hidden-lg action-buttons">
+                                                        <div class="inline pos-rel">
+                                                            <button class="btn btn-minier btn-yellow dropdown-toggle"
+                                                                    data-position="auto" data-toggle="dropdown">
+                                                                <i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
+                                                            </button>
+
+                                                            <div class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+																<a class="green" title="Edit"
+																	th:href="@{'/updateinscompany/'+${insCompanyList.id}}">
+																	<i class="ace-icon fa fa-pencil bigger-130"></i>
+																</a> <a class="red" id="btnDeleteInsCompany"
+																	th:data-thing="${insCompanyList?.id}"
+																	th:onclick="deleteInsCompany(this.getAttribute('data-thing'));">
+																	<i class="ace-icon fa fa-trash-o bigger-130"></i>
+																</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane" id="profile4">
+                                    <div>
+                                        <table class="dynamic-table table table-striped table-bordered table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th >Company Name</th>
+                                                <th >Scheme Code</th>
+                                                <th >Scheme Name</th>
+                                                <th >Scheme Tenure</th>
+                                                <th >Scheme Type</th>
+                                                <th width="10%">Action</th>
+                                            </tr>
+                                            </thead>
+
+                                            <tbody>
+                                            <tr th:each="insSchemaList :${insSchemaList}">
+                                                <td th:text="${insSchemaList?.insCompanyName}">test</td>
+                                                <td th:text="${insSchemaList?.insSchemaCode}">test</td>
+                                                <td th:text="${insSchemaList?.insSchemaName}">test</td>
+                                                <td th:text="${insSchemaList?.insSchemaTenure}">test</td>
+                                                <td th:text="${insSchemaList?.schemaType}">test</td>
+                                                <td>
+                                                    <div class="hidden-sm hidden-xs action-buttons">
+														<a class="green" title="Edit"
+															th:href="@{'/updateinscompanyscheme/'+${insSchemaList.id}}">
+															<i class="ace-icon fa fa-pencil bigger-130"></i>
+														</a> <a class="red" id="btnDeleteInsCompany"
+															th:data-thing="${insSchemaList?.id}"
+															th:onclick="deleteInsScheme(this.getAttribute('data-thing'));">
+															<i class="ace-icon fa fa-trash-o bigger-130"></i>
+														</a>
+													</div>
+                                                    <div class="hidden-md hidden-lg action-buttons">
+                                                        <div class="inline pos-rel">
+                                                            <button class="btn btn-minier btn-yellow dropdown-toggle"
+                                                                    data-position="auto" data-toggle="dropdown">
+                                                                <i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
+                                                            </button>
+
+                                                            <div class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+																<a class="green" title="Edit"
+																	th:href="@{'/updateinscompanyscheme/'+${insSchemaList.id}}">
+																	<i class="ace-icon fa fa-pencil bigger-130"></i>
+																</a> <a class="red" id="btnDeleteInsCompany"
+																	th:data-thing="${insSchemaList?.id}"
+																	th:onclick="deleteInsScheme(this.getAttribute('data-thing'));">
+																	<i class="ace-icon fa fa-trash-o bigger-130"></i>
+																</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.page-content -->
+
+
+</div>
+
+<th:block layout:fragment="scripts">
+    <script src="../static/js/jquery.dataTables.min.js" th:src="@{/js/jquery.dataTables.min.js/}"></script>
+    <script src="../static/js/jquery.dataTables.bootstrap.min.js"
+            th:src="@{/js/jquery.dataTables.bootstrap.min.js/}"></script>
+    <script src="../static/js/dataTables.buttons.min.js" th:src="@{/js/dataTables.buttons.min.js/}"></script>
+    <script src="../static/js/buttons.flash.min.js" th:src="@{/js/buttons.flash.min.js/}"></script>
+    <script src="../static/js/buttons.html5.min.js" th:src="@{/js/buttons.html5.min.js/}"></script>
+    <script src="../static/js/buttons.print.min.js" th:src="@{/js/buttons.print.min.js/}"></script>
+    <script src="../static/js/buttons.colVis.min.js" th:src="@{/js/buttons.colVis.min.js/}"></script>
+    <script src="../static/js/dataTables.select.min.js" th:src="@{/js/dataTables.select.min.js/}"></script>
+    <script src="../static/js/chosen.jquery.min.js" th:src="@{/js/chosen.jquery.min.js/}"></script>
+    <script src="../static/js/autosize.min.js" th:src="@{/js/autosize.min.js/}"></script>
+    <script src="../static/js/getInsuranceCompany.js" th:src="@{/js/getInsuranceCompany.js/}"></script>
+    <script src="../static/js/bootbox.js" th:src="@{/js/bootbox.js/}"></script> 
+    <script>
+        autosize(document.querySelectorAll('textarea'));
+    </script>
+    <script type="text/javascript">
+	   $('.chosen-select').chosen();    
+	   $(window)
+		.off('resize.chosen')
+		.on('resize.chosen', function() {
+			$('.chosen-select').each(function() {
+				 var $this = $(this);
+				 $this.next().css({minWidth: '380px'});
+			})
+		}).trigger('resize.chosen');  
+    </script>
+    <script type="text/javascript">
+        jQuery(function ($) {
+            //initiate dataTables plugin
+            $('.dynamic-table')
+
+                .DataTable({
+                    bAutoWidth: false,
+                    "aoColumns": [
+                        null, null, null, null, null,
+
+                        {"bSortable": false}
+                    ],
+                    "aaSorting": [],
+
+
+                });
+        })
+    </script>
+   	<script>
+		function deleteInsCompany(control) {
+        var dialog = bootbox.dialog({
+        	title: 'Delete Insurance Company!!!',
+        	message: '<p>Are you sure you want to delete recorded insurance company data?</p>',
+            size: 'md',
+            onEscape: true,
+            backdrop: true,
+            buttons: {
+                cancel: {
+                	label: '<i class="fa fa-times"></i> Cancel',
+                    className: 'btn-danger pull-right margin-left-10px',
+                },
+                ok: {
+                	label: '<i class="fa fa-check"></i> Confirm',
+                    className: 'btn-info',
+                    callback: function(result){
+                    	if(result){
+                    		$.ajax({
+                    	        type: 'DELETE',
+                    	        url:  '/updateinscompany/delete/' + control,
+                    	        success: function(result) {
+                    	        	$('#showMessage').append("<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'><i class='ace-icon fa fa-times'></i></button><br>"
+                    	        			+ result.message+  ': '+ result.data+"</div>");
+                    	        	alert(result.message
+                    	                + ': '+ result.data);
+                    	        	window.location.href = "/insSchema";
+                    	        },
+                    	        error: function(jqXHR, textStatus, errorThrown) {
+                    	            alert(jqXHR.status + ' ' + jqXHR.responseText);
+                    	        }
+                    	    });
+                    	}
+                    }
+                }
+            },
+        });
+	}
+	
+function deleteInsScheme(control) {
+    var dialog = bootbox.dialog({
+    	title: 'Delete Insurance Company Scheme!!!',
+    	message: '<p>Are you sure you want to delete recorded insurance company scheme data?</p>',
+        size: 'md',
+        onEscape: true,
+        backdrop: true,
+        buttons: {
+            cancel: {
+            	label: '<i class="fa fa-times"></i> Cancel',
+                className: 'btn-danger pull-right margin-left-10px',
+            },
+            ok: {
+            	label: '<i class="fa fa-check"></i> Confirm',
+                className: 'btn-info',
+                callback: function(result){
+                	if(result){
+                		$.ajax({
+                	        type: 'DELETE',
+                	        url:  '/updateinscompanyscheme/delete/' + control,
+                	        success: function(result) {
+                	        	$('#showMessage').append("<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'><i class='ace-icon fa fa-times'></i></button><br>"
+                	        			+ result.message+  ': '+ result.data+"</div>");
+                	        	alert(result.message
+                	                + ': '+ result.data);
+                	        	window.location.href = "/insSchema";
+                	        },
+                	        error: function(jqXHR, textStatus, errorThrown) {
+                	            alert(jqXHR.status + ' ' + jqXHR.responseText);
+                	        }
+                	    });
+                	}
+                }
+            }
+        },
+    });
+}
+</script>
+</th:block>
+</body>
+</html>
