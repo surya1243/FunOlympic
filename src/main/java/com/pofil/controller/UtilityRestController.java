@@ -917,7 +917,6 @@ public class UtilityRestController {
 	}
 	
 
-	@PreAuthorize("hasAnyAuthority('ADMIN','HIGHSUPERVISOR', 'SUPERVISOR', 'HOD','BM', 'CAD','GAD','MAKER', 'VIEWER','FEEDBACK', 'LOCKER', 'MINUTES')")
 	@RequestMapping(value = "/getsports", method = RequestMethod.GET)
 	public List<Sports> getSports() {
 		List<Sports> sports = sportsDetailService.getAllSports();

@@ -206,7 +206,7 @@
 									<option th:each="roleVal : ${roleValue}" th:value="${roleVal?.role}"
 										th:text="${roleVal?.role}"></option>
 								</select>
-																			
+
 							</div>
 						</div>
 						<div class="space-10"></div>
@@ -217,7 +217,6 @@
 								<div id="checkbox-container" class="checkbox-container">
 								</div>
 								<div class="pagination-container">
-									
 								</div>
 								<div class="help-block with-errors"></div>
 							</div>
@@ -265,23 +264,22 @@
 	</script>
 
 	<script>
-	$(document).ready(function(){
-		$('#sportsListContainer').hide();
-		$("#idRole").change(function() {
-			showResolvedDateBox();
-	    });
-	});
-	
-	function showResolvedDateBox(){
-		let statusValue = $('#idRole').val();
-		if(!(statusValue==='ADMIN')){
-			$('#sportsListContainer').show();
-			$("[name='selectedSports']").attr("required", false);
-		}else{
+		$(document).ready(function () {
 			$('#sportsListContainer').hide();
+			$("#idRole").change(function () {
+				showResolvedDateBox();
+			});
+		});
+
+		function showResolvedDateBox() {
+			let statusValue = $('#idRole').val();
+			if (!(statusValue === 'ADMIN')) {
+				$('#sportsListContainer').show();
+				$("[name='selectedSports']").attr("required", false);
+			} else {
+				$('#sportsListContainer').hide();
+			}
 		}
-	}
-	
 	</script>
 
 	<script>

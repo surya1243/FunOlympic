@@ -1,70 +1,107 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+
 <head>
 
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-<meta charset="utf-8" />
-<title>Login page</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta charset="utf-8" />
+	<title>Login page</title>
 
-<meta name="description" content="User login page" />
-<meta name="viewport"
-	content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+	<meta name="description" content="User login page" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 
-<th:block th:replace="fragments/style"></th:block>
+	<th:block th:replace="fragments/style"></th:block>
+	<link rel="stylesheet" href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+	<link rel="stylesheet" href="../static/font-awesome/4.5.0/css/font-awesome.min.css"
+		th:href="@{/font-awesome/4.5.0/css/font-awesome.min.css}" />
+	<link rel="stylesheet" href="../static/css/colorbox.min.css" th:href="@{/css/colorbox.min.css}" />
+	<link rel="stylesheet" href="../static/css/fonts.googleapis.com.css" th:href="@{/css/fonts.googleapis.com.css}" />
+	<link rel="stylesheet" href="../static/css/chosen.min.css" th:href="@{/css/chosen.min.css}" />
+	<link rel="stylesheet" href="../static/css/bootstrap-datepicker3.min.css"
+		th:href="@{/css/bootstrap-datepicker3.min.css/}" />
+	<link rel="stylesheet" href="../static/css/bootstrap-datetimepicker.min.css"
+		th:href="@{/css/bootstrap-datetimepicker.min.css}" />
+	<link rel="stylesheet" href="../static/css/ace.min.css" th:href="@{/css/ace.min.css}" id="main-ace-style" />
+	<link rel="stylesheet" href="../static/css/ace-skins.min.css" th:href="@{/css/ace-skins.min.css}" />
+	<link rel="stylesheet" href="../static/css/select2.min.css" th:href="@{/css/select2.min.css}" />
+	<link rel="stylesheet" href="../static/css/jquery-ui.min.css" th:href="@{/css/jquery-ui.min.css}" />
+	<link rel="stylesheet" href="../static/css/flag-icons.min.css" th:href="@{/css/flag-icons.min.css}" />
+	<link rel="stylesheet" href="../static/css/mycss.css" th:href="@{/css/mycss.css}" />
+
+	<script src="../static/js/ace-extra.min.js" th:src="@{/js/ace-extra.min.js/}"></script>
+	<style>
+		.login-layout .widget-box .widget-main {
+			padding: 9px 25px 6px;
+			background: #f7f7f7;
+		}
+	</style>
+
 
 </head>
-<body class="login-layout">
+
+<body class="login-layout blur-login">
 	<div class="main-container">
 		<div class="main-content">
 			<div class="row">
 				<div class="col-sm-10 col-sm-offset-1">
+					<div th:if="${message}">
+						<div class="alert alert-danger">
+							<button type="button" class="close" data-dismiss="alert">
+								<i class="ace-icon fa fa-times"></i>
+							</button>
+							<strong th:text="${message}">Warning!</strong> <br />
+						</div>
+					</div>
+					<div th:if="${successMessage}">
+						<div class="alert alert-success">
+							<button type="button" class="close" data-dismiss="alert">
+								<i class="ace-icon fa fa-times"></i>
+							</button>
+							<strong th:text="${successMessage}">Success!</strong> <br />
+						</div>
+					</div>
 					<div class="login-container">
 						<div class="position-relative">
 							<div class="center">
 								<h1>
-									<img th:src="@{/images/ums_logo_final.png}"
-										alt="Pokhara Finance Ltd." width="100%" />
+									<img th:src="@{/images/ums_logo_final.png}" alt="Pokhara Finance Ltd."
+										width="80%" />
 								</h1>
 							</div>
-							<div id="login-box"
-								class="login-box visible widget-box no-border">
+							<div id="login-box" class="login-box visible widget-box no-border">
 								<div class="widget-body">
 									<div class="widget-main">
 
-										<div class="center">
-											<img th:src="@{/images/ums_logo_final.png}"
-												alt="Pokhara Finance Ltd." width="100%" />
-										</div>
-										<h5 class="header blue  bigger">Sign in to FunOlympic 2024</h5>
+										<h4 class="header blue bigger">
+											<i class="ace-icon fa fa-coffee green"></i>Sign in to FunOlympic Games
+										</h4>
 										<form th:action="@{/login}" method="post" autocomplete="off">
 											<fieldset>
-												<div th:if="${param.error}" class="alert alert-danger">
-													Invalid email and password.</div>
+												<div th:if="${param.error}" class="alert alert-danger">Invalid email and
+													password.</div>
 												<div class="space-6"></div>
-												<div th:if="${param.logout}">You have been logged out.
-												</div>
-												<label class="block clearfix"> <span
-													class="block input-icon input-icon-right"> <input
-														type="email" name="email" id="inputEmail"
-														class="form-control" placeholder="Email" /> <i
-														class="ace-icon fa fa-user"></i>
-												</span>
-												</label> <label class="block clearfix"> <span
-													class="block input-icon input-icon-right"> <input
-														type="password" name="password" id="inputPassword"
-														class="form-control" placeholder="Password" /> <i
-														class="ace-icon fa fa-lock"></i>
-												</span>
+												<div th:if="${param.logout}">You have been logged out.</div>
+												<label class="block clearfix">
+													<span class="block input-icon input-icon-right">
+														<input type="email" name="email" id="inputEmail"
+															class="form-control" placeholder="Email" />
+														<i class="ace-icon fa fa-user"></i>
+													</span>
+												</label>
+												<label class="block clearfix">
+													<span class="block input-icon input-icon-right">
+														<input type="password" name="password" id="inputPassword"
+															class="form-control" placeholder="Password" />
+														<i class="ace-icon fa fa-lock"></i>
+													</span>
 												</label>
 
 												<div class="space"></div>
 
 												<div class="clearfix center">
-													<button type="submit"
-														class="width-35 btn btn-sm btn-primary">
-														<i class="ace-icon fa fa-key"></i> <span
-															class="bigger-110">Login</span>
+													<button type="submit" class="width-35 btn btn-sm btn-primary">
+														<i class="ace-icon fa fa-key"></i>
+														<span class="bigger-110">Login</span>
 													</button>
 												</div>
 
@@ -72,24 +109,338 @@
 											</fieldset>
 										</form>
 									</div>
-									<!-- /.widget-main -->
+
+									<div class="toolbar clearfix">
+										<div class="pull-right">
+											<a href="#" data-target="#signup-box" class="user-signup-link">
+												I want to register
+												<i class="ace-icon fa fa-arrow-right"></i>
+											</a>
+										</div>
+									</div>
 								</div>
-								<!-- /.widget-body -->
 							</div>
-							<!-- /.login-box -->
 						</div>
-						<!-- /.position-relative -->
+					</div>
+					<div id="signup-box" class="signup-box widget-box no-border">
+						<div class="widget-body">
+							<div class="widget-main">
+								<h4 class="header green lighter bigger">
+									<i class="ace-icon fa fa-users blue"></i>
+									New User Registration:
+									<small>Enter your details to begin</small>
+								</h4>
+								<form th:action="@{/viewer/register}" th:object="${appUserForm}" method="POST"
+									class="form-horizontal" data-toggle="validator" role="form" autocomplete="off">
+									<fieldset>
+										<div class="row">
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label class="col-sm-5 control-label no-padding-right"
+														for="idFirstName">First Name <span class="red">*</span>:</label>
+													<div class="col-sm-7">
+														<div class="input-group">
+															<input class="form-control" name="firstName"
+																data-error="Please fill first name field."
+																id="idFirstName" placeholder="First Name" type="text"
+																required />
+															<span class="input-group-addon">
+																<i class="fa fa-user"></i>
+															</span>
+														</div>
+														<div class="help-block with-errors"></div>
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-5 control-label no-padding-right"
+														for="idLastName">Last Name <span class="red">*</span>:</label>
+													<div class="col-sm-7">
+														<div class="input-group">
+															<input class="form-control" name="lastName"
+																data-error="Please fill last name field." id="lastName"
+																placeholder="Last Name" type="text" required />
+															<span class="input-group-addon">
+																<i class="fa fa-user"></i>
+															</span>
+														</div>
+														<div class="help-block with-errors"></div>
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-5 control-label no-padding-right"
+														for="date-timepicker1">Date of Birth <span
+															class="red">*</span>:</label>
+													<div class="col-sm-7">
+														<div class="input-group">
+															<input type="text" class="form-control date-timepicker"
+																id="date-timepicker1" data-date-format="yyyy-mm-dd"
+																name="dateOfBirth" placeholder="Select date and time"
+																required>
+															<span class="input-group-addon">
+																<i class="fa fa-calendar bigger-110"></i>
+															</span>
+														</div>
+														<div class="help-block with-errors"></div>
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-5 control-label no-padding-right"
+														for="inputSignUpEmail">Email <span class="red">*</span>:</label>
+													<div class="col-sm-7">
+														<div class="input-group">
+															<input type="email" class="form-control"
+																id="inputSignUpEmail" name="email"
+																data-error="Please fill email field."
+																placeholder="Email" required />
+															<span class="input-group-addon">
+																<i class="fa fa-envelope-square"></i>
+															</span>
+														</div>
+														<div class="help-block with-errors"></div>
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-5 control-label no-padding-right"
+														for="address">User's Address <span class="red">*</span>:</label>
+													<div class="col-sm-7">
+														<div class="input-group">
+															<input class="form-control" name="address"
+																data-error="Please enter user's address field."
+																id="address" placeholder="Address" type="text"
+																required />
+															<span class="input-group-addon">
+																<i class="fa fa-map"></i>
+															</span>
+														</div>
+														<div class="help-block with-errors"></div>
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-5 control-label no-padding-right"
+														for="inputSignUpPassword"> Password <span class="red">*</span>:
+													</label>
+													<div class="col-sm-7">
+														<div class="input-group">
+															<input type="password" data-minlength="5"
+																class="form-control" id="inputSignUpPassword"
+																data-error="Must enter minimum of 5 characters"
+																placeholder="Password" required>
+															<span class="input-group-addon">
+																<i class="fa fa-key"></i>
+															</span>
+														</div>
+														<div class="help-block with-errors"></div>
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-5 control-label no-padding-right"
+														for="inputSignUpPasswordConfirm"> Confirm
+														Password <span class="red">*</span>: </label>
+													<div class="col-sm-7">
+														<div class="input-group">
+															<input type="password" name="password" class="form-control"
+																id="inputSignUpPasswordConfirm"
+																data-match="#inputSignUpPassword"
+																data-match-error="Whoops, password don't match"
+																placeholder="Confirm" required>
+															<span class="input-group-addon">
+																<i class="fa fa-key"></i>
+															</span>
+														</div>
+														<div class="help-block with-errors"></div>
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="control-label col-sm-5 no-padding-right"
+														for="idGender">Gender <small class="red">*</small>:</label>
+													<div class="col-sm-7">
+														<div class="input-group">
+															<label class="radio-inline blue no-padding-left">
+																<input name="gender" value="Male" type="radio"
+																	class="ace input-lg" required />
+																<span class="lbl blue"> Male</span>
+															</label>
+															<label class="radio-inline blue">
+																<input name="gender" value="Female" type="radio"
+																	class="ace input-lg" required />
+																<span class="lbl pink"> Female</span>
+															</label>
+														</div>
+														<div class="help-block with-errors"></div>
+													</div>
+												</div>
+											</div>
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label class="col-sm-5 control-label no-padding-right"
+														for="idBranchl">Country <span class="red">*</span>:</label>
+													<div class="col-sm-7">
+														<select id="countryName-dropedown" name="countryName"
+															class="form-control">
+															<optgroup label="Countries">
+																<!-- Options will be dynamically added here -->
+															</optgroup>
+														</select>
+													</div>
+													<div class="help-block with-errors"></div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-5 control-label no-padding-right"
+														for="idMobileNumber">Mobile Number <span
+															class="red">*</span>:</label>
+													<div class="col-sm-7">
+														<div class="input-group">
+															<input class="form-control input-mask-mobile"
+																name="mobileNumber" placeholder="Enter Mobile Number"
+																pattern="^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$"
+																onblur="this.parentNode.parentNode.style.backgroundColor=/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/.test(this.value)?'inherit':'transparent'"
+																data-error="Please fill Mobile number field."
+																required />
+															<span class="input-group-addon">
+																<i class="ace-icon fa fa-phone"></i>
+															</span>
+														</div>
+														<div class="help-block with-errors"></div>
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-5 control-label no-padding-right"
+														for="sportsListContainer">Sports List: <small
+															class="red">*</small>:</label>
+													<div class="col-sm-7">
+														<div id="checkbox-container" class="checkbox-container"></div>
+														<div class="pagination-container"></div>
+														<div class="help-block with-errors"></div>
+													</div>
+												</div>
+												<div class="clearfix ">
+													<button type="reset" class="width-30 pull-left btn btn-sm">
+														<i class="ace-icon fa fa-refresh"></i>
+														<span class="bigger-110">Reset</span>
+													</button>
+													<button type="submit"
+														class="width-65 pull-right btn btn-sm btn-success">
+														<span class="bigger-110">Register</span>
+														<i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+													</button>
+												</div>
+											</div>
+										</div>
+									</fieldset>
+								</form>
+							</div>
+
+							<div class="toolbar center">
+								<a href="#" data-target="#login-box" class="back-to-login-link">
+									<i class="ace-icon fa fa-arrow-left"></i>
+									Back to login
+								</a>
+							</div>
+						</div>
 					</div>
 				</div>
-				<!-- /.col -->
 			</div>
-			<!-- /.row -->
 		</div>
-		<!-- /.main-content -->
 	</div>
 
+
+	<!--[if !IE]> -->
 	<script type="text/javascript" href="../static/js/jquery-2.1.4.min.js"
 		th:src="@{/js/jquery-2.1.4.min.js/}"></script>
+	<!-- <![endif]-->
+	<!--[if IE]>
+<script src="assets/js/jquery-1.11.3.min.js"></script>
+<![endif]-->
+	<script src="../static/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js/}"></script>
+	<script src="../static/js/ace-elements.min.js" th:src="@{/js/ace-elements.min.js/}"></script>
+	<script src="../static/js/ace.min.js" th:src="@{/js/ace.min.js/}"></script>
+	<script src="../static/js/chosen.jquery.min.js" th:src="@{/js/chosen.jquery.min.js/}"></script>
+	<script src="../static/js/printThis.js" th:src="@{/js/printThis.js/}"></script>
+	<script src="../static/js/currency.min.js" th:src="@{/js/currency.min.js/}"></script>
+	<script src="../static/js/select2.min.js" th:src="@{/js/select2.min.js/}"></script>
+	<script src="../static/js/jquery-ui.min.js" th:src="@{/js/jquery-ui.min.js/}"></script>
 
+
+	<script src="../static/js/jquery.dataTables.min.js" th:src="@{/js/jquery.dataTables.min.js/}"></script>
+	<script src="../static/js/jquery.dataTables.bootstrap.min.js"
+		th:src="@{/js/jquery.dataTables.bootstrap.min.js/}"></script>
+	<script src="../static/js/moment.min.js" th:src="@{/js/moment.min.js/}"></script>
+	<script src="../static/js/bootstrap-datepicker.min.js" th:src="@{/js/bootstrap-datepicker.min.js/}"></script>
+	<script src="../static/js/autosize.min.js" th:src="@{/js/autosize.min.js/}"></script>
+	<script src="../static/js/jquery.maskedinput.min.js" th:src="@{/js/jquery.maskedinput.min.js/}"></script>
+	<script src="../static/js/jquery.inputlimiter.min.js" th:src="@{/js/jquery.inputlimiter.min.js/}"></script>
+	<script src="../static/js/validator.min.js" th:src="@{/js/validator.min.js/}"></script>
+	<script src="../static/js/dataTables.buttons.min.js" th:src="@{/js/dataTables.buttons.min.js/}"></script>
+	<script src="../static/js/buttons.flash.min.js" th:src="@{/js/buttons.flash.min.js/}"></script>
+	<script src="../static/js/buttons.html5.min.js" th:src="@{/js/buttons.html5.min.js/}"></script>
+	<script src="../static/js/buttons.print.min.js" th:src="@{/js/buttons.print.min.js/}"></script>
+	<script src="../static/js/buttons.colVis.min.js" th:src="@{/js/buttons.colVis.min.js/}"></script>
+	<script src="../static/js/dataTables.select.min.js" th:src="@{/js/dataTables.select.min.js/}"></script>
+	<script src="../static/js/daterangepicker.min.js" th:src="@{/js/daterangepicker.min.js/}"></script>
+	<script src="../static/js/bootbox.js" th:src="@{/js/bootbox.js/}"></script>
+	<script src="../static/js/highcharts.js" th:src="@{/js/highcharts.js/}"></script>
+	<script src="../static/js/highcharts-3d.js" th:src="@{/js/highcharts-3d.js/}"></script>
+	<script src="../static/js/exporting.js" th:src="@{/js/exporting.js/}"></script>
+	<script src="../static/js/bootstrap-datetimepicker.min.js"
+		th:src="@{/js/bootstrap-datetimepicker.min.js/}"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+	<script src="../static/js/jquery.autocomplete.min.js" th:src="@{/js/jquery.autocomplete.min.js/}"></script>
+	<script src="../static/js/jquery.colorbox.min.js" th:src="@{/js/jquery.colorbox.min.js/}"></script>
+	<script src="../static/js/countryList.js" th:src="@{/js/countryList.js/}"></script>
+	<script src="../static/js/getsports.js" th:src="@{/js/getsports.js/}"></script>
+	<script type="text/javascript">
+		jQuery(function ($) {
+			$(document).on('click', '.toolbar a[data-target]', function (e) {
+				e.preventDefault();
+				var target = $(this).data('target');
+				$('.widget-box.visible').removeClass('visible');//hide others
+				$(target).addClass('visible');//show target
+			});
+		});
+	</script>
+	<script>
+		$(document).ready(function () {
+			$('#sportsListContainer').show();
+			$("[name='selectedSports']").attr("required", false);
+		});
+	</script>
+	<script>
+		$(function () {
+			$("#date-timepicker1").datepicker({
+				format: "yyyy-mm-dd",
+				autoclose: true,
+				todayBtn: "linked",
+				todayHighlight: true
+			}).datepicker('update', new Date());
+		});
+	</script>
+	<script>
+		if (!ace.vars['touch']) {
+			$('.chosen-select').chosen({allow_single_deselect: true});
+			//resize the chosen on window resize
+			$(window)
+				.off('resize.chosen')
+				.on('resize.chosen', function () {
+					$('.chosen-select').each(function () {
+						var $this = $(this);
+						$this.next().css({'width': $this.parent().width()});
+					})
+				}).trigger('resize.chosen');
+			//resize chosen on sidebar collapse/expand
+			$(document).on('settings.ace.chosen', function (e, event_name, event_val) {
+				if (event_name != 'sidebar_collapsed') return;
+				$('.chosen-select').each(function () {
+					var $this = $(this);
+					$this.next().css({'width': $this.parent().width()});
+				})
+			});
+		}
+	</script>
+	<script>
+		$('.input-mask-mobile').mask('9999999999', {
+			autoclear: false
+		});
+	</script>
 </body>
+
 </html>
