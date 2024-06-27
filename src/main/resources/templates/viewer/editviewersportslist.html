@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	layout:decorate="~{layouts/default}">
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta charset="utf-8" />
+	<title>Viewer Selected Games Page</title>
+
+</head>
+
+<body>
+	<div layout:fragment="content">
+		<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+			<ul class="breadcrumb">
+				<li>
+					<i class="ace-icon fa fa-home home-icon"></i>
+					<a href="#">Home</a>
+				</li>
+				<li class="active">List of Selected Games</li>
+			</ul><!-- /.breadcrumb -->
+		</div>
+		<div class="page-content">
+			<div class="page-header">
+				<h1>
+					<i class="ace-icon  fa fa-check-square-o"></i> User
+					<small>
+						<i class="ace-icon fa fa-angle-double-right"></i>
+						Please select games that you like to watch Online
+					</small>
+				</h1>
+			</div><!-- /.page-header -->
+			<div th:if="${message}">
+				<h2 class="alert alert-danger" th:text="${message}"></h2>
+			</div>
+			<div class="col-xs-12">
+				<div class="space-10"></div>
+				<form th:action="@{/admin/register}" th:object="${appUserForm}" method="POST" class="form-horizontal"
+					data-toggle="validator" role="form" autocomplete="off">
+					<div class="col-sm-6">
+						<div class="space-2"></div>
+						<input type="hidden" id="selectedSports"
+							th:value="${#strings.arrayJoin(currentUser.selectedSports, ',')}" />
+
+						<div class="form-group" id="sportsListContainer">
+							<label class="col-sm-5 control-label no-padding-right"> Sports List: <small
+									class="red">*</small>:</label>
+							<div class="col-sm-7">
+								<div id="checkbox-container" class="checkbox-container">
+									<!-- Sports checkboxes will be inserted here dynamically -->
+								</div>
+								<div id="pagination-container" class="pagination-container">
+									<!-- Pagination controls will be inserted here dynamically -->
+								</div>
+								<div class="help-block with-errors"></div>
+							</div>
+						</div>
+						<div class="form-group hidden">
+							<label class="control-label col-sm-5 no-padding-right" for="idUserCreatedBy"><span
+									class="blue"> User
+									Created By </span> <span class="red">*</span>:
+							</label>
+							<div class="col-sm-7">
+								<input name="userCreatedBy" id="idUserCreatedBy" class="form-control"
+									th:value="${currentUser.email}" type="text" required readonly>
+							</div>
+						</div>
+						<div class="clearfix form-actions col-sm-offset-3 col-sm-9">
+							<button type="reset" class="width-30 pull-left btn btn-sm">
+								<i class="ace-icon fa fa-refresh"></i> <span class="bigger-110">Reset</span>
+							</button>
+							<button type="submit" class="width-65 pull-right btn btn-sm btn-success">
+								<span class="bigger-110">Register</span> <i
+									class="ace-icon fa fa-arrow-right icon-on-right"></i>
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+<th:block layout:fragment="scripts">
+	<script src="../static/js/getsports.js" th:src="@{/js/getsports.js/}"></script>
+	<script src="../static/js/moment.min.js" th:src="@{/js/moment.min.js/}"></script>
+	<script src="../static/js/countryList.js" th:src="@{/js/countryList.js/}"></script>
+	<script src="../static/js/chosen.jquery.min.js" th:src="@{/js/chosen.jquery.min.js/}"></script>
+	<script src="../static/js/validator.min.js" th:src="@{/js/validator.min.js/}"></script>
+
+	<script>
+		$(document).ready(function () {
+			ajaxGetSports();
+		});
+
+		function ajaxGetSports() {
+			let checkboxContainer = $('#checkbox-container');
+			let paginationContainer = $('#pagination-container');
+			const itemsPerPage = 5; // Number of checkboxes per page
+			let currentPage = 1; // Current page number
+
+			if (!checkboxContainer.length) {
+				console.error('Checkbox container element not found');
+				return;
+			}
+
+			// Clear both containers
+			checkboxContainer.empty();
+			paginationContainer.empty();
+
+			const url = '/getsports';
+
+			$.getJSON(url, function (data) {
+				if (!data || data.length === 0) {
+					console.warn('No data received or data is empty');
+					return;
+				}
+
+				let allItems = []; // Array to store all checkbox items
+				let selectedSports = $('#selectedSports').val().split(','); // Get selected sports from hidden input
+
+				$.each(data, function (key, entry) {
+					let isChecked = selectedSports.includes(entry.sportsName); // Check if sport is selected
+					let checkbox = $('<input />', {type: 'checkbox', name: 'selectedSports', id: 'sports_' + key, value: entry.sportsName, checked: isChecked});
+					let label = $("<label/>", {'for': 'sports_' + key, text: entry.sportsName});
+
+					// Wrap checkbox and label in a div for easier manipulation
+					let checkboxWrapper = $('<div class="checkbox-item"></div>');
+					checkboxWrapper.append(checkbox).append(label);
+					allItems.push(checkboxWrapper); // Add to all items array
+				});
+
+				// Function to display checkboxes for a specific page
+				function displayCheckboxes(page) {
+					checkboxContainer.empty();
+					let startIndex = (page - 1) * itemsPerPage;
+					let endIndex = startIndex + itemsPerPage;
+					for (let i = startIndex; i < endIndex && i < allItems.length; i++) {
+						checkboxContainer.append(allItems[i]);
+					}
+				}
+
+				// Function to update pagination links based on current page
+				function updatePaginationLinks() {
+					paginationContainer.empty(); // Clear previous pagination links
+
+					let totalPages = Math.ceil(allItems.length / itemsPerPage);
+
+					let prevPageLink = $('<span/>', {
+						class: 'pagination-link',
+						text: '<<Prev',
+						click: function (e) {
+							e.preventDefault(); // Prevent default link behavior
+							if (currentPage > 1) {
+								currentPage--;
+								displayCheckboxes(currentPage);
+								updatePaginationLinks();
+							}
+						}
+					});
+
+					if (currentPage > 1) {
+						paginationContainer.append(prevPageLink);
+					}
+
+					for (let i = 1; i <= totalPages; i++) {
+						let pageLink = $('<span/>', {
+							class: 'pagination-link',
+							text: i,
+							click: function (e) {
+								e.preventDefault(); // Prevent default link behavior
+								currentPage = i;
+								displayCheckboxes(currentPage);
+								updatePaginationLinks();
+							}
+						});
+
+						if (i === currentPage) {
+							pageLink.addClass('current-page'); // Highlight current page in green
+						}
+
+						paginationContainer.append(pageLink);
+					}
+
+					let nextPageLink = $('<span/>', {
+						class: 'pagination-link',
+						text: 'Next>>',
+						click: function (e) {
+							e.preventDefault(); // Prevent default link behavior
+							if (currentPage < totalPages) {
+								currentPage++;
+								displayCheckboxes(currentPage);
+								updatePaginationLinks();
+							}
+						}
+					});
+
+					if (currentPage < totalPages) {
+						paginationContainer.append(nextPageLink);
+					}
+				}
+
+				// Show initial page of checkboxes
+				displayCheckboxes(currentPage);
+
+				// Initialize pagination links
+				updatePaginationLinks();
+
+			}).fail(function (jqxhr, textStatus, error) {
+				console.error("Request Failed: " + textStatus + ", " + error);
+			});
+		}
+	</script>
+	<script>
+		$(function () {
+			$("#date-timepicker1").datepicker({
+				format: "yyyy-mm-dd",
+				autoclose: true,
+				todayBtn: "linked",
+				todayHighlight: true
+			}).datepicker('update', new Date());
+		});
+	</script>
+
+
+	<script>
+		if (!ace.vars['touch']) {
+			$('.chosen-select').chosen({allow_single_deselect: true});
+			//resize the chosen on window resize
+			$(window)
+				.off('resize.chosen')
+				.on('resize.chosen', function () {
+					$('.chosen-select').each(function () {
+						var $this = $(this);
+						$this.next().css({'width': $this.parent().width()});
+					})
+				}).trigger('resize.chosen');
+			//resize chosen on sidebar collapse/expand
+			$(document).on('settings.ace.chosen', function (e, event_name, event_val) {
+				if (event_name != 'sidebar_collapsed') return;
+				$('.chosen-select').each(function () {
+					var $this = $(this);
+					$this.next().css({'width': $this.parent().width()});
+				})
+			});
+		}
+	</script>
+	<script>
+		$('.input-mask-mobile').mask('9999999999', {
+			autoclear: false
+		});
+	</script>
+</th:block>
+
+</html>

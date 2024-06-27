@@ -3,7 +3,9 @@ package com.pofil.controller;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.lang.RandomStringUtils;
@@ -17,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -128,4 +131,31 @@ public class ViewerController {
 	public String generateUniqueId() {
 		return RandomStringUtils.randomAlphanumeric(ID_LENGTH);
 	}
+	
+	@PreAuthorize("hasAnyAuthority('VIEWER')")
+	@GetMapping("/getselectedsports")
+	public String showSelectedGames(Model model, @AuthenticationPrincipal UserDetails currentUser) {
+		AppUser user = userRepository.findByEmail(currentUser.getUsername());
+		List<Sports> sports = sportsDetailService.getAllSports();
+		model.addAttribute("sports", sports);
+		
+		
+		model.addAttribute("currentUser", user);
+		return "viewer/editviewersportslist";
+	}
+	
+	/*
+	 * @GetMapping("/updateuser/{id}") public String updateUser(Model
+	 * model, @PathVariable String id, @AuthenticationPrincipal UserDetails
+	 * currentUser, HttpServletRequest request) { AppUser currentUsers =
+	 * userRepository.findByEmail(currentUser.getUsername()); List<Sports> sports =
+	 * sportsDetailService.getAllSports(); model.addAttribute("sports", sports);
+	 * 
+	 * model.addAttribute("currentUser", currentUsers); Optional<AppUser> user =
+	 * userRepository.findById(id); model.addAttribute("roleValue",
+	 * roleRepository.findAll()); model.addAttribute("user", user.get()); return
+	 * "updateuser"; }
+	 */
+
+	
 }
