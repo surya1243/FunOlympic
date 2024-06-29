@@ -7,6 +7,114 @@
 	<meta charset="utf-8" />
 	<title>Viewer Selected Games Page</title>
 
+	<style>
+		@media (max-width: 576px) {
+			#sportsListContainer .pagination-wrapper {
+				display: none;
+				/* Hide pagination wrapper on mobile */
+			}
+		}
+
+		#sportsListContainer .sports-list-outer-wrapper {
+			width: 100%;
+			overflow: hidden;
+		}
+
+		#sportsListContainer .sports-list-inner-wrapper {
+			width: 100%;
+		}
+
+		#sportsListContainer .checkbox-container {
+			display: flex;
+			flex-wrap: wrap;
+			width: 100%;
+		}
+
+		#sportsListContainer .checkbox-item {
+			width: 20%;
+			padding: 5px;
+			box-sizing: border-box;
+		}
+
+		/* Responsive Design */
+		@media (max-width: 1200px) {
+			#sportsListContainer .checkbox-item {
+				width: 25%;
+				/* 4 columns */
+			}
+		}
+
+		@media (max-width: 992px) {
+			#sportsListContainer .checkbox-item {
+				width: 33.33%;
+				/* 3 columns */
+			}
+		}
+
+		@media (max-width: 768px) {
+			#sportsListContainer .checkbox-item {
+				width: 50%;
+				/* 2 columns */
+			}
+		}
+
+		@media (max-width: 576px) {
+			#sportsListContainer .checkbox-item {
+				width: 100%;
+				/* 1 column */
+			}
+		}
+
+		#sportsListContainer .pagination-wrapper {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-top: 15px;
+		}
+
+		#sportsListContainer .pagination-container {
+			display: flex;
+			gap: 5px;
+		}
+
+		#sportsListContainer .pagination-link {
+			cursor: pointer;
+			padding: 5px 10px;
+			border: 1px solid #ddd;
+		}
+
+		#sportsListContainer .pagination-link.current-page {
+			background-color: #007bff;
+			color: white;
+		}
+
+		#sportsListContainer .pagination-link.disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+
+		#sportsListContainer .form-actions {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+
+		@media (max-width: 576px) {
+			#sportsListContainer .pagination-wrapper {
+				flex-direction: column;
+				align-items: flex-start;
+			}
+
+			#sportsListContainer .pagination-container {
+				margin-bottom: 10px;
+			}
+
+			#sportsListContainer .form-actions {
+				width: 100%;
+				justify-content: space-between;
+			}
+		}
+	</style>
 </head>
 
 <body>
@@ -21,9 +129,9 @@
 			</ul><!-- /.breadcrumb -->
 		</div>
 		<div class="page-content">
-			<div class="page-header">
+			<div class="page-header center">
 				<h1>
-					<i class="ace-icon  fa fa-check-square-o"></i> User
+					<i class="ace-icon fa fa-check-square-o"></i> User
 					<small>
 						<i class="ace-icon fa fa-angle-double-right"></i>
 						Please select games that you like to watch Online
@@ -35,45 +143,39 @@
 			</div>
 			<div class="col-xs-12">
 				<div class="space-10"></div>
-				<form th:action="@{/admin/register}" th:object="${appUserForm}" method="POST" class="form-horizontal"
+				<form th:action="@{/viewer/getselectedsports}" th:object="${appUser}" method="POST" class="form-horizontal"
 					data-toggle="validator" role="form" autocomplete="off">
-					<div class="col-sm-6">
+					<input type="hidden" name="id" th:value="${currentUser.id}" />
+<!--					<input type="hidden" name="id" th:value="${currentUser.id}" />
+					<input type="hidden" name="chpassword" th:value="${currentUser.password}" />
+					<input type="hidden" name="userCreatedBy" th:value="${currentUser.userCreatedBy}" />
+					<input type="hidden" name="userCreatedBy" th:value="${currentUser.createdDate}" />-->
+					<div class="col-sm-10 col-sm-offset-1">
 						<div class="space-2"></div>
 						<input type="hidden" id="selectedSports"
 							th:value="${#strings.arrayJoin(currentUser.selectedSports, ',')}" />
-
 						<div class="form-group" id="sportsListContainer">
-							<label class="col-sm-5 control-label no-padding-right"> Sports List: <small
-									class="red">*</small>:</label>
-							<div class="col-sm-7">
-								<div id="checkbox-container" class="checkbox-container">
-									<!-- Sports checkboxes will be inserted here dynamically -->
+							<div class="sports-list-outer-wrapper">
+								<div class="sports-list-inner-wrapper">
+									<div id="checkbox-container" class="checkbox-container">
+										<!-- Sports checkboxes will be inserted here dynamically -->
+									</div>
+								</div>
+							</div>
+							<div class="pagination-wrapper">
+								<div class="form-actions">
+									<button type="submit" class="width-100 btn btn-sm btn-success">
+										<span class="bigger-110">Register</span> <i
+											class="ace-icon fa fa-arrow-right icon-on-right"></i>
+									</button>
 								</div>
 								<div id="pagination-container" class="pagination-container">
 									<!-- Pagination controls will be inserted here dynamically -->
 								</div>
-								<div class="help-block with-errors"></div>
 							</div>
+							<div class="help-block with-errors"></div>
 						</div>
-						<div class="form-group hidden">
-							<label class="control-label col-sm-5 no-padding-right" for="idUserCreatedBy"><span
-									class="blue"> User
-									Created By </span> <span class="red">*</span>:
-							</label>
-							<div class="col-sm-7">
-								<input name="userCreatedBy" id="idUserCreatedBy" class="form-control"
-									th:value="${currentUser.email}" type="text" required readonly>
-							</div>
-						</div>
-						<div class="clearfix form-actions col-sm-offset-3 col-sm-9">
-							<button type="reset" class="width-30 pull-left btn btn-sm">
-								<i class="ace-icon fa fa-refresh"></i> <span class="bigger-110">Reset</span>
-							</button>
-							<button type="submit" class="width-65 pull-right btn btn-sm btn-success">
-								<span class="bigger-110">Register</span> <i
-									class="ace-icon fa fa-arrow-right icon-on-right"></i>
-							</button>
-						</div>
+						<!-- ... (rest of the form remains unchanged) ... -->
 					</div>
 				</form>
 			</div>
@@ -91,65 +193,65 @@
 		$(document).ready(function () {
 			ajaxGetSports();
 		});
-
 		function ajaxGetSports() {
 			let checkboxContainer = $('#checkbox-container');
 			let paginationContainer = $('#pagination-container');
-			const itemsPerPage = 5; // Number of checkboxes per page
-			let currentPage = 1; // Current page number
+			const itemsPerPage = 30; // 5 columns * 6 rows
+			let currentPage = 1;
 
 			if (!checkboxContainer.length) {
 				console.error('Checkbox container element not found');
 				return;
 			}
 
-			// Clear both containers
 			checkboxContainer.empty();
 			paginationContainer.empty();
 
 			const url = '/getsports';
 
 			$.getJSON(url, function (data) {
+				console.log("Received data:", data);
 				if (!data || data.length === 0) {
 					console.warn('No data received or data is empty');
 					return;
 				}
 
-				let allItems = []; // Array to store all checkbox items
-				let selectedSports = $('#selectedSports').val().split(','); // Get selected sports from hidden input
+				let allItems = [];
+				let selectedSports = $('#selectedSports').val().split(',');
 
 				$.each(data, function (key, entry) {
-					let isChecked = selectedSports.includes(entry.sportsName); // Check if sport is selected
+					let isChecked = selectedSports.includes(entry.sportsName);
 					let checkbox = $('<input />', {type: 'checkbox', name: 'selectedSports', id: 'sports_' + key, value: entry.sportsName, checked: isChecked});
 					let label = $("<label/>", {'for': 'sports_' + key, text: entry.sportsName});
 
-					// Wrap checkbox and label in a div for easier manipulation
 					let checkboxWrapper = $('<div class="checkbox-item"></div>');
 					checkboxWrapper.append(checkbox).append(label);
-					allItems.push(checkboxWrapper); // Add to all items array
+					allItems.push(checkboxWrapper);
 				});
 
-				// Function to display checkboxes for a specific page
 				function displayCheckboxes(page) {
 					checkboxContainer.empty();
 					let startIndex = (page - 1) * itemsPerPage;
-					let endIndex = startIndex + itemsPerPage;
-					for (let i = startIndex; i < endIndex && i < allItems.length; i++) {
+					let endIndex = Math.min(startIndex + itemsPerPage, allItems.length);
+
+					for (let i = startIndex; i < endIndex; i++) {
 						checkboxContainer.append(allItems[i]);
 					}
 				}
 
-				// Function to update pagination links based on current page
 				function updatePaginationLinks() {
-					paginationContainer.empty(); // Clear previous pagination links
-
+					paginationContainer.empty();
+					if ($(window).width() <= 576) {
+						// Don't display pagination links on mobile
+						return;
+					}
 					let totalPages = Math.ceil(allItems.length / itemsPerPage);
 
 					let prevPageLink = $('<span/>', {
 						class: 'pagination-link',
 						text: '<<Prev',
 						click: function (e) {
-							e.preventDefault(); // Prevent default link behavior
+							e.preventDefault();
 							if (currentPage > 1) {
 								currentPage--;
 								displayCheckboxes(currentPage);
@@ -158,16 +260,14 @@
 						}
 					});
 
-					if (currentPage > 1) {
-						paginationContainer.append(prevPageLink);
-					}
+					paginationContainer.append(prevPageLink);
 
 					for (let i = 1; i <= totalPages; i++) {
 						let pageLink = $('<span/>', {
 							class: 'pagination-link',
 							text: i,
 							click: function (e) {
-								e.preventDefault(); // Prevent default link behavior
+								e.preventDefault();
 								currentPage = i;
 								displayCheckboxes(currentPage);
 								updatePaginationLinks();
@@ -175,7 +275,7 @@
 						});
 
 						if (i === currentPage) {
-							pageLink.addClass('current-page'); // Highlight current page in green
+							pageLink.addClass('current-page');
 						}
 
 						paginationContainer.append(pageLink);
@@ -185,7 +285,7 @@
 						class: 'pagination-link',
 						text: 'Next>>',
 						click: function (e) {
-							e.preventDefault(); // Prevent default link behavior
+							e.preventDefault();
 							if (currentPage < totalPages) {
 								currentPage++;
 								displayCheckboxes(currentPage);
@@ -194,16 +294,17 @@
 						}
 					});
 
-					if (currentPage < totalPages) {
-						paginationContainer.append(nextPageLink);
-					}
+					paginationContainer.append(nextPageLink);
+
+					// Disable prev/next links if on first/last page
+					prevPageLink.toggleClass('disabled', currentPage === 1);
+					nextPageLink.toggleClass('disabled', currentPage === totalPages);
 				}
 
-				// Show initial page of checkboxes
 				displayCheckboxes(currentPage);
-
-				// Initialize pagination links
 				updatePaginationLinks();
+
+				console.log("Total items:", allItems.length);
 
 			}).fail(function (jqxhr, textStatus, error) {
 				console.error("Request Failed: " + textStatus + ", " + error);

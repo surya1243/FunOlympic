@@ -42,69 +42,15 @@ public class ViewerController {
 	private UserRepository userRepository;
 	@Autowired
 	private UserDetailService userDetailService;
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	@Autowired
 	private SportsDetailService sportsDetailService;
 	@Autowired
 	private CustomUserDetailsService customUserDetailsService;
 	@Autowired
 	private RoleRepository roleRepository;
-	
-	@PreAuthorize("hasAnyAuthority('ADMIN','HIGHSUPERVISOR', 'SUPERVISOR', 'HOD', 'CAD','GAD','MAKER', 'VIEWER','FEEDBACK', 'LOCKER', 'MINUTES')")
-	@GetMapping("/changePassword")
-	public String updatePassword(Model model, @AuthenticationPrincipal UserDetails currentUser) {
-		AppUser user = userRepository.findByEmail(currentUser.getUsername());
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String currentDate = LocalDateTime.now().format(formatter);
-        model.addAttribute("currentDate", currentDate);
-		model.addAttribute("user", user);
-		return "user/change_password_form";
-	}
 
-	/*
-	 * @PreAuthorize("hasAnyAuthority('ADMIN','HIGHSUPERVISOR', 'SUPERVISOR', 'HOD', 'CAD','GAD','MAKER', 'VIEWER','FEEDBACK', 'LOCKER', 'MINUTES')"
-	 * )
-	 * 
-	 * @PostMapping("/changePassword") public ModelAndView
-	 * saveUpdatedPassword(@Valid @ModelAttribute("appUser") AppUser appUser,
-	 * 
-	 * @RequestParam("password") String password, @RequestParam("roles") String
-	 * roles, BindingResult result) { ModelAndView modelAndView = new
-	 * ModelAndView(); if(result.hasErrors()){ modelAndView.addObject("message",
-	 * "Could not Update Password");
-	 * modelAndView.setViewName("fragments/dashboard"); } if (!((password == null)
-	 * || (password.isEmpty()))) { customUserDetailsService.saveUser(appUser,
-	 * roles); modelAndView.addObject("successMessage",
-	 * "Password updated successfully.");
-	 * modelAndView.setViewName("fragments/dashboard"); } return modelAndView; }
-	 */
-	
-	@PreAuthorize("hasAnyAuthority('ADMIN','HIGHSUPERVISOR', 'SUPERVISOR', 'HOD', 'CAD','GAD','MAKER', 'VIEWER','FEEDBACK', 'LOCKER', 'MINUTES')")
-	@PostMapping("/changePassword")
-	public ModelAndView saveUpdatedPassword(@Valid @ModelAttribute("appUser") AppUser appUser,@AuthenticationPrincipal UserDetails currentUser,
-			@RequestParam("password") String password, BindingResult result) {
-				ModelAndView modelAndView = new ModelAndView();
-				if(result.hasErrors()){
-					modelAndView.addObject("message", "Could not Update Password");
-					modelAndView.setViewName("fragments/dashboard");
-				}
-				if (!((password == null) || (password.isEmpty()))) {
-					userDetailService.updatePassword(currentUser.getUsername(), bCryptPasswordEncoder.encode(password));
-					
-					modelAndView.addObject("successMessage", "Password updated successfully.");
-					modelAndView.setViewName("fragments/dashboard");
-				}
-		return modelAndView;
-	}
-	
-	@PreAuthorize("hasAnyAuthority('ADMIN','HIGHSUPERVISOR', 'SUPERVISOR', 'HOD', 'CAD','GAD','MAKER', 'VIEWER','FEEDBACK', 'LOCKER', 'MINUTES')")
-	@GetMapping("/getuserprofile")
-	public String showUserProfile(Model model, @AuthenticationPrincipal UserDetails currentUser) {
-		AppUser user = userRepository.findByEmail(currentUser.getUsername());
-		model.addAttribute("currentUser", user);
-		return "user/user_profile";
-	}
 	
 	@RequestMapping(value = "/viewer/register", method = RequestMethod.POST)
 	public String saveUserDetail(@Valid AppUser user, BindingResult bindingResult, 
@@ -128,34 +74,80 @@ public class ViewerController {
 		}
 		return "redirect:/login";
 	}
-	public String generateUniqueId() {
-		return RandomStringUtils.randomAlphanumeric(ID_LENGTH);
-	}
 	
+	@PreAuthorize("hasAnyAuthority('ADMIN','HIGHSUPERVISOR', 'SUPERVISOR', 'HOD', 'CAD','GAD','MAKER', 'VIEWER','FEEDBACK', 'LOCKER', 'MINUTES')")
+	@GetMapping("/changePassword")
+	public String updatePassword(Model model, @AuthenticationPrincipal UserDetails currentUser) {
+		AppUser user = userRepository.findByEmail(currentUser.getUsername());
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		String currentDate = LocalDateTime.now().format(formatter);
+		model.addAttribute("currentDate", currentDate);
+		model.addAttribute("user", user);
+		return "user/change_password_form";
+	}
+
+	@PreAuthorize("hasAnyAuthority('ADMIN', 'VIEWER','FEEDBACK', 'LOCKER', 'MINUTES')")
+	@PostMapping("/changePassword")
+	public ModelAndView saveUpdatedPassword(@Valid @ModelAttribute("appUser") AppUser appUser,
+			@AuthenticationPrincipal UserDetails currentUser, @RequestParam("password") String password,
+			BindingResult result) {
+		ModelAndView modelAndView = new ModelAndView();
+		if (result.hasErrors()) {
+			modelAndView.addObject("message", "Could not Update Password");
+			modelAndView.setViewName("fragments/dashboard");
+		}
+		if (!((password == null) || (password.isEmpty()))) {
+			userDetailService.updatePassword(currentUser.getUsername(), bCryptPasswordEncoder.encode(password));
+
+			modelAndView.addObject("successMessage", "Password updated successfully.");
+			modelAndView.setViewName("fragments/dashboard");
+		}
+		return modelAndView;
+	}
+
+	@PreAuthorize("hasAnyAuthority('ADMIN','HIGHSUPERVISOR', 'SUPERVISOR', 'HOD', 'CAD','GAD','MAKER', 'VIEWER','FEEDBACK', 'LOCKER', 'MINUTES')")
+	@GetMapping("/getuserprofile")
+	public String showUserProfile(Model model, @AuthenticationPrincipal UserDetails currentUser) {
+		AppUser user = userRepository.findByEmail(currentUser.getUsername());
+		model.addAttribute("currentUser", user);
+		return "user/user_profile";
+	}
+
 	@PreAuthorize("hasAnyAuthority('VIEWER')")
-	@GetMapping("/getselectedsports")
+	@GetMapping("/viewer/getselectedsports")
 	public String showSelectedGames(Model model, @AuthenticationPrincipal UserDetails currentUser) {
 		AppUser user = userRepository.findByEmail(currentUser.getUsername());
 		List<Sports> sports = sportsDetailService.getAllSports();
 		model.addAttribute("sports", sports);
-		
-		
 		model.addAttribute("currentUser", user);
 		return "viewer/editviewersportslist";
 	}
-	
-	/*
-	 * @GetMapping("/updateuser/{id}") public String updateUser(Model
-	 * model, @PathVariable String id, @AuthenticationPrincipal UserDetails
-	 * currentUser, HttpServletRequest request) { AppUser currentUsers =
-	 * userRepository.findByEmail(currentUser.getUsername()); List<Sports> sports =
-	 * sportsDetailService.getAllSports(); model.addAttribute("sports", sports);
-	 * 
-	 * model.addAttribute("currentUser", currentUsers); Optional<AppUser> user =
-	 * userRepository.findById(id); model.addAttribute("roleValue",
-	 * roleRepository.findAll()); model.addAttribute("user", user.get()); return
-	 * "updateuser"; }
-	 */
 
-	
+	@PreAuthorize("hasAnyAuthority('VIEWER')")
+	@RequestMapping(value = "/viewer/getselectedsports", method = RequestMethod.POST)
+	public ModelAndView saveSelectedGames(@Valid @ModelAttribute("appUser") AppUser appUser,
+			@AuthenticationPrincipal UserDetails currentUser, @RequestParam("selectedSports") String[] selectedSports,
+			BindingResult result) {
+		ModelAndView modelAndView = new ModelAndView();
+		if (result.hasErrors()) {
+			modelAndView.addObject("message", "Could not Update Sports Games list");
+			modelAndView.setViewName("fragments/dashboard");
+		}
+		try {
+			appUser.setLastModifiedDate(LocalDateTime.now());
+			userRepository.save(appUser);
+			modelAndView.addObject("successMessage", "Sports list updated successfully.");
+			modelAndView.setViewName("fragments/dashboard");
+
+		} catch (Exception e) {
+			modelAndView.addObject("message", "Could not Update Sports Games list");
+		}
+
+		return modelAndView;
+	}
+
+	public String generateUniqueId() {
+		return RandomStringUtils.randomAlphanumeric(ID_LENGTH);
+	}
+
 }
