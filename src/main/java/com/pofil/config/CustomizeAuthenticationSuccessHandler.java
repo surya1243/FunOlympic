@@ -23,7 +23,7 @@ public class CustomizeAuthenticationSuccessHandler implements AuthenticationSucc
                 response.sendRedirect("/dashboard");
             }
             else if ("VIEWER".equals(auth.getAuthority())) {
-                response.sendRedirect("/dashboard");
+                response.sendRedirect("/viewer/dashboard");
             }
             else response.sendRedirect("/login");
         }

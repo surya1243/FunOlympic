@@ -15,6 +15,8 @@ public interface UserDetailService {
 
 	Optional<AppUser> getUserById(String id);
 	public void updatePassword(String email, String password);
+	public void updateSelectedGameList(String email, String[] selectedGames);
+	Long countViewerSelectedSports(String field, String value);
 
 	/* Long countUser(String field, String value); */
 }

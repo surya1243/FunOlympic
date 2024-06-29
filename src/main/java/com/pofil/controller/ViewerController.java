@@ -135,7 +135,7 @@ public class ViewerController {
 		}
 		try {
 			appUser.setLastModifiedDate(LocalDateTime.now());
-			userRepository.save(appUser);
+			userDetailService.updateSelectedGameList(currentUser.getUsername(), selectedSports);
 			modelAndView.addObject("successMessage", "Sports list updated successfully.");
 			modelAndView.setViewName("fragments/dashboard");
 

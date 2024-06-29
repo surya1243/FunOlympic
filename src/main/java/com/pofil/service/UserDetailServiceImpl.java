@@ -37,7 +37,19 @@ public class UserDetailServiceImpl implements UserDetailService{
             throw new RuntimeException("User not found with email: " + email);
         }
     }
-	
+	@Transactional
+	@Override
+	public void updateSelectedGameList(String email, String[] selectedGames) {
+		AppUser user = userRepository.findByEmail(email);
+        if (user != null) {
+            // Update only the selectedGames field
+            user.setSelectedSports(selectedGames);
+            userRepository.save(user);
+        } else {
+            throw new RuntimeException("Could not update info for: " + email);
+        }
+		
+	}
 
 	@Override
 	public AppUser getUserByEmail(String email) {
@@ -62,6 +74,13 @@ public class UserDetailServiceImpl implements UserDetailService{
 	 * @Override public Long countUser(String field, String value) { return
 	 * userRepository.countUser(field, value); }
 	 */
+
+	@Override
+	public Long countViewerSelectedSports(String field, String value) {
+		return userRepository.countViewerSportsCount(field, value);
+	}
+
+
 	
 
 /*	@Override

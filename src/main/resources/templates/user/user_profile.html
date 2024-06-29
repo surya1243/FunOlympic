@@ -93,5 +93,32 @@
 		</div>
 	</div>
 </body>
+<th:block layout:fragment="scripts">
+	<script th:inline="javascript">
+		$(window).ready(function () {
+			updateSelectedSportsCount();
+			setInterval(updateSelectedSportsCount, 10000);
+		});
+
+		function updateSelectedSportsCount() {
+
+			/*<![CDATA[*/
+			var userEmail = /*[[${currentUser}]]*/ '';
+			/*]]>*/
+			console.log(userEmail);
+			$.ajax({
+				url: '/viewer/getsportscount/{userEmail}',
+				type: "GET",
+				dataType: 'json',
+				contentType: 'application/json',
+				success: function (response) {
+					console.log(response);
+					document.getElementById("selectedSportsCount").innerText = response;
+
+				}
+			});
+		}
+	</script>
+</th:block>
 
 </html>

@@ -556,7 +556,6 @@ $.ajax({
     dataType: 'json',
     contentType: 'application/json',
     success: function(response) {
-        console.log(response);
 
         // Prepare data for Highcharts
         var data = [];

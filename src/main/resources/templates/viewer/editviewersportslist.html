@@ -143,10 +143,10 @@
 			</div>
 			<div class="col-xs-12">
 				<div class="space-10"></div>
-				<form th:action="@{/viewer/getselectedsports}" th:object="${appUser}" method="POST" class="form-horizontal"
-					data-toggle="validator" role="form" autocomplete="off">
+				<form th:action="@{/viewer/getselectedsports}" th:object="${appUser}" method="POST"
+					class="form-horizontal" data-toggle="validator" role="form" autocomplete="off">
 					<input type="hidden" name="id" th:value="${currentUser.id}" />
-<!--					<input type="hidden" name="id" th:value="${currentUser.id}" />
+					<!--					<input type="hidden" name="id" th:value="${currentUser.id}" />
 					<input type="hidden" name="chpassword" th:value="${currentUser.password}" />
 					<input type="hidden" name="userCreatedBy" th:value="${currentUser.userCreatedBy}" />
 					<input type="hidden" name="userCreatedBy" th:value="${currentUser.createdDate}" />-->
@@ -349,6 +349,31 @@
 		$('.input-mask-mobile').mask('9999999999', {
 			autoclear: false
 		});
+	</script>
+	<script th:inline="javascript">
+		$(window).ready(function () {
+			updateSelectedSportsCount();
+			setInterval(updateSelectedSportsCount, 10000);
+		});
+
+		function updateSelectedSportsCount() {
+
+			/*<![CDATA[*/
+			var userEmail = /*[[${currentUser}]]*/ '';
+			/*]]>*/
+			console.log(userEmail);
+			$.ajax({
+				url: '/viewer/getsportscount/{userEmail}',
+				type: "GET",
+				dataType: 'json',
+				contentType: 'application/json',
+				success: function (response) {
+					console.log(response);
+					document.getElementById("selectedSportsCount").innerText = response;
+
+				}
+			});
+		}
 	</script>
 </th:block>
 

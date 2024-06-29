@@ -32,9 +32,23 @@
 					<!--<div class="col-sm-5 well">
 						<div id="feedbackContainer"></div>
 					</div>-->
-					<div class="col-sm-12 well">
+					<!--					<div class="col-sm-12 well">
 						<div id="accReportContainer"></div>
+					</div>-->
+
+
+					<div class="row">
+						<div class="col-xs-3 col-sm-2 pricing-box" th:each="sports, index :${sportsList}">
+							<div class=""></div>
+							<div class="widget-box pricing-box-small widget-color-blue2">
+								<div class="widget-header">
+									<h5 class="widget-title larger lighter" th:text="${sports}"> Sports Name
+									</h5>
+								</div>
+							</div>
+						</div>
 					</div>
+
 				</div>
 			</div>
 		</div>
@@ -45,13 +59,15 @@
 			$(window).ready(function () {
 				updateSelectedSportsCount();
 				setInterval(updateSelectedSportsCount, 5000);
-					});
-					
-					function updateSelectedSportsCount() {
-						
+			});
+
+			function updateSelectedSportsCount() {
+
 				/*<![CDATA[*/
 				var userEmail = /*[[${currentUser}]]*/ '';
 				/*]]>*/
+
+				console.log("hi" + userEmail);
 				$.ajax({
 					url: '/viewer/getsportscount/{userEmail}',
 					type: "GET",
@@ -63,7 +79,7 @@
 
 					}
 				});
-		}
+			}
 		</script>
 	</th:block>
 </body>
