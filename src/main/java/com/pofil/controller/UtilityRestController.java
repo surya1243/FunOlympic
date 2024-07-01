@@ -26,27 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mongodb.client.DistinctIterable;
 import com.mongodb.client.MongoCursor;
-import com.pofil.model.AccountInfo;
 import com.pofil.model.AppUser;
-import com.pofil.model.Budget;
-import com.pofil.model.Card;
-import com.pofil.model.CardDelivery;
-import com.pofil.model.CardRenew;
-import com.pofil.model.CustomerLocker;
-import com.pofil.model.ErrorIssueLog;
-import com.pofil.model.Feedback;
-import com.pofil.model.FiscalYear;
-import com.pofil.model.GoodForPayment;
-import com.pofil.model.InsuranceCompany;
-import com.pofil.model.InsuranceCustomer;
-import com.pofil.model.InsuranceCustomerRegister;
-import com.pofil.model.InsuranceSchema;
-import com.pofil.model.LockerLog;
-import com.pofil.model.MaintenanceLog;
-import com.pofil.model.ManagerCheque;
-import com.pofil.model.Minutes;
 import com.pofil.model.Sports;
-import com.pofil.model.UtilityBills;
 
 import com.pofil.repository.UserRepository;
 import com.pofil.service.SportsDetailService;

@@ -13,5 +13,6 @@ public interface SportsDetailService {
 	List<Sports> getSportsListBySportsName(String sportsName);
 	Sports saveSports(Sports sports);
 	List<Sports> getAllSports();
+	List<Sports> getSportsBySportsNameList(String[] sportsName);
 
 }

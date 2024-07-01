@@ -87,7 +87,7 @@ input[readonly] {
 }
 
 .pricing-span {
-	margin: 0;
+	margin: 10px;
 	width: 90%;
 	max-width: 350px !important;
 	min-width: 250px !important;

@@ -102,7 +102,7 @@ public class ViewerController {
 			modelAndView.addObject("successMessage", "Password updated successfully.");
 			modelAndView.setViewName("fragments/dashboard");
 		}
-		return modelAndView;
+		return new ModelAndView("redirect:/getuserprofile");
 	}
 
 	@PreAuthorize("hasAnyAuthority('ADMIN','HIGHSUPERVISOR', 'SUPERVISOR', 'HOD', 'CAD','GAD','MAKER', 'VIEWER','FEEDBACK', 'LOCKER', 'MINUTES')")
@@ -131,19 +131,18 @@ public class ViewerController {
 		ModelAndView modelAndView = new ModelAndView();
 		if (result.hasErrors()) {
 			modelAndView.addObject("message", "Could not Update Sports Games list");
-			modelAndView.setViewName("fragments/dashboard");
+			modelAndView.setViewName("viewer/viewerdashboard");
 		}
 		try {
 			appUser.setLastModifiedDate(LocalDateTime.now());
 			userDetailService.updateSelectedGameList(currentUser.getUsername(), selectedSports);
 			modelAndView.addObject("successMessage", "Sports list updated successfully.");
-			modelAndView.setViewName("fragments/dashboard");
+			modelAndView.setViewName("viewer/viewerdashboard");
 
 		} catch (Exception e) {
 			modelAndView.addObject("message", "Could not Update Sports Games list");
 		}
-
-		return modelAndView;
+		return new ModelAndView("redirect:/viewer/getselectedsports");
 	}
 
 	public String generateUniqueId() {

@@ -78,7 +78,7 @@
 										<span th:text="${currentUser.gender}"></span>
 									</div>
 								</div>
-								<div class="profile-info-row">
+								<div class="profile-info-row" sec:authorize="hasAuthority('VIEWER')">
 									<div class="profile-info-name"> Selected Sports </div>
 									<div class="profile-info-value form-group">
 										<span th:each="sport,iterStat : ${currentUser.selectedSports}"

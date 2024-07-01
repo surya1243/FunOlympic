@@ -41,30 +41,6 @@
 	</div>
 	<th:block layout:fragment="scripts">
 		<script src="../static/js/dashboardcharts.js" th:src="@{/js/dashboardcharts.js/}"></script>
-		<script th:inline="javascript">
-			$(window).ready(function () {
-				updateSelectedSportsCount();
-				setInterval(updateSelectedSportsCount, 5000);
-					});
-					
-					function updateSelectedSportsCount() {
-						
-				/*<![CDATA[*/
-				var userEmail = /*[[${currentUser}]]*/ '';
-				/*]]>*/
-				$.ajax({
-					url: '/viewer/getsportscount/{userEmail}',
-					type: "GET",
-					dataType: 'json',
-					contentType: 'application/json',
-					success: function (response) {
-						console.log(response);
-						document.getElementById("selectedSportsCount").innerText = response;
-
-					}
-				});
-		}
-		</script>
 	</th:block>
 </body>
 

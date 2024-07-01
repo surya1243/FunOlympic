@@ -13,14 +13,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.pofil.model.AppUser;
 import com.pofil.repository.UserRepository;
+import com.pofil.service.SportsDetailService;
 
 @Controller
 public class DashboardController {
 	
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private SportsDetailService sportsDetailService;
 	
-	@PreAuthorize("hasAnyAuthority('ADMIN','VIEWER')")
+	@PreAuthorize("hasAnyAuthority('ADMIN')")
 	@RequestMapping(value = "/dashboard", method = RequestMethod.GET)
 	public String getDemo(HttpServletRequest request, Model model, @AuthenticationPrincipal UserDetails currentUser) {
 		AppUser currentUsers = userRepository.findByEmail(currentUser.getUsername());
@@ -35,6 +38,7 @@ public class DashboardController {
 		String[] selectedSports = currentUsers.getSelectedSports(); // Assuming currentUsers is accessible
 	    model.addAttribute("sportsList", selectedSports);
 		model.addAttribute("currentUser", currentUsers);
+		model.addAttribute("selectedUserSports", sportsDetailService.getSportsBySportsNameList(selectedSports));
 		return "viewer/viewerdashboard";
 	}
 	

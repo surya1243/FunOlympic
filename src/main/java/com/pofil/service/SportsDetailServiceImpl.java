@@ -1,4 +1,5 @@
 package com.pofil.service;
+import java.util.Arrays;
 import java.util.List;
 
 import java.util.Optional;
@@ -53,4 +54,8 @@ public class SportsDetailServiceImpl implements SportsDetailService{
 		return sportsRepository.findAllByOrderBySportsNameAsc(sportsName);
 	}
 
+	@Override
+	public List<Sports> getSportsBySportsNameList(String[] sportsNames) {
+        return sportsRepository.findBySportsNameIn(Arrays.asList(sportsNames));
+    }
 }
