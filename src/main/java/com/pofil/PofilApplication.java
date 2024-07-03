@@ -1,14 +1,21 @@
 package com.pofil;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import com.pofil.model.AppUser;
 import com.pofil.model.Role;
 import com.pofil.repository.RoleRepository;
 import com.pofil.service.CustomUserDetailsService;
 import com.pofil.service.FileSystemStorageService;
+import com.pofil.service.UserDetailService;
 
 @SpringBootApplication
 public class PofilApplication {
@@ -18,20 +25,10 @@ public class PofilApplication {
 	}
 	@Bean
 	CommandLineRunner init(RoleRepository roleRepository, FileSystemStorageService storageService, 
-			CustomUserDetailsService userDetailsService) {
+			CustomUserDetailsService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder) {
 	    return args -> {
 	    	
 	    	storageService.init();
-	    	
-			/*
-			 * BankCardInfo bankCardInfo = bankCardInfoRepository.findByInstitution("POFL");
-			 * if(bankCardInfo == null) { BankCardInfo newBankCardInfo = new BankCardInfo();
-			 * newBankCardInfo.setBankName("Pokhara Finance Ltd.");
-			 * newBankCardInfo.setbIN("62347712"); newBankCardInfo.setOldBin("637029");
-			 * newBankCardInfo.setInstitution("POFL");
-			 * newBankCardInfo.setCardProduct("POFD");
-			 * bankCardInfoRepository.save(newBankCardInfo); }
-			 */
 
 	    	 Role viewerRole = roleRepository.findByRole("VIEWER");
 		        if (viewerRole == null) {
@@ -45,7 +42,21 @@ public class PofilApplication {
 	            Role newAdminRole = new Role();
 	            newAdminRole.setRole("ADMIN");
 	            roleRepository.save(newAdminRole);
-	        }	       
+	        }
+			/*
+			 * AppUser adminUser = userDetailsService.findUserByEmail("admin1@gmail.com");
+			 * if (adminUser == null) { AppUser newAdminUser = new AppUser();
+			 * newAdminUser.setFirstName("admin1"); newAdminUser.setLastName("Max");
+			 * newAdminUser.setEmail("admin1@gmail.com"); newAdminUser.setEnabled(true);
+			 * Set<Role> roles = new HashSet<>(); roles.add(adminRole); // Assign ADMIN role
+			 * 
+			 * String encodedPassword = bCryptPasswordEncoder.encode("111111");
+			 * newAdminUser.setPassword(encodedPassword);
+			 * System.out.println("Encoded Password: " + encodedPassword);
+			 * newAdminUser.setRoles(roles);
+			 * userDetailsService.saveUser(newAdminUser,"ADMIN"); }
+			 */	
+	        		
 	    };
 
 	}

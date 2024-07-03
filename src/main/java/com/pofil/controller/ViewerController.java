@@ -142,7 +142,7 @@ public class ViewerController {
 		} catch (Exception e) {
 			modelAndView.addObject("message", "Could not Update Sports Games list");
 		}
-		return new ModelAndView("redirect:/viewer/getselectedsports");
+		return new ModelAndView("redirect:/viewer/dashboard");
 	}
 
 	public String generateUniqueId() {
