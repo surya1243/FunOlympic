@@ -1,0 +1,18 @@
+version: 1.0
+components:
+  app:
+    source:
+      type: git
+      repository_url: https://<username>:<token>@github.com/surya1243/FunOlympic.git
+      branch: main
+    build:
+      command: ./build.sh
+      artifacts:
+        - build/app.jar
+    run:
+      command: java -jar build/app.jar
+      environment:
+        SPRING_DATA_MONGODB_URI: mongodb://<username>:<password>@<host>:<port>/<database>
+      ports:
+        - port: 8080
+          protocol: http
