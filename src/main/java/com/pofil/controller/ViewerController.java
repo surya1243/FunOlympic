@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.lang.RandomStringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -51,7 +53,7 @@ public class ViewerController {
 	@Autowired
 	private RoleRepository roleRepository;
 
-	
+	private static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
 	@RequestMapping(value = "/viewer/register", method = RequestMethod.POST)
 	public String saveUserDetail(@Valid AppUser user, BindingResult bindingResult, 
 			RedirectAttributes redirAttrs) {
@@ -118,21 +120,35 @@ public class ViewerController {
 	public String showSelectedGames(Model model, @AuthenticationPrincipal UserDetails currentUser) {
 		AppUser user = userRepository.findByEmail(currentUser.getUsername());
 		List<Sports> sports = sportsDetailService.getAllSports();
+		String[] selectedSports = user.getSelectedSports();
+		if (selectedSports == null || selectedSports.length == 0) {
+            selectedSports = new String[0]; // Default to an empty array
+            logger.info("No sports selected for user: {}", currentUser.getUsername());
+            model.addAttribute("noSportsSelectedMessage", "No sports are selected for live streaming, please select the sports from sports lists");
+        }
+		
 		model.addAttribute("sports", sports);
 		model.addAttribute("currentUser", user);
+		model.addAttribute("selectedUserSports", sportsDetailService.getSportsBySportsNameList(selectedSports));
 		return "viewer/editviewersportslist";
 	}
 
 	@PreAuthorize("hasAnyAuthority('VIEWER')")
 	@RequestMapping(value = "/viewer/getselectedsports", method = RequestMethod.POST)
 	public ModelAndView saveSelectedGames(@Valid @ModelAttribute("appUser") AppUser appUser,
-			@AuthenticationPrincipal UserDetails currentUser, @RequestParam("selectedSports") String[] selectedSports,
+			@AuthenticationPrincipal UserDetails currentUser, @RequestParam(value = "selectedSports", required = false) String[] selectedSports,
 			BindingResult result) {
 		ModelAndView modelAndView = new ModelAndView();
 		if (result.hasErrors()) {
 			modelAndView.addObject("message", "Could not Update Sports Games list");
 			modelAndView.setViewName("viewer/viewerdashboard");
+			return modelAndView;
 		}
+		if (selectedSports == null) {
+	        selectedSports = new String[0]; // Default to an empty array
+	        logger.info("No sports selected for user: {}", currentUser.getUsername());
+	    }
+		
 		try {
 			appUser.setLastModifiedDate(LocalDateTime.now());
 			userDetailService.updateSelectedGameList(currentUser.getUsername(), selectedSports);
@@ -141,6 +157,7 @@ public class ViewerController {
 
 		} catch (Exception e) {
 			modelAndView.addObject("message", "Could not Update Sports Games list");
+			modelAndView.setViewName("viewer/viewerdashboard");
 		}
 		return new ModelAndView("redirect:/viewer/dashboard");
 	}

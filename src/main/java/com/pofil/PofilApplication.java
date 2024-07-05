@@ -43,6 +43,7 @@ public class PofilApplication {
 	            newAdminRole.setRole("ADMIN");
 	            roleRepository.save(newAdminRole);
 	        }
+			
 			/*
 			 * AppUser adminUser = userDetailsService.findUserByEmail("admin1@gmail.com");
 			 * if (adminUser == null) { AppUser newAdminUser = new AppUser();
@@ -55,7 +56,8 @@ public class PofilApplication {
 			 * System.out.println("Encoded Password: " + encodedPassword);
 			 * newAdminUser.setRoles(roles);
 			 * userDetailsService.saveUser(newAdminUser,"ADMIN"); }
-			 */	
+			 */
+			 	
 	        		
 	    };
 

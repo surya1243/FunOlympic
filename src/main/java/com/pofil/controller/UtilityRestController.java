@@ -33,6 +33,9 @@ import com.pofil.repository.UserRepository;
 import com.pofil.service.SportsDetailService;
 import com.pofil.service.UserDetailService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @RestController
 public class UtilityRestController {
 	@Autowired

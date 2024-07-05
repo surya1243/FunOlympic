@@ -74,7 +74,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         web
                 .ignoring()
                 .antMatchers("/resources/**", "/static/**", "/font-awesome/**", "/fonts/**", "/css/**", "/js/**",
-        				"/images/**", "/video/**");
+        				"/images/**", "/video/**", "/viewer/video/**");
     }
 
 }

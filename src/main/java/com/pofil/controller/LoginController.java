@@ -20,7 +20,7 @@ public class LoginController {
 	@GetMapping({ "/"})
 	public String getHomePage(HttpServletRequest request) {
 		if (request.getRemoteUser() != null)
-			return "redirect:/dashboard";
+			return "redirect:/viewer/dashboard";
 		return "viewer/homepage";
 	}
 }

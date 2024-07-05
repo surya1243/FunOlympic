@@ -18,7 +18,8 @@ import com.pofil.model.AppUser;
 import com.pofil.model.Role;
 import com.pofil.repository.RoleRepository;
 import com.pofil.repository.UserRepository;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
@@ -29,6 +30,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    private static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
+    
     public AppUser findUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
@@ -61,8 +64,22 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     private List<GrantedAuthority> getUserAuthority(Set<Role> userRoles) {
         Set<GrantedAuthority> roles = new HashSet<>();
+        if (userRoles == null) {
+            logger.warn("userRoles is null");
+            return new ArrayList<>(roles);
+        }
+        
         userRoles.forEach(role -> {
-            roles.add(new SimpleGrantedAuthority(role.getRole()));
+            if (role == null) {
+                logger.warn("Encountered null role in userRoles");
+            } else {
+                String roleString = role.getRole();
+                if (roleString == null) {
+                    logger.warn("Role {} returned null for getRole()", role);
+                } else {
+                    roles.add(new SimpleGrantedAuthority(roleString));
+                }
+            }
         });
 
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>(roles);

@@ -130,13 +130,20 @@
 		</div>
 		<div class="page-content">
 			<div class="page-header center">
+				<div class="alert alert-warning" th:if="${noSportsSelectedMessage}">
+					<button type="button" class="close" data-dismiss="alert">
+						<i class="ace-icon fa fa-times"></i>
+					</button>
+					<p th:text="${noSportsSelectedMessage}"></p>
+				</div>
 				<h1>
 					<i class="ace-icon fa fa-check-square-o"></i> User
 					<small>
 						<i class="ace-icon fa fa-angle-double-right"></i>
-						Please select games that you like to watch Online
+						<strong> Select games that you like to watch Online</strong>
 					</small>
 				</h1>
+
 			</div><!-- /.page-header -->
 			<div th:if="${message}">
 				<h2 class="alert alert-danger" th:text="${message}"></h2>
@@ -153,7 +160,10 @@
 					<div class="col-sm-10 col-sm-offset-1">
 						<div class="space-2"></div>
 						<input type="hidden" id="selectedSports"
-							th:value="${#strings.arrayJoin(currentUser.selectedSports, ',')}" />
+							th:value="${#strings.arrayJoin(currentUser.selectedSports != null ? currentUser.selectedSports : new String[0], ',')}" />
+
+						<!--<input type="hidden" id="selectedSports"
+							th:value="${#strings.arrayJoin(currentUser.selectedSports, ',')}" />-->
 						<div class="form-group" id="sportsListContainer">
 							<div class="sports-list-outer-wrapper">
 								<div class="sports-list-inner-wrapper">
