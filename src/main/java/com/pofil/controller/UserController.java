@@ -75,19 +75,21 @@ public class UserController {
 		return "test";
 	}
 
-	@PreAuthorize("hasAuthority('ADMIN')") 
+	/* @PreAuthorize("hasAuthority('ADMIN')") */
 	@RequestMapping(value = "/register", method = RequestMethod.GET)
 	public String getRegisterForm(Model model, @AuthenticationPrincipal UserDetails currentUser,
 			HttpServletRequest request) {
 		
-		  AppUser user = userRepository.findByEmail(currentUser.getUsername());
-		  model.addAttribute("currentUser", user);
+		/*
+		 * AppUser user = userRepository.findByEmail(currentUser.getUsername());
+		 * model.addAttribute("currentUser", user);
+		 */
 		 
 		model.addAttribute("roleValue", roleRepository.findAll());
 		return "register";
 	}
 
-	@PreAuthorize("hasAuthority('ADMIN')") 
+	/* @PreAuthorize("hasAuthority('ADMIN')") */
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public String saveUserDetail(@Valid AppUser user, BindingResult bindingResult, @RequestParam("roles") String roles, 
 			RedirectAttributes redirAttrs) {
